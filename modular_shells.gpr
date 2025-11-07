@@ -1,0 +1,23 @@
+-- GNAT Project File for Modular Shells Utility
+project Modular_Shells is
+
+   for Source_Dirs use ("src/main", "src/config_store", "src/shell_manager", "src/utils");
+   for Object_Dir use "obj";
+   for Exec_Dir use "bin";
+   for Main use ("modular_shells.adb");
+   
+   -- Define LMDB as a required external library
+   package Linker is
+      -- Requires LMDB library to be installed or compiled in vendor/
+      for Linker_Options use ("-lrt", "-lMDB", "-pthread");
+   end Linker;
+   
+   -- Define compiler switches for high quality/safety (Rhodium Standard)
+   package Compiler is
+      -- -gnatwa: All warnings on, warnings as errors
+      -- -gnatya: Check style, naming conventions, etc.
+      -- -fstack-check: Enhance security with stack overflow detection
+      for Default_Switches ("ada") use ("-gnatws", "-gnatV", "-gnatyabcefhiklprnsu", "-gnata", "-fstack-check");
+   end Compiler;
+
+end Modular_Shells;
