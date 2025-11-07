@@ -10,7 +10,7 @@ stages:
 
 variables:
   # The GNAT Project File used for all operations
-  GPR_PROJECT: modular_shells.gpr
+  GPR_PROJECT: modshells.gpr
 
 # --- Stage: Verify (Syntax and Static Analysis) ---
 
@@ -29,7 +29,7 @@ test:unit:
   script:
     - echo "Running AUnit tests (Stub)"
     # A full pipeline would use a dedicated test GPR file.
-    - gprbuild -P $GPR_PROJECT src/main/modular_shells.adb 
+    - gprbuild -P $GPR_PROJECT src/main/modshells.adb 
     # Placeholder to ensure test stage passes for v0.0
     - echo "Unit tests successful."
 
@@ -40,7 +40,7 @@ build:linux:amd64:
   script:
     - echo "Building for Linux/Fedora (Primary Target)"
     - gprbuild -P $GPR_PROJECT
-    - mv bin/modular_shells modular_shells_linux_amd64
+    - mv bin/modular_shells modshells_linux_amd64
   artifacts:
     paths:
-      - modular_shells_linux_amd64
+      - modshells_linux_amd64

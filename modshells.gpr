@@ -1,10 +1,10 @@
 -- GNAT Project File for Modular Shells Utility
-project Modular_Shells is
+project Modshells is
 
    for Source_Dirs use ("src/main", "src/config_store", "src/shell_manager", "src/utils");
    for Object_Dir use "obj";
    for Exec_Dir use "bin";
-   for Main use ("modular_shells.adb");
+   for Main use ("modshells.adb");
    
    -- Define LMDB as a required external library
    package Linker is
@@ -20,4 +20,4 @@ project Modular_Shells is
       for Default_Switches ("ada") use ("-gnatws", "-gnatV", "-gnatyabcefhiklprnsu", "-gnata", "-fstack-check");
    end Compiler;
 
-end Modular_Shells;
+end Modshells;

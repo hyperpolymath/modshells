@@ -4,11 +4,11 @@ with Shell_Manager;
 use Ada.Text_IO;
 use Shell_Manager;
 
-procedure Modular_Shells is
+procedure Modshells is
    -- Placeholders for the main execution loop (v0.0)
    Shells : Shell_List := Detect_Shells;
 begin
-   Put_Line("Modular Shells Utility (v0.0) - Safety First.");
+   Put_Line("Modshells Utility (v0.0) - Safety First.");
    Put_Line("Detected Shells:");
    
    for I in Shells'Range loop
@@ -18,4 +18,4 @@ begin
    -- NOTE: Full installation and modularisation logic will be implemented here in v0.1
    -- The system currently only lists and confirms the safety framework.
 
-end Modular_Shells;
+end Modshells;
