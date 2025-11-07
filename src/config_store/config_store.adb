@@ -1,36 +1,58 @@
--- src/config_store/config_store.adb
-with Ada.Text_IO;
-use Ada.Text_IO;
+with Ada.Environment_Variables;
+with Ada.Strings.Unbounded;
+with Ada.Directories; 
+with Ada.Text_IO; 
 
 package body Config_Store is
-   -- NOTE: This body requires GNAT FFI bindings to the LMDB C library.
-   -- For v0.0, it contains stubs to demonstrate the required structure.
+    
+    use Ada.Environment_Variables;
+    use Ada.Strings.Unbounded;
+    
+    ENV_VAR_NAME : constant String := "MODSHELLS_CONFIG_PATH";
 
-   procedure Initialize_Store is
-   begin
-      Put_Line("LMDB: Initializing transactional configuration store.");
-      -- Actual LMDB environment setup goes here.
-   end Initialize_Store;
+    function Get_Home_Directory return String is
+    begin
+        declare
+            Home_Path_Ptr : constant String_Access := Value("HOME");
+        begin
+            if Home_Path_Ptr /= null then
+                return Home_Path_Ptr.all;
+            else
+                return Ada.Directories.Current_Directory; 
+            end if;
+        exception
+            when Name_Error => 
+                return Ada.Directories.Current_Directory; 
+            when others =>
+                raise;
+        end;
+    end Get_Home_Directory;
 
-   procedure Store_Backup(
-      Shell_Name : in Shell_Manager.Shell_Type;
-      File_Path  : in String;
-      Content    : in String)
-   is
-   begin
-      Put_Line("LMDB: Storing backup of " & File_Path & " (" & Integer'Image(Content'Length) & " bytes).");
-      -- Actual LMDB transaction and key-value write goes here.
-   end Store_Backup;
+    DEFAULT_ROOT_PATH : constant String := 
+        Get_Home_Directory & Ada.Directories.Separator & ".config/nushell/modshells";
 
-   function Retrieve_Backup(Shell_Name : Shell_Manager.Shell_Type) return String is
-   begin
-      return "LMDB Backup Content (Placeholder)";
-   end Retrieve_Backup;
+    function Get_Modshell_Root_Path return String is
+        Path_Value : String := "";
+        Env_Value_Ptr : String_Access;
+    begin
+        -- 1. Check for the environment variable (Accessibility & Interoperability)
+        Env_Value_Ptr := Value(ENV_VAR_NAME);
 
-   procedure Rollback_To_Last_State(Shell_Name : Shell_Manager.Shell_Type) is
-   begin
-      Put_Line("LMDB: Executing Rollback for " & Shell_Manager.To_String(Shell_Name));
-      -- Retrieve backup content and overwrite the live file.
-   end Rollback_To_Last_State;
+        if Env_Value_Ptr /= null then
+            Path_Value := Env_Value_Ptr.all;
+        else
+            -- 2. Fall back to the calculated default path (Dependability)
+            Path_Value := DEFAULT_ROOT_PATH;
+        end if;
+        
+        return Path_Value;
+        
+    exception
+        when others =>
+            Ada.Text_IO.Put_Line("Error retrieving config path. Raising exception.");
+            raise;
+    end Get_Modshell_Root_Path;
+    
+    -- ... Placeholder for other functions in Config_Store package body ...
 
 end Config_Store;

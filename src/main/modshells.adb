@@ -1,21 +1,31 @@
--- src/main/modular_shells.adb
-with Ada.Text_IO;
 with Shell_Manager;
-use Ada.Text_IO;
-use Shell_Manager;
+with Config_Store;
+with Ada.Text_IO;
 
 procedure Modshells is
-   -- Placeholders for the main execution loop (v0.0)
-   Shells : Shell_List := Detect_Shells;
-begin
-   Put_Line("Modshells Utility (v0.0) - Safety First.");
-   Put_Line("Detected Shells:");
-   
-   for I in Shells'Range loop
-      Put_Line("  - " & To_String(Shells(I).Name) & " (" & Shell_Status'Image(Shells(I).Status) & ")");
-   end loop;
-   
-   -- NOTE: Full installation and modularisation logic will be implemented here in v0.1
-   -- The system currently only lists and confirms the safety framework.
 
+   Config_Path : constant String := Config_Store.Get_Modshell_Root_Path;
+
+begin
+   Ada.Text_IO.Put_Line("Starting modshells initialisation...");
+   Ada.Text_IO.Put_Line("Configuration path: " & Config_Path);
+
+   -- Idempotent creation of directories (core, tools, misc, os, ui)
+   Shell_Manager.Create_Modshell_Directories(
+      Root_Path => Config_Path
+   );
+   
+   Ada.Text_IO.Put_Line("Modular directories created idempotently.");
+   
+   -- [Continue with application logic, such as shell detection, etc.]
+   
+exception
+   when others =>
+      declare
+         Error_Msg : constant String := 
+            "FATAL ERROR: Modshells failed during initial setup.";
+      begin
+         Ada.Text_IO.Put_Line(Error_Msg);
+         raise; 
+      end;
 end Modshells;
