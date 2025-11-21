@@ -1,23 +1,15 @@
--- GNAT Project File for Modular Shells Utility
+-- File: modshells.gpr
+-- GNAT Project File for the modshells application.
 project Modshells is
-
-   for Source_Dirs use ("src/main", "src/config_store", "src/shell_manager", "src/utils");
+   -- Point to the correct main file
+   for Main use ("src/shell_manager/shell_manager.adb");
+   -- Include all source directories
+   for Source_Dirs use ("src/**");
+   -- Object and executable directories
    for Object_Dir use "obj";
    for Exec_Dir use "bin";
-   for Main use ("modshells.adb");
-   
-   -- Define LMDB as a required external library
-   package Linker is
-      -- Requires LMDB library to be installed or compiled in vendor/
-      for Linker_Options use ("-lrt", "-lMDB", "-pthread");
-   end Linker;
-   
-   -- Define compiler switches for high quality/safety (Rhodium Standard)
-   package Compiler is
-      -- -gnatwa: All warnings on, warnings as errors
-      -- -gnatya: Check style, naming conventions, etc.
-      -- -fstack-check: Enhance security with stack overflow detection
-      for Default_Switches ("ada") use ("-gnatws", "-gnatV", "-gnatyabcefhiklprnsu", "-gnata", "-fstack-check");
-   end Compiler;
-
+   -- Optional: Parallel build
+   package Builder is
+      for Default_Switches ("ada") use ("-j4");
+   end Builder;
 end Modshells;
