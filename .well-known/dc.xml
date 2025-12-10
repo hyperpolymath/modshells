@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata xmlns="http://purl.org/dc/elements/1.1/"
+          xmlns:dcterms="http://purl.org/dc/terms/">
+  <title>modshells</title>
+  <creator>Hyper Polymath</creator>
+  <subject>RSR</subject>
+  <description>RSR-compliant project</description>
+  <publisher>Rhodium Standard</publisher>
+  <date>2025</date>
+  <type>Software</type>
+  <identifier>https://github.com/hyperpolymath/modshells</identifier>
+  <language>en</language>
+  <rights>AGPL-3.0-or-later OR LicenseRef-Palimpsest-0.5</rights>
+  <dcterms:license>https://spdx.org/licenses/AGPL-3.0-or-later.html</dcterms:license>
+  <dcterms:hasVersion>0.1.0</dcterms:hasVersion>
+  <dcterms:isPartOf>RSR Framework</dcterms:isPartOf>
+</metadata>

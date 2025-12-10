@@ -1,0 +1,36 @@
+= modshells - Citation Guide
+:toc:
+
+== BibTeX
+
+[source,bibtex]
+----
+@software{modshells_2025,
+  author = {Polymath, Hyper},
+  title = {modshells},
+  year = {2025},
+  url = {https://github.com/hyperpolymath/modshells},
+  license = {AGPL-3.0-or-later}
+}
+----
+
+== Harvard Style
+
+Polymath, H. (2025) _modshells_ [Computer software]. Available at: https://github.com/hyperpolymath/modshells
+
+== OSCOLA
+
+Hyper Polymath, 'modshells' (2025) <https://github.com/hyperpolymath/modshells>
+
+== MLA
+
+Polymath, Hyper. "modshells." 2025, github.com/hyperpolymath/modshells.
+
+== APA 7
+
+Polymath, H. (2025). _modshells_ [Computer software]. GitHub. https://github.com/hyperpolymath/modshells
+
+== See Also
+
+* link:../CITATION.cff[CITATION.cff]
+* link:../codemeta.json[codemeta.json]

@@ -1,0 +1,32 @@
+# Consent-Aware HTTP Declaration for {{PROJECT_NAME}}
+# RFC Draft: draft-jewell-http-430-consent-required
+
+Version: 1.0
+Project: {{PROJECT_NAME}}
+Canonical: https://github.com/hyperpolymath/{{PROJECT_NAME}}
+
+# Consent Framework
+This project implements the Consent-Aware HTTP framework.
+See: https://github.com/hyperpolymath/consent-aware-http
+
+# Consent Levels
+Level-1-Public: true
+Level-2-Attributed: requires-consent
+Level-3-Commercial: requires-consent
+Level-4-AI-Training: requires-explicit-consent
+Level-5-Derivative: follows-license
+
+# HTTP 430 Consent Required
+This project will return HTTP 430 status for:
+  - Automated data collection without consent header
+  - AI training data harvesting
+  - Commercial use without license compliance
+
+# Headers to Include in Requests
+Required-Headers:
+  - X-Consent-Token: [your-consent-token]
+  - X-Attribution: [your-attribution-string]
+
+# How to Request Consent
+Consent-Request-URL: https://hyperpolymath.org/consent/{{PROJECT_NAME}}
+Documentation: https://github.com/hyperpolymath/consent-aware-http

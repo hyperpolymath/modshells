@@ -1,0 +1,21 @@
+/* TEAM */
+Project: modshells
+Maintainer: Jonathan D.A. Jewell
+Contact: jonathan@hyperpolymath.org
+Location: Netherlands
+ORCID: 0000-0002-1234-5678
+
+/* THANKS */
+Contributors: See CONTRIBUTORS.md
+Community: Rhodium Standard Initiative
+License Philosophy: Palimpsest License
+
+/* SITE */
+Last update: {{LAST_UPDATE}}
+Software: Serum (Elixir SSG)
+Standards: Consent-Aware HTTP, RSR
+
+/* PHILOSOPHY */
+Design: Reversibility-first
+Ethics: Consent-aware
+Language: Tier 1 RSR (Rust, Elixir, Zig, Ada, Haskell, ReScript)

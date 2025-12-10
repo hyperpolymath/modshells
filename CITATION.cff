@@ -1,0 +1,23 @@
+# CITATION.cff - Citation File Format for modshells
+# https://citation-file-format.github.io/
+# SPDX-License-Identifier: AGPL-3.0-or-later OR LicenseRef-Palimpsest-0.5
+
+cff-version: 1.2.0
+title: "modshells"
+message: "If you use this software, please cite it as below."
+type: software
+authors:
+  - family-names: "Polymath"
+    given-names: "Hyper"
+    email: "hyperpolymath@proton.me"
+    affiliation: "Rhodium Standard / Independent Researcher"
+repository-code: "https://github.com/hyperpolymath/modshells"
+url: "https://rhodium.sh/projects/modshells"
+abstract: "RSR-compliant project"
+keywords:
+  - RSR
+  - rhodium-standard
+license: "AGPL-3.0-or-later"
+license-url: "https://github.com/hyperpolymath/modshells/blob/main/LICENSE.txt"
+version: "0.1.0"
+date-released: "2025-12-10"

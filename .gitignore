@@ -1,0 +1,24 @@
+# Ada/GNAT build artifacts
+/obj/
+/bin/
+*.o
+*.ali
+*.exe
+b__*.ad[sb]
+
+# GPRbuild
+*.cgpr.bak
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log

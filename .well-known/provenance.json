@@ -1,0 +1,43 @@
+{
+  "$schema": "https://hyperpolymath.org/schemas/provenance-v1.json",
+  "project": "modshells",
+  "version": "{{VERSION}}",
+  "canonical": "https://github.com/hyperpolymath/modshells",
+  "singleSourceOfTruth": "github",
+  "mirrors": [
+    {
+      "platform": "gitlab",
+      "url": "https://gitlab.com/hyperpolymath/modshells",
+      "type": "mirror",
+      "sync": "automated"
+    }
+  ],
+  "authors": [
+    {
+      "name": "Jonathan D.A. Jewell",
+      "email": "jonathan@hyperpolymath.org",
+      "orcid": "0000-0002-1234-5678",
+      "role": "maintainer"
+    }
+  ],
+  "license": {
+    "spdx": "AGPL-3.0-or-later",
+    "philosophy": "Palimpsest-0.4",
+    "file": "LICENSE.txt"
+  },
+  "consent": {
+    "framework": "consent-aware-http",
+    "ai-training": "explicit-consent-required",
+    "attribution": "required"
+  },
+  "verification": {
+    "method": "git-signatures",
+    "keyserver": "https://hyperpolymath.org/gpg/",
+    "attestation": "sigstore"
+  },
+  "metadata": {
+    "created": "{{CREATED_DATE}}",
+    "updated": "{{UPDATED_DATE}}",
+    "generator": "conative-gating"
+  }
+}
