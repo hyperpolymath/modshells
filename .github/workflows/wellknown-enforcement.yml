@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: AGPL-3.0-or-later
 name: Well-Known Standards (RFC 9116 + RSR)
 on:
   push:
@@ -13,11 +14,15 @@ on:
     - cron: '0 9 * * 1'
   workflow_dispatch:
 
+permissions: read-all
+
 jobs:
   validate:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
       
       - name: RFC 9116 security.txt validation
         run: |

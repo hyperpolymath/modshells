@@ -1,18 +1,23 @@
+# SPDX-License-Identifier: AGPL-3.0-or-later
 name: Code Quality
 on: [push, pull_request]
+
+permissions: read-all
 
 jobs:
   lint:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
       
       - name: Check file permissions
         run: |
           find . -type f -perm /111 -name "*.sh" | head -10 || true
       
       - name: Check for secrets
-        uses: trufflesecurity/trufflehog@main
+        uses: trufflesecurity/trufflehog@8a8ef8526528d8a4ff3e2c90be08e25ef8efbd9b # v3.88.3
         with:
           path: ./
           base: ${{ github.event.pull_request.base.sha || github.event.before }}
@@ -34,8 +39,10 @@ jobs:
 
   docs:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
       - name: Check documentation
         run: |
           MISSING=""

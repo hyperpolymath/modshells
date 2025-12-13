@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: AGPL-3.0-or-later
 name: Comprehensive Quality Gates
 on:
   push:
@@ -6,12 +7,16 @@ on:
   schedule:
     - cron: '0 5 * * 0'
 
+permissions: read-all
+
 jobs:
   # DEPENDABILITY - Stability and reliability
   dependability:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
       - name: Check test coverage
         run: |
           echo "Checking for test files..."
@@ -29,10 +34,12 @@ jobs:
   # SECURITY - Multi-layer security scanning
   security:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
       - name: Secret scanning
-        uses: trufflesecurity/trufflehog@main
+        uses: trufflesecurity/trufflehog@8a8ef8526528d8a4ff3e2c90be08e25ef8efbd9b # v3.88.3
         continue-on-error: true
       - name: Dependency vulnerabilities
         run: |
@@ -49,8 +56,10 @@ jobs:
   # INTEROPERABILITY - API and format compatibility
   interoperability:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
       - name: Check API specs
         run: |
           if [ -f "openapi.yaml" ] || [ -f "openapi.json" ]; then
@@ -66,8 +75,10 @@ jobs:
   # VALIDATION - Input/output validation
   validation:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
       - name: Check for validation patterns
         run: |
           VALIDATION=$(grep -rE "validate|sanitize|Schema|Validator" --include="*.rs" --include="*.res" --include="*.ex" . 2>/dev/null | wc -l || echo "0")
@@ -81,7 +92,7 @@ jobs:
       contents: read
       attestations: write
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
       - name: Generate SBOM
         run: |
           echo "SBOM generation would run here"
@@ -96,8 +107,10 @@ jobs:
   # VERIFICATION - Formal methods where applicable
   verification:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
       - name: Check SPARK proofs
         run: |
           if find . -name "*.ads" | grep -q .; then
@@ -112,8 +125,10 @@ jobs:
   # FUNCTIONALITY - Feature completeness
   functionality:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
       - name: Check TODOs and FIXMEs
         run: |
           echo "=== Incomplete items ==="
@@ -125,8 +140,10 @@ jobs:
   # PERFORMANCE - Benchmarks and profiling
   performance:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
       - name: Check for benchmarks
         run: |
           BENCHES=$(find . -name "*bench*" -o -name "*perf*" | wc -l)
@@ -141,9 +158,11 @@ jobs:
   # ACCESSIBILITY - A11y compliance
   accessibility:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     if: hashFiles('**/*.html') != ''
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
       - name: HTML accessibility check
         run: |
           echo "Checking for a11y attributes..."
@@ -156,8 +175,10 @@ jobs:
   # LICENSE COMPLIANCE
   license:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
       - name: Check license files
         run: |
           if [ -f "LICENSE" ] || [ -f "LICENSE.txt" ] || [ -f "LICENSE.md" ]; then
@@ -174,8 +195,10 @@ jobs:
   # DOCUMENTATION QUALITY
   documentation:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
       - name: Check docs completeness
         run: |
           DOCS=""

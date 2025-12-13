@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: AGPL-3.0-or-later
 # This workflow uses actions that are not certified by GitHub.
 # They are provided by a third-party and are governed by
 # separate terms of service, privacy policy, and support
@@ -16,14 +17,18 @@ on:
   release:
     types: [created]
 
+permissions: read-all
+
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     outputs:
       digests: ${{ steps.hash.outputs.digests }}
 
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
 
       # ========================================================
       #

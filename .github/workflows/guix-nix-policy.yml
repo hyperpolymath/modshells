@@ -1,10 +1,16 @@
+# SPDX-License-Identifier: AGPL-3.0-or-later
 name: Guix/Nix Package Policy
 on: [push, pull_request]
+
+permissions: read-all
+
 jobs:
   check:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
       - name: Enforce Guix primary / Nix fallback
         run: |
           # Check for package manager files

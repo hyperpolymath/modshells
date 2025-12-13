@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: AGPL-3.0-or-later
 name: "CodeQL"
 
 on:
@@ -7,6 +8,8 @@ on:
     branches: [ "main", "master" ]
   schedule:
     - cron: '30 1 * * 1'
+
+permissions: read-all
 
 jobs:
   analyze:
@@ -32,10 +35,10 @@ jobs:
 
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v4
+      uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
 
     - name: Initialize CodeQL
-      uses: github/codeql-action/init@v3
+      uses: github/codeql-action/init@662472033e021d55d94146f66f6058822b0b39fd # v3.28.1
       with:
         languages: ${{ matrix.language }}
         build-mode: ${{ matrix.build-mode }}
@@ -45,6 +48,6 @@ jobs:
         echo 'Build step for compiled languages'
 
     - name: Perform CodeQL Analysis
-      uses: github/codeql-action/analyze@v3
+      uses: github/codeql-action/analyze@662472033e021d55d94146f66f6058822b0b39fd # v3.28.1
       with:
         category: "/language:${{matrix.language}}"

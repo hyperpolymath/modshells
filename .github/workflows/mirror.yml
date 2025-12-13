@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: AGPL-3.0-or-later
 name: Mirror to GitLab and Bitbucket
 
 on:
@@ -7,14 +8,18 @@ on:
       - 'v*'
   workflow_dispatch:
 
+permissions: read-all
+
 jobs:
   mirror-gitlab:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     if: ${{ vars.GITLAB_MIRROR_ENABLED == 'true' }}
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
         with:
           fetch-depth: 0
 
@@ -29,11 +34,13 @@ jobs:
 
   mirror-bitbucket:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     if: ${{ vars.BITBUCKET_MIRROR_ENABLED == 'true' }}
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
         with:
           fetch-depth: 0
 
