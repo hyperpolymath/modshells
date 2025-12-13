@@ -11,7 +11,7 @@ on:
       - '.well-known/**'
   schedule:
     # Weekly expiry check
-    - cron: '0 9 * * 1'
+    - cron: '0 9 * * *'
   workflow_dispatch:
 
 permissions: read-all
