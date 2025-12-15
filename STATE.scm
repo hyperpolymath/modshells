@@ -1,59 +1,22 @@
-;;; STATE.scm --- modshells conversation checkpoint
-;;; Format: Guile Scheme S-expressions
-;;; Schema: RSR STATE v2.0
+;;; STATE.scm — modshells
+;; SPDX-License-Identifier: AGPL-3.0-or-later
+;; SPDX-FileCopyrightText: 2025 Jonathan D.A. Jewell
 
-(define state
-  `((metadata
-     (format-version . "2.0")
-     (schema-version . "2025-12-10")
-     (project . "modshells")
-     (created . "2025-12-10T19:03:55+00:00")
-     (updated . "2025-12-10T19:03:55+00:00"))
+(define metadata
+  '((version . "0.1.0") (updated . "2025-12-15") (project . "modshells")))
 
-    (position
-     (summary . "RSR-compliant project")
-     (phase . implementation)
-     (maturity . alpha)
-     (rsr-tier . infrastructure)
-     (primary-language . "guile")
-     (domain . "General"))
+(define current-position
+  '((phase . "v0.1 - Initial Setup")
+    (overall-completion . 25)
+    (components ((rsr-compliance ((status . "complete") (completion . 100)))))))
 
-    (context
-     (last-session . "2025-12-10")
-     (focus-area . "Initial standardization")
-     (blockers . ())
-     (decisions-pending . ()))
+(define blockers-and-issues '((critical ()) (high-priority ())))
 
-    (implementations
-     ((name . "Initial setup")
-      (status . complete)
-      (files . ())
-      (notes . "Project scaffolding")))
+(define critical-next-actions
+  '((immediate (("Verify CI/CD" . high))) (this-week (("Expand tests" . medium)))))
 
-    (issues
-     (active . ())
-     (resolved . ())
-     (known-limitations . ())
-     (technical-debt . ()))
+(define session-history
+  '((snapshots ((date . "2025-12-15") (session . "initial") (notes . "SCM files added")))))
 
-    (roadmap
-     (current-version . "0.1.0")
-     (next-milestone . "MVP")
-     (version-plan
-      ((version . "0.2.0")
-       (features . ())
-       (target . "2025-Q1"))))
-
-    (ecosystem
-     (part-of . ("RSR Framework"))
-     (depends-on . ())
-     (integrates-with . ())
-     (supersedes . ()))
-
-    (session-files
-     ())
-
-    (notes
-     "Standardized with RSR compliance.")))
-
-state
+(define state-summary
+  '((project . "modshells") (completion . 25) (blockers . 0) (updated . "2025-12-15")))
