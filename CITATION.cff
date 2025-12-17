@@ -7,8 +7,9 @@ title: "modshells"
 message: "If you use this software, please cite it as below."
 type: software
 authors:
-  - family-names: "Polymath"
-    given-names: "Hyper"
+  - family-names: "Jewell"
+    given-names: "Jonathan D.A."
+    alias: "hyperpolymath"
     email: "hyperpolymath@proton.me"
     affiliation: "Rhodium Standard / Independent Researcher"
 repository-code: "https://github.com/hyperpolymath/modshells"
