@@ -2,7 +2,7 @@
 # https://securitytxt.org/
 
 Contact: security@hyperpolymath.org
-Expires: {{EXPIRY_DATE}}
+Expires: 2026-12-17T00:00:00.000Z
 Encryption: https://hyperpolymath.org/gpg/security.asc
 Preferred-Languages: en, nl
 Canonical: https://github.com/hyperpolymath/modshells/.well-known/security.txt

@@ -1,12 +1,16 @@
+;; SPDX-License-Identifier: AGPL-3.0-or-later
+;; SPDX-FileCopyrightText: 2025 Jonathan D.A. Jewell
+;;
 ;; modshells - Guix Package Definition
 ;; Run: guix shell -D -f guix.scm
 
 (use-modules (guix packages)
              (guix gexp)
              (guix git-download)
-             (guix build-system gnu)
+             (guix build-system gnat)
              ((guix licenses) #:prefix license:)
-             (gnu packages base))
+             (gnu packages base)
+             (gnu packages ada))
 
 (define-public modshells
   (package
@@ -15,9 +19,23 @@
     (source (local-file "." "modshells-checkout"
                         #:recursive? #t
                         #:select? (git-predicate ".")))
-    (build-system gnu-build-system)
-    (synopsis "Guix channel/infrastructure")
-    (description "Guix channel/infrastructure - part of the RSR ecosystem.")
+    (build-system gnat-build-system)
+    (arguments
+     '(#:gpr-file "modshells.gpr"
+       #:phases
+       (modify-phases %standard-phases
+         (add-before 'build 'create-output-dirs
+           (lambda _
+             (mkdir-p "obj")
+             (mkdir-p "bin")
+             #t)))))
+    (native-inputs
+     (list gprbuild gnat))
+    (synopsis "Declarative shell configuration manager")
+    (description
+     "Modshells is a declarative configuration manager for shell environments.
+It establishes modular shell configuration directories and provides idempotent
+initialization of shell-agnostic configurations. Part of the RSR ecosystem.")
     (home-page "https://github.com/hyperpolymath/modshells")
     (license license:agpl3+)))
 

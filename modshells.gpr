@@ -2,7 +2,7 @@
 -- GNAT Project File for the modshells application.
 project Modshells is
    -- Point to the correct main file
-   for Main use ("src/shell_manager/shell_manager.adb");
+   for Main use ("modshells.adb");
    -- Include all source directories
    for Source_Dirs use ("src/**");
    -- Object and executable directories
