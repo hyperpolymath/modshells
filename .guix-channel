@@ -1,7 +1,0 @@
-;; modshells - Guix Channel
-;; Add to ~/.config/guix/channels.scm
-
-(channel
- (version 0)
- (url "https://github.com/hyperpolymath/modshells")
- (branch "main"))
