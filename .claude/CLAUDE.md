@@ -9,11 +9,17 @@
 | **ReScript** | Primary application code | Compiles to JS, type-safe |
 | **Deno** | Runtime & package management | Replaces Node/npm/bun |
 | **Rust** | Performance-critical, systems, WASM | Preferred for CLI tools |
+| **Tauri 2.0+** | Mobile apps (iOS/Android) | Rust backend + web UI |
+| **Dioxus** | Mobile apps (native UI) | Pure Rust, React-like |
+| **Gleam** | Backend services | Runs on BEAM or compiles to JS |
 | **Bash/POSIX Shell** | Scripts, automation | Keep minimal |
 | **JavaScript** | Only where ReScript cannot | MCP protocol glue, Deno APIs |
 | **Python** | SaltStack only | No other Python permitted |
 | **Nickel** | Configuration language | For complex configs |
 | **Guile Scheme** | State/meta files | STATE.scm, META.scm, ECOSYSTEM.scm |
+| **Julia** | Batch scripts, data processing | Per RSR |
+| **OCaml** | AffineScript compiler | Language-specific |
+| **Ada** | Safety-critical systems | Where required |
 
 ### BANNED - Do Not Use
 
@@ -26,7 +32,19 @@
 | pnpm/yarn | Deno |
 | Go | Rust |
 | Python (general) | ReScript/Rust |
-| Java/Kotlin | Rust |
+| Java/Kotlin | Rust/Tauri/Dioxus |
+| Swift | Tauri/Dioxus |
+| React Native | Tauri/Dioxus |
+| Flutter/Dart | Tauri/Dioxus |
+
+### Mobile Development
+
+**No exceptions for Kotlin/Swift** - use Rust-first approach:
+
+1. **Tauri 2.0+** - Web UI (ReScript) + Rust backend, MIT/Apache-2.0
+2. **Dioxus** - Pure Rust native UI, MIT/Apache-2.0
+
+Both are FOSS with independent governance (no Big Tech).
 
 ### Enforcement Rules
 
@@ -35,46 +53,18 @@
 3. **No node_modules in production** - Deno caches deps automatically
 4. **No Go code** - Use Rust instead
 5. **Python only for SaltStack** - All other Python must be rewritten
+6. **No Kotlin/Swift for mobile** - Use Tauri 2.0+ or Dioxus
 
-### ReScript Conventions
+### Package Management
 
-- Output format: ES6 modules (`"module": "es6"` in rescript.json)
-- File extension: `.res` (compiled to `.res.js`)
-- Use `@rescript/core` for stdlib
-- Bindings in `src/bindings/` directory
+- **Primary**: Guix (guix.scm)
+- **Fallback**: Nix (flake.nix)
+- **JS deps**: Deno (deno.json imports)
 
-### Deno Conventions
+### Security Requirements
 
-- Import maps in `deno.json`
-- Permissions explicitly declared
-- Use `Deno.Command` not shell execution
-- Format with `deno fmt`
-- Lint with `deno lint`
-
-### Build Commands
-
-```bash
-# ReScript build
-deno task res:build   # or: npx rescript build
-
-# Run server
-deno task start
-
-# Development
-deno task dev
-```
-
-### Migration Priority
-
-When encountering banned languages:
-1. **Immediate**: Block new code in banned languages
-2. **Short-term**: Convert TypeScript to ReScript
-3. **Medium-term**: Replace Node/npm with Deno
-4. **Long-term**: Rewrite Go/Python in Rust
-
-## Code Quality
-
-- SPDX license headers on all files
+- No MD5/SHA1 for security (use SHA256+)
+- HTTPS only (no HTTP URLs)
+- No hardcoded secrets
 - SHA-pinned dependencies
-- No shell metacharacters in commands
-- Whitelist approach for CLI subcommands
+- SPDX license headers on all files
