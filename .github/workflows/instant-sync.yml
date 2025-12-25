@@ -1,0 +1,33 @@
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Instant Forge Sync - Triggers propagation to all forges on push/release
+name: Instant Sync
+
+on:
+  push:
+    branches: [main, master]
+  release:
+    types: [published]
+
+permissions:
+  contents: read
+
+jobs:
+  dispatch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Propagation
+        uses: peter-evans/repository-dispatch@ff45666b9427631e3450c54a1bcbee4d9ff4d7c0 # v3
+        with:
+          token: ${{ secrets.FARM_DISPATCH_TOKEN }}
+          repository: hyperpolymath/.git-private-farm
+          event-type: propagate
+          client-payload: |-
+            {
+              "repo": "${{ github.event.repository.name }}",
+              "ref": "${{ github.ref }}",
+              "sha": "${{ github.sha }}",
+              "forges": ""
+            }
+
+      - name: Confirm
+        run: echo "::notice::Propagation triggered for ${{ github.event.repository.name }}"
