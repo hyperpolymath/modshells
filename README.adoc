@@ -1,3 +1,266 @@
-= 🐚 Modular Shells: A Declarative Configuration Manager
+= Modshells: Modular Shell Configuration Manager
+:toc: macro
+:toc-title: Contents
+:toclevels: 3
+:icons: font
+:source-highlighter: rouge
+:experimental:
 
-(See full README structure from the previous response. This is a placeholder.)
+A declarative, idempotent configuration manager for modularising shell environments.
+Written in Ada for safety-critical reliability.
+
+toc::[]
+
+== Overview
+
+Modshells transforms monolithic shell configuration files (`.bashrc`, `.zshrc`, etc.) into a modular directory structure. Instead of maintaining a single, sprawling configuration file, Modshells organises configurations into logical categories that are automatically sourced.
+
+=== The Problem
+
+Traditional shell configuration becomes unwieldy:
+
+* Single files grow to hundreds of lines
+* Related configurations scattered throughout
+* Difficult to share configurations across shells
+* No clear separation of concerns
+* Risky manual editing of critical dotfiles
+
+=== The Solution
+
+Modshells creates a standardised modular structure:
+
+[source]
+----
+~/.config/nushell/modshells/
+├── core/       # Essential shell settings, prompts, paths
+├── tools/      # Tool-specific configs (git, fzf, starship)
+├── misc/       # Miscellaneous aliases and functions
+├── os/         # OS-specific configurations
+└── ui/         # Visual customisations, themes
+----
+
+Each directory contains shell-agnostic or shell-specific configuration snippets that are automatically sourced in order.
+
+== Features
+
+=== Multi-Shell Support
+
+Modshells detects and manages configurations for ten shells:
+
+[cols="1,1,1"]
+|===
+| Shell | Status | Config File
+
+| Bash | ✓ Supported | `.bashrc`
+| Zsh | ✓ Supported | `.zshrc`
+| Fish | ✓ Supported | `config.fish`
+| Nushell | ✓ Primary | `config.nu`
+| Ion | ✓ Supported | `initrc`
+| Oils (OSH/YSH) | ✓ Supported | `.oshrc`
+| Tcsh | ✓ Supported | `.tcshrc`
+| Ksh | ✓ Supported | `.kshrc`
+| Dash | ◐ Limited | `ENV` file
+| PowerShell | ✓ Supported | `profile.ps1`
+|===
+
+=== Idempotent Operations
+
+All Modshells operations are idempotent:
+
+* Running the tool multiple times produces the same result
+* Existing configurations are never destroyed
+* Automatic backup before any modification
+* Signature-based detection of already-modularised shells
+
+=== Safety-First Design
+
+Built in Ada for maximum reliability:
+
+* Strong static typing catches errors at compile time
+* Exception handling ensures graceful failure
+* No unsafe memory operations
+* Deterministic behaviour
+
+== Architecture
+
+=== Package Structure
+
+[source]
+----
+src/
+├── main/
+│   └── modshells.adb          # Entry point
+├── config_store/
+│   ├── config_store.ads       # Configuration path interface
+│   └── config_store.adb       # Environment & path resolution
+└── shell_manager/
+    ├── shell_manager.ads      # Shell operations interface
+    └── shell_manager.adb      # Detection, creation, modularisation
+----
+
+=== Core Components
+
+`Config_Store`:: Resolves the modshells root path from `MODSHELLS_CONFIG_PATH` environment variable or defaults to `~/.config/nushell/modshells`
+
+`Shell_Manager`:: Handles shell detection, directory creation, modularisation checking, and configuration injection
+
+=== Signature-Based Idempotency
+
+Modshells uses a signature comment to detect previously modularised configurations:
+
+[source,bash]
+----
+# MODSHELLS_START - DO NOT REMOVE THIS LINE
+# ... sourcing logic ...
+# MODSHELLS_END
+----
+
+This enables safe re-execution without duplicate injections.
+
+== Installation
+
+=== Prerequisites
+
+* GNAT (Ada compiler) - typically via `gnat` or `gcc-ada` package
+* GPRBuild (GNAT project builder)
+
+=== Building from Source
+
+[source,bash]
+----
+# Clone the repository
+git clone https://github.com/hyperpolymath/modshells.git
+cd modshells
+
+# Build with GPRBuild
+gprbuild -p -j0 modshells.gpr
+
+# Binary is in bin/
+./bin/modshells
+----
+
+=== Package Managers
+
+[source,bash]
+----
+# Guix (primary)
+guix install modshells
+
+# Nix (alternative)
+nix profile install github:hyperpolymath/modshells
+----
+
+== Usage
+
+=== Basic Initialisation
+
+[source,bash]
+----
+# Initialise modular structure in default location
+modshells
+
+# Use custom configuration path
+export MODSHELLS_CONFIG_PATH="$HOME/.config/shells/modular"
+modshells
+----
+
+=== Directory Structure
+
+After initialisation, populate directories with configuration snippets:
+
+[source,bash]
+----
+# Add a tool configuration
+echo 'alias g="git"' > ~/.config/nushell/modshells/tools/git.sh
+
+# Add OS-specific config
+echo 'export BROWSER=firefox' > ~/.config/nushell/modshells/os/linux.sh
+----
+
+Files are sourced alphabetically. Use numeric prefixes for ordering:
+
+[source]
+----
+core/
+├── 00-path.sh
+├── 10-prompt.sh
+└── 20-history.sh
+----
+
+== Configuration
+
+=== Environment Variables
+
+`MODSHELLS_CONFIG_PATH`:: Override default configuration root directory. Default: `~/.config/nushell/modshells`
+
+=== Modular Categories
+
+[cols="1,3"]
+|===
+| Directory | Purpose
+
+| `core/`
+| Essential shell settings: PATH modifications, prompt configuration, history settings, shell options
+
+| `tools/`
+| Tool integrations: git aliases, fzf configuration, starship prompt, direnv, asdf
+
+| `misc/`
+| General aliases, utility functions, one-off customisations
+
+| `os/`
+| OS-specific configurations: Linux vs macOS differences, distro-specific settings
+
+| `ui/`
+| Visual customisations: colours, themes, terminal-specific settings
+|===
+
+== Development Status
+
+Current version: **v0.0 (Alpha)**
+
+=== Implemented
+
+* [x] Core Ada package structure
+* [x] Idempotent directory creation
+* [x] Configuration path resolution
+* [x] Environment variable support
+* [x] Shell type enumeration (10 shells)
+* [x] Signature-based modularisation check
+* [x] GNAT project build configuration
+* [x] CI/CD pipeline (GitHub Actions)
+
+=== In Progress
+
+* [ ] Actual shell detection (currently stubbed)
+* [ ] Configuration file backup
+* [ ] Source injection logic
+* [ ] Shell-specific sourcing syntax
+
+See link:ROADMAP.adoc[ROADMAP.adoc] for detailed development plans.
+
+== Contributing
+
+Contributions welcome. See link:CONTRIBUTING.md[CONTRIBUTING.md] for guidelines.
+
+This project follows the Rhodium Standard Repository (RSR) conventions.
+
+=== Language Policy
+
+This project adheres to the Hyperpolymath Standard:
+
+* **Ada** for core application logic
+* **Nushell** for automation scripts
+* **Bash/POSIX** for git hooks only
+
+See `.claude/CLAUDE.md` for complete language policy.
+
+== License
+
+SPDX-License-Identifier: `AGPL-3.0-or-later OR MIT`
+
+Dual-licensed under GNU Affero General Public License v3.0 or later, or MIT License. See link:LICENSE.txt[LICENSE.txt] for details.
+
+== Citation
+
+For academic use, see link:docs/CITATIONS.adoc[CITATIONS.adoc] for BibTeX, Harvard, OSCOLA, MLA, and APA 7 formats.
