@@ -223,6 +223,9 @@ Modularising fish...
 # Use custom configuration path
 export MODSHELLS_CONFIG_PATH="$HOME/.config/shells/modular"
 modshells
+
+# Target specific shells only
+modshells init --shell=bash,zsh
 ----
 
 === Populating Your Configuration
