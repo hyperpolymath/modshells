@@ -276,6 +276,97 @@ core/
 | Visual customisations: colours, themes, terminal-specific settings
 |===
 
+== Examples
+
+The `examples/` directory contains ready-to-use configuration snippets:
+
+[source,bash]
+----
+# Copy all examples to your modshells directory
+cp -r examples/* ~/.config/nushell/modshells/
+
+# Or copy individual files
+cp examples/tools/git.sh ~/.config/nushell/modshells/tools/
+cp examples/misc/aliases.sh ~/.config/nushell/modshells/misc/
+----
+
+=== Available Examples
+
+[cols="1,2"]
+|===
+| File | Description
+
+| `core/00-path.sh`
+| PATH modifications for ~/.local/bin, Cargo, Go, Deno
+
+| `core/10-history.sh`
+| History size, deduplication, timestamps, ignore patterns
+
+| `core/20-options.sh`
+| Shell options (extglob, cdspell, globstar), editor, locale
+
+| `tools/git.sh`
+| Git aliases (gs, ga, gc, gp, gl, glog, etc.)
+
+| `tools/fzf.sh`
+| Fuzzy finder setup with fd integration
+
+| `tools/starship.sh`
+| Starship prompt initialisation
+
+| `misc/aliases.sh`
+| Navigation (.., ...), ls variants, safety nets (rm -i)
+
+| `misc/functions.sh`
+| Utility functions: mkcd, extract, ff, fd, backup
+
+| `os/linux.sh`
+| Package manager aliases, systemd shortcuts
+
+| `os/macos.sh`
+| Homebrew setup, macOS-specific utilities
+
+| `ui/colours.sh`
+| Terminal colours, GCC colours, man page colours
+
+| `ui/prompt.sh`
+| Custom bash prompt with git branch (fallback for non-starship)
+|===
+
+== Testing
+
+=== Smoke Test
+
+Run the shell-based smoke test to verify the build:
+
+[source,bash]
+----
+# From the repository root
+./tests/smoke_test.sh
+----
+
+The smoke test verifies:
+
+* Source files exist
+* Examples have correct structure
+* SPDX license headers present
+* Binary runs (if built)
+* Directory creation works
+* Idempotency check passes
+
+=== Unit Tests
+
+Build and run the Ada unit tests:
+
+[source,bash]
+----
+# Build tests
+gprbuild -p -j0 -P tests/tests.gpr
+
+# Run tests
+./bin/test_shell_manager
+----
+
 == Development Status
 
 Current version: **v0.1**
