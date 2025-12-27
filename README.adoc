@@ -11,11 +11,46 @@ Written in Ada for safety-critical reliability.
 
 toc::[]
 
-== Overview
+== Deliverable
 
-Modshells transforms monolithic shell configuration files (`.bashrc`, `.zshrc`, etc.) into a modular directory structure. Instead of maintaining a single, sprawling configuration file, Modshells organises configurations into logical categories that are automatically sourced.
+**Modshells** is a command-line tool that transforms monolithic shell configuration files into a modular, maintainable directory structure. The tool:
 
-=== The Problem
+1. **Creates** a standardised directory hierarchy for shell configurations
+2. **Detects** installed shells on your system (Bash, Zsh, Fish, Nushell, and 6 others)
+3. **Injects** sourcing logic into shell configuration files (with backup)
+4. **Ensures idempotency** - safe to run multiple times without side effects
+
+=== Current Status
+
+[cols="1,1"]
+|===
+| Aspect | Status
+
+| Directory creation | Working
+| Shell detection | Stub (returns hardcoded list)
+| Config backup | Not implemented
+| Source injection | Not implemented
+|===
+
+*This is alpha software.* The core architecture is complete, but the primary feature (modularising shell configs) is not yet functional. See <<Development Status>> for details.
+
+=== What You Get
+
+After running `modshells`, your shell configurations are organised into:
+
+[source]
+----
+~/.config/nushell/modshells/
+├── core/       # PATH, prompt, history, shell options
+├── tools/      # git, fzf, starship, direnv configs
+├── misc/       # Custom aliases and functions
+├── os/         # Linux vs macOS differences
+└── ui/         # Themes and visual settings
+----
+
+Each shell's config file (`.bashrc`, `.zshrc`, etc.) sources these directories automatically. Add a new alias? Drop a file into `misc/`. OS-specific tweak? Put it in `os/`. Done.
+
+== The Problem
 
 Traditional shell configuration becomes unwieldy:
 
@@ -25,21 +60,9 @@ Traditional shell configuration becomes unwieldy:
 * No clear separation of concerns
 * Risky manual editing of critical dotfiles
 
-=== The Solution
+== The Solution
 
-Modshells creates a standardised modular structure:
-
-[source]
-----
-~/.config/nushell/modshells/
-├── core/       # Essential shell settings, prompts, paths
-├── tools/      # Tool-specific configs (git, fzf, starship)
-├── misc/       # Miscellaneous aliases and functions
-├── os/         # OS-specific configurations
-└── ui/         # Visual customisations, themes
-----
-
-Each directory contains shell-agnostic or shell-specific configuration snippets that are automatically sourced in order.
+Modshells creates a standardised modular structure with shell-agnostic or shell-specific configuration snippets that are automatically sourced in order.
 
 == Features
 
@@ -152,21 +175,43 @@ nix profile install github:hyperpolymath/modshells
 
 == Usage
 
-=== Basic Initialisation
+=== Current Functionality (v0.0)
 
 [source,bash]
 ----
-# Initialise modular structure in default location
+# Build and run
+gprbuild -p -j0 modshells.gpr
+./bin/modshells
+----
+
+Output:
+[source]
+----
+Starting modshells initialisation...
+Configuration path: /home/user/.config/nushell/modshells
+Modular directories created idempotently.
+----
+
+This creates the directory structure. Shell detection and config injection are not yet functional.
+
+=== Planned Functionality (v0.1+)
+
+[source,bash]
+----
+# Initialise modular structure and inject into all detected shells
 modshells
 
 # Use custom configuration path
 export MODSHELLS_CONFIG_PATH="$HOME/.config/shells/modular"
 modshells
+
+# Target specific shells only
+modshells init --shell=bash,zsh
 ----
 
-=== Directory Structure
+=== Populating Your Configuration
 
-After initialisation, populate directories with configuration snippets:
+After initialisation, add configuration snippets:
 
 [source,bash]
 ----
@@ -219,25 +264,48 @@ core/
 
 Current version: **v0.0 (Alpha)**
 
-=== Implemented
+=== Working Now
 
-* [x] Core Ada package structure
-* [x] Idempotent directory creation
-* [x] Configuration path resolution
-* [x] Environment variable support
-* [x] Shell type enumeration (10 shells)
-* [x] Signature-based modularisation check
-* [x] GNAT project build configuration
-* [x] CI/CD pipeline (GitHub Actions)
+[cols="1,2"]
+|===
+| Feature | Description
 
-=== In Progress
+| Directory creation
+| Idempotently creates `core/`, `tools/`, `misc/`, `os/`, `ui/` structure
 
-* [ ] Actual shell detection (currently stubbed)
-* [ ] Configuration file backup
-* [ ] Source injection logic
-* [ ] Shell-specific sourcing syntax
+| Path resolution
+| Reads `MODSHELLS_CONFIG_PATH` or defaults to `~/.config/nushell/modshells`
 
-See link:ROADMAP.adoc[ROADMAP.adoc] for detailed development plans.
+| Shell enumeration
+| Defines 10 shell types (Bash, Zsh, Fish, Nushell, Ion, Oils, Tcsh, Ksh, Dash, PowerShell)
+
+| Build system
+| GPRBuild project files with CI/CD (GitHub Actions)
+
+| Idempotency markers
+| Signature-based detection to prevent duplicate injections
+|===
+
+=== Not Yet Implemented (Stubs)
+
+[cols="1,2"]
+|===
+| Feature | Current State
+
+| Shell detection
+| Returns hardcoded list (Nushell, Bash, Zsh); needs `which`/`command -v` checks
+
+| Config file backup
+| Not implemented; required before modifying dotfiles
+
+| Source injection
+| Not implemented; the core feature that modifies `.bashrc`, `.zshrc`, etc.
+
+| Shell-specific syntax
+| Not implemented; each shell needs different sourcing syntax
+|===
+
+See link:ROADMAP.adoc[ROADMAP.adoc] for the complete development plan.
 
 == Contributing
 
