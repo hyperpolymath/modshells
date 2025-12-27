@@ -1,0 +1,28 @@
+-- tests/tests.gpr
+-- SPDX-License-Identifier: AGPL-3.0-or-later OR MIT
+-- GPRBuild project for modshells unit tests
+
+with "../modshells.gpr";
+
+project Tests is
+
+   for Languages use ("Ada");
+   for Source_Dirs use (".", "../src/shell_manager", "../src/config_store");
+   for Object_Dir use "../obj/tests";
+   for Exec_Dir use "../bin";
+   for Main use ("test_shell_manager.adb");
+
+   package Compiler is
+      for Default_Switches ("Ada") use
+        ("-g",           -- Debug info
+         "-gnatwa",      -- All warnings
+         "-gnatVa",      -- All validity checks
+         "-gnato",       -- Overflow checking
+         "-gnat2012");   -- Ada 2012 mode
+   end Compiler;
+
+   package Binder is
+      for Default_Switches ("Ada") use ("-E");  -- Store tracebacks
+   end Binder;
+
+end Tests;

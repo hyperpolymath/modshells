@@ -1,0 +1,69 @@
+= Modshells Example Configurations
+:toc:
+
+Example shell configuration snippets for use with Modshells.
+
+== Usage
+
+Copy the snippets you want into your modshells directory:
+
+[source,bash]
+----
+# Copy all examples
+cp -r examples/* ~/.config/nushell/modshells/
+
+# Or copy individual files
+cp examples/tools/git.sh ~/.config/nushell/modshells/tools/
+----
+
+== Directory Structure
+
+[cols="1,3"]
+|===
+| Directory | Purpose
+
+| `core/`
+| Essential settings loaded first (PATH, history, shell options)
+
+| `tools/`
+| Tool-specific configurations (git, fzf, starship)
+
+| `misc/`
+| General aliases and utility functions
+
+| `os/`
+| Operating system specific settings (Linux, macOS)
+
+| `ui/`
+| Visual customisations (colours, prompt)
+|===
+
+== File Naming
+
+Files are sourced alphabetically. Use numeric prefixes to control load order:
+
+* `00-*.sh` - Load first (PATH, critical settings)
+* `10-*.sh` - Load early (history, options)
+* `20-*.sh` - Load later (depends on earlier settings)
+* No prefix - Load in alphabetical order
+
+== Customisation
+
+These examples are starting points. Modify them to suit your workflow:
+
+1. Copy the file to your modshells directory
+2. Edit to add/remove aliases and settings
+3. Restart your shell or run `source ~/.bashrc`
+
+== Shell Compatibility
+
+These examples use POSIX-compatible syntax and work with:
+
+* Bash
+* Zsh
+* Ksh
+* Dash (limited)
+* Oils (OSH/YSH)
+
+For Fish, Nushell, or PowerShell, you'll need to translate the syntax.
+See the main README for shell-specific sourcing blocks.
