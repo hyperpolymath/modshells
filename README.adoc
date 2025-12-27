@@ -26,13 +26,13 @@ toc::[]
 |===
 | Aspect | Status
 
-| Directory creation | Working
-| Shell detection | Stub (returns hardcoded list)
-| Config backup | Not implemented
-| Source injection | Not implemented
+| Directory creation | ✓ Working
+| Shell detection | ✓ Working (checks /usr/bin, /bin, /usr/local/bin, /opt/homebrew/bin)
+| Config backup | ✓ Working (timestamped backups before modification)
+| Source injection | ✓ Working (shell-specific syntax for all 10 shells)
 |===
 
-*This is alpha software.* The core architecture is complete, but the primary feature (modularising shell configs) is not yet functional. See <<Development Status>> for details.
+*Version 0.1* - Core functionality complete. The tool detects installed shells, backs up configs, and injects modular sourcing blocks.
 
 === What You Get
 
@@ -175,7 +175,7 @@ nix profile install github:hyperpolymath/modshells
 
 == Usage
 
-=== Current Functionality (v0.0)
+=== Basic Usage
 
 [source,bash]
 ----
@@ -184,23 +184,42 @@ gprbuild -p -j0 modshells.gpr
 ./bin/modshells
 ----
 
-Output:
+Example output:
 [source]
 ----
-Starting modshells initialisation...
+=== Modshells v0.1 ===
 Configuration path: /home/user/.config/nushell/modshells
-Modular directories created idempotently.
+
+Creating modular directory structure...
+  Directories ready: core, tools, misc, os, ui
+
+Detecting installed shells...
+  bash: [installed]
+  dash: [not found]
+  fish: [installed]
+  ion: [not found]
+  nushell: [installed]
+  tcsh: [not found]
+  zsh: [installed]
+  oils: [not found]
+  pwsh: [not found]
+  ksh: [not found]
+
+Modularising shell configurations...
+Modularising bash...
+  Backup created: /home/user/.bashrc.modshells-backup-20250101-120000
+  Injected modshells sourcing block.
+Modularising fish...
+  Injected modshells sourcing block.
+...
+
+=== Modshells complete ===
 ----
 
-This creates the directory structure. Shell detection and config injection are not yet functional.
-
-=== Planned Functionality (v0.1+)
+=== Custom Configuration Path
 
 [source,bash]
 ----
-# Initialise modular structure and inject into all detected shells
-modshells
-
 # Use custom configuration path
 export MODSHELLS_CONFIG_PATH="$HOME/.config/shells/modular"
 modshells
@@ -262,9 +281,9 @@ core/
 
 == Development Status
 
-Current version: **v0.0 (Alpha)**
+Current version: **v0.1**
 
-=== Working Now
+=== Implemented Features
 
 [cols="1,2"]
 |===
@@ -276,36 +295,33 @@ Current version: **v0.0 (Alpha)**
 | Path resolution
 | Reads `MODSHELLS_CONFIG_PATH` or defaults to `~/.config/nushell/modshells`
 
-| Shell enumeration
-| Defines 10 shell types (Bash, Zsh, Fish, Nushell, Ion, Oils, Tcsh, Ksh, Dash, PowerShell)
+| Shell detection
+| Checks `/usr/bin`, `/bin`, `/usr/local/bin`, `/opt/homebrew/bin` for shell binaries
+
+| Config file backup
+| Creates timestamped backups (`.modshells-backup-YYYYMMDD-HHMMSS`) before modification
+
+| Source injection
+| Appends shell-specific sourcing blocks with `MODSHELLS_START`/`END` markers
+
+| Shell-specific syntax
+| Generates correct sourcing code for all 10 shells (POSIX, Fish, Nushell, Tcsh, Ion, PowerShell)
+
+| Idempotency
+| Signature-based detection prevents duplicate injections
 
 | Build system
 | GPRBuild project files with CI/CD (GitHub Actions)
-
-| Idempotency markers
-| Signature-based detection to prevent duplicate injections
 |===
 
-=== Not Yet Implemented (Stubs)
+=== Future Enhancements
 
-[cols="1,2"]
-|===
-| Feature | Current State
+See link:ROADMAP.adoc[ROADMAP.adoc] for planned features including:
 
-| Shell detection
-| Returns hardcoded list (Nushell, Bash, Zsh); needs `which`/`command -v` checks
-
-| Config file backup
-| Not implemented; required before modifying dotfiles
-
-| Source injection
-| Not implemented; the core feature that modifies `.bashrc`, `.zshrc`, etc.
-
-| Shell-specific syntax
-| Not implemented; each shell needs different sourcing syntax
-|===
-
-See link:ROADMAP.adoc[ROADMAP.adoc] for the complete development plan.
+* Command-line arguments (`--shell=bash,zsh`, `--dry-run`)
+* Shell-agnostic `.modshells` config format
+* Configuration drift detection
+* Snippet management commands
 
 == Contributing
 
