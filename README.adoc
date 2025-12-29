@@ -1,4 +1,6 @@
 = Modshells: Modular Shell Configuration Manager
+
+image:https://img.shields.io/badge/license-AGPL--3.0-blue.svg[AGPL-3.0,link="https://www.gnu.org/licenses/agpl-3.0"] image:https://img.shields.io/badge/philosophy-Palimpsest-purple.svg[Palimpsest,link="https://github.com/hyperpolymath/palimpsest-licence"]
 :toc: macro
 :toc-title: Contents
 :toclevels: 3
