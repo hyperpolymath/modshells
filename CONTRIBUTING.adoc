@@ -1,0 +1,20 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
+= Contributing Guide
+
+== Getting Started
+
+1. Fork the repository
+2. Create a feature branch from `main`
+3. Sign off commits (`git commit -s`)
+4. Submit a pull request
+
+== Commit Guidelines
+
+* Conventional commits: `type(scope): description`
+* Sign all commits (DCO required)
+* Atomic, focused commits
+
+== License
+
+Contributions licensed under project license.
+
