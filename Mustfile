@@ -1,0 +1,14 @@
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Mustfile - hyperpolymath mandatory checks
+# See: https://github.com/hyperpolymath/mustfile
+
+version: 1
+
+checks:
+  - name: security
+    run: just lint
+  - name: tests
+    run: just test
+  - name: format
+    run: just fmt
+
