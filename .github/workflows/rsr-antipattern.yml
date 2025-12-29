@@ -1,0 +1,58 @@
+# SPDX-License-Identifier: AGPL-3.0-or-later
+name: RSR Language Policy
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions: read-all
+
+jobs:
+  check-banned-patterns:
+    name: Check for banned languages/patterns
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
+      
+      - name: Check for TypeScript
+        run: |
+          if find . -name "*.ts" -o -name "*.tsx" | grep -v node_modules | grep -q .; then
+            echo "::error::TypeScript files found! Use ReScript instead (per RSR policy)"
+            exit 1
+          fi
+          echo "✓ No TypeScript files found"
+      
+      - name: Check for Go
+        run: |
+          if find . -name "*.go" | grep -q .; then
+            echo "::error::Go files found! Use Rust instead (per RSR policy)"
+            exit 1
+          fi
+          echo "✓ No Go files found"
+      
+      - name: Check for npm/Node artifacts
+        run: |
+          if [ -f "package-lock.json" ] || [ -d "node_modules" ]; then
+            echo "::error::npm artifacts found! Use Deno instead (per RSR policy)"
+            exit 1
+          fi
+          echo "✓ No npm artifacts found"
+      
+      - name: Check for Python (non-SaltStack)
+        run: |
+          banned_py=$(find . -name "*.py" | grep -v -E "(salt|pillar|states|_modules|_states)" | head -1)
+          if [ -n "$banned_py" ]; then
+            echo "::error::Python files found outside SaltStack! Use ReScript/Rust (per RSR policy)"
+            exit 1
+          fi
+          echo "✓ No banned Python files found"
+      
+      - name: Check for Makefiles
+        run: |
+          if [ -f "Makefile" ] || [ -f "makefile" ] || find . -name "*.mk" | grep -q .; then
+            echo "::error::Makefile found! Use Justfile or Mustfile instead (per RSR policy)"
+            exit 1
+          fi
+          echo "✓ No Makefiles found"
