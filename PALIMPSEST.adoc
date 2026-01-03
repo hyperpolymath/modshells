@@ -3,7 +3,7 @@
 :toc-placement!:
 
 image:https://img.shields.io/badge/license-MPL--2.0-blue.svg[MPL-2.0,link="https://www.mozilla.org/en-US/MPL/2.0/"]
-image:https://img.shields.io/badge/philosophy-Palimpsest-purple.svg[Palimpsest,link="https://github.com/hyperpolymath/palimpsest-licence"]
+image:https://img.shields.io/badge/philosophy-Palimpsest-purple.svg[Palimpsest,link="https://github.com/hyperpolymath/palimpsest-license"]
 
 toc::[]
 
@@ -57,7 +57,7 @@ If you are interested in:
 **Please get in touch:**
 
 * GitHub: https://github.com/hyperpolymath
-* Palimpsest Licence repo: https://github.com/hyperpolymath/palimpsest-licence
+* Palimpsest Licence repo: https://github.com/hyperpolymath/palimpsest-license
 
 == Signing Up to Palimpsest
 
