@@ -1,4 +1,4 @@
-# SPDX-License-Identifier: AGPL-3.0-or-later
+# SPDX-License-Identifier: MPL-2.0
 # workflow-linter.yml - Validates GitHub workflows against RSR security standards
 # This workflow can be copied to other repos for consistent enforcement
 name: Workflow Security Linter

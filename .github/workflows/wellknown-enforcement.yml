@@ -1,4 +1,4 @@
-# SPDX-License-Identifier: AGPL-3.0-or-later
+# SPDX-License-Identifier: MPL-2.0
 name: Well-Known Standards (RFC 9116 + RSR)
 on:
   push:
