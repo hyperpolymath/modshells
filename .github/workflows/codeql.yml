@@ -1,15 +1,40 @@
-# SPDX-License-Identifier: MPL-2.0
-# CodeQL disabled - no scannable source code detected
+# SPDX-License-Identifier: AGPL-3.0-or-later
 name: CodeQL Security Analysis
 
 on:
-  workflow_dispatch:  # Manual trigger only
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+  schedule:
+    - cron: '0 6 * * 1'
 
 permissions: read-all
 
 jobs:
-  placeholder:
+  analyze:
     runs-on: ubuntu-latest
-    if: false
+    permissions:
+      contents: read
+      security-events: write
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - language: actions
+            build-mode: none
+
     steps:
-      - run: echo "Enable when source code is added"
+      - name: Checkout
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@662472033e021d55d94146f66f6058822b0b39fd # v3.28.1
+        with:
+          languages: ${{ matrix.language }}
+          build-mode: ${{ matrix.build-mode }}
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@662472033e021d55d94146f66f6058822b0b39fd # v3.28.1
+        with:
+          category: "/language:${{ matrix.language }}"

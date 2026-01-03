@@ -1,0 +1,20 @@
+# SPDX-License-Identifier: AGPL-3.0-or-later
+name: NPM/Bun Blocker
+on: [push, pull_request]
+
+permissions: read-all
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - name: Block npm/bun
+        run: |
+          if [ -f "package-lock.json" ] || [ -f "bun.lockb" ] || [ -f ".npmrc" ]; then
+            echo "❌ npm/bun artifacts detected. Use Deno instead."
+            exit 1
+          fi
+          echo "✅ No npm/bun violations"

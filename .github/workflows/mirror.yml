@@ -1,11 +1,10 @@
-# SPDX-License-Identifier: MPL-2.0
-name: Mirror to GitLab and Bitbucket
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# SPDX-FileCopyrightText: 2025 Jonathan D.A. Jewell
+name: Mirror to Git Forges
 
 on:
   push:
-    branches: [main, master]
-    tags:
-      - 'v*'
+    branches: [main]
   workflow_dispatch:
 
 permissions: read-all
@@ -13,60 +12,133 @@ permissions: read-all
 jobs:
   mirror-gitlab:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-    if: ${{ vars.GITLAB_MIRROR_ENABLED == 'true' }}
-
+    if: vars.GITLAB_MIRROR_ENABLED == 'true'
     steps:
-      - name: Checkout
-        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
         with:
           fetch-depth: 0
 
-      - name: Setup SSH
-        uses: webfactory/ssh-agent@a6f90b1f127823b31d4d4a8d96047790581349bd # v0.9.1
+      - uses: webfactory/ssh-agent@dc588b651fe13675774614f8e6a936a468676387 # v0.9.0
         with:
           ssh-private-key: ${{ secrets.GITLAB_SSH_KEY }}
 
-      - name: Add GitLab to known hosts
+      - name: Mirror to GitLab
         run: |
-          mkdir -p ~/.ssh
           ssh-keyscan -t ed25519 gitlab.com >> ~/.ssh/known_hosts
-
-      - name: Push to GitLab
-        env:
-          REPO_NAME: ${{ github.event.repository.name }}
-        run: |
-          git remote add gitlab git@gitlab.com:hyperpolymath/${REPO_NAME}.git || true
-          git push gitlab HEAD:main --force || git push gitlab HEAD:master --force
-          git push gitlab --tags --force
+          git remote add gitlab git@gitlab.com:hyperpolymath/${{ github.event.repository.name }}.git || true
+          git push --force gitlab main
 
   mirror-bitbucket:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-    if: ${{ vars.BITBUCKET_MIRROR_ENABLED == 'true' }}
-
+    if: vars.BITBUCKET_MIRROR_ENABLED == 'true'
     steps:
-      - name: Checkout
-        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
         with:
           fetch-depth: 0
 
-      - name: Setup SSH
-        uses: webfactory/ssh-agent@a6f90b1f127823b31d4d4a8d96047790581349bd # v0.9.1
+      - uses: webfactory/ssh-agent@dc588b651fe13675774614f8e6a936a468676387 # v0.9.0
         with:
           ssh-private-key: ${{ secrets.BITBUCKET_SSH_KEY }}
 
-      - name: Add Bitbucket to known hosts
+      - name: Mirror to Bitbucket
         run: |
-          mkdir -p ~/.ssh
           ssh-keyscan -t ed25519 bitbucket.org >> ~/.ssh/known_hosts
+          git remote add bitbucket git@bitbucket.org:hyperpolymath/${{ github.event.repository.name }}.git || true
+          git push --force bitbucket main
 
-      - name: Push to Bitbucket
-        env:
-          REPO_NAME: ${{ github.event.repository.name }}
+  mirror-codeberg:
+    runs-on: ubuntu-latest
+    if: vars.CODEBERG_MIRROR_ENABLED == 'true'
+    steps:
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
+        with:
+          fetch-depth: 0
+
+      - uses: webfactory/ssh-agent@dc588b651fe13675774614f8e6a936a468676387 # v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.CODEBERG_SSH_KEY }}
+
+      - name: Mirror to Codeberg
         run: |
-          git remote add bitbucket git@bitbucket.org:hyperpolymath/${REPO_NAME}.git || true
-          git push bitbucket HEAD:main --force || git push bitbucket HEAD:master --force
-          git push bitbucket --tags --force
+          ssh-keyscan -t ed25519 codeberg.org >> ~/.ssh/known_hosts
+          git remote add codeberg git@codeberg.org:hyperpolymath/${{ github.event.repository.name }}.git || true
+          git push --force codeberg main
+
+  mirror-sourcehut:
+    runs-on: ubuntu-latest
+    if: vars.SOURCEHUT_MIRROR_ENABLED == 'true'
+    steps:
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
+        with:
+          fetch-depth: 0
+
+      - uses: webfactory/ssh-agent@dc588b651fe13675774614f8e6a936a468676387 # v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.SOURCEHUT_SSH_KEY }}
+
+      - name: Mirror to SourceHut
+        run: |
+          ssh-keyscan -t ed25519 git.sr.ht >> ~/.ssh/known_hosts
+          git remote add sourcehut git@git.sr.ht:~hyperpolymath/${{ github.event.repository.name }} || true
+          git push --force sourcehut main
+
+  mirror-disroot:
+    runs-on: ubuntu-latest
+    if: vars.DISROOT_MIRROR_ENABLED == 'true'
+    steps:
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
+        with:
+          fetch-depth: 0
+
+      - uses: webfactory/ssh-agent@dc588b651fe13675774614f8e6a936a468676387 # v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.DISROOT_SSH_KEY }}
+
+      - name: Mirror to Disroot
+        run: |
+          ssh-keyscan -t ed25519 git.disroot.org >> ~/.ssh/known_hosts
+          git remote add disroot git@git.disroot.org:hyperpolymath/${{ github.event.repository.name }}.git || true
+          git push --force disroot main
+
+  mirror-gitea:
+    runs-on: ubuntu-latest
+    if: vars.GITEA_MIRROR_ENABLED == 'true'
+    steps:
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
+        with:
+          fetch-depth: 0
+
+      - uses: webfactory/ssh-agent@dc588b651fe13675774614f8e6a936a468676387 # v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.GITEA_SSH_KEY }}
+
+      - name: Mirror to Gitea
+        run: |
+          ssh-keyscan -t ed25519 ${{ vars.GITEA_HOST }} >> ~/.ssh/known_hosts
+          git remote add gitea git@${{ vars.GITEA_HOST }}:hyperpolymath/${{ github.event.repository.name }}.git || true
+          git push --force gitea main
+
+  mirror-radicle:
+    runs-on: ubuntu-latest
+    if: vars.RADICLE_MIRROR_ENABLED == 'true'
+    steps:
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@56f84321dbccf38fb67ce29ab63e4754056677e0 # stable
+        with:
+          toolchain: stable
+
+      - name: Install Radicle
+        run: |
+          # Install via cargo (safer than curl|sh)
+          cargo install radicle-cli --locked
+          echo "$HOME/.cargo/bin" >> $GITHUB_PATH
+
+      - name: Mirror to Radicle
+        run: |
+          echo "${{ secrets.RADICLE_KEY }}" > ~/.radicle/keys/radicle
+          chmod 600 ~/.radicle/keys/radicle
+          rad sync --announce || echo "Radicle sync attempted"
