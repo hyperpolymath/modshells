@@ -173,9 +173,89 @@ Inject sourcing logic into shell configurations.
 * [ ] Import from bash-it
 * [ ] Export to portable format
 
-== Milestone 5: Advanced Features
+== Milestone 5: Comprehensive Validation (NEW)
 
-=== 5.1 Remote Configuration
+The Shell Validator provides comprehensive validation, verification, and security analysis.
+
+=== 5.1 Syntax and Sequence Validation
+
+* [ ] `Validate_Syntax` - Run bash -n and shellcheck
+* [ ] `Validate_Command_Sequence` - Ensure correct ordering (exports before use)
+* [ ] `Detect_Infinite_Loops` - Static analysis for potential loops
+* [ ] `Detect_Skipped_Blocks` - Dead code detection
+
+=== 5.2 Directory and File Validation
+
+* [ ] `Validate_Directory_Structure` - Check modular structure
+* [ ] `Validate_Symlinks` - Verify all symlinks are valid
+* [ ] `Validate_File_Presence` - Check required files exist
+* [ ] `Validate_Completeness` - No orphaned modules
+
+=== 5.3 Permission Validation
+
+* [ ] `Validate_Permissions` - Correct read/write/execute
+* [ ] `Validate_Ownership` - File owned by current user
+* [ ] `Detect_World_Writable` - Security risk detection
+* [ ] `Detect_SUID_SGID` - Inappropriate permission bits
+
+=== 5.4 Duplication Detection
+
+* [ ] `Detect_Duplicate_Aliases` - Find duplicate alias definitions
+* [ ] `Detect_Duplicate_Functions` - Find duplicate function definitions
+* [ ] `Detect_Duplicate_Exports` - Find duplicate exports
+* [ ] `Detect_Path_Duplicates` - Find duplicate PATH entries
+* [ ] `Detect_Conflicting_Settings` - Find overriding settings
+
+=== 5.5 POSIX Compliance
+
+* [ ] `Validate_POSIX_Compliance` - Strict/Relaxed/Extended levels
+* [ ] `Detect_Bashisms` - Find bash-specific syntax
+* [ ] `Validate_Portable_Syntax` - Cross-shell compatibility
+
+=== 5.6 Performance Analysis
+
+* [ ] `Analyze_Load_Time` - Profile shell startup
+* [ ] `Detect_Slow_Commands` - Find slow initialization
+* [ ] `Suggest_Lazy_Loading` - Deferred loading candidates
+* [ ] `Analyze_Execution_Flow` - Optimal load order
+
+=== 5.7 Security Validation
+
+* [ ] `Detect_Hardcoded_Secrets` - Find exposed credentials
+* [ ] `Detect_Dangerous_Commands` - rm -rf, eval, exec
+* [ ] `Validate_Input_Sanitization` - Proper quoting
+* [ ] `Check_CVE_Vulnerabilities` - Known shell CVEs
+* [ ] `Validate_Sudo_Usage` - Safe sudo patterns
+
+=== 5.8 SELinux and Firewall Compatibility
+
+* [ ] `Validate_SELinux_Context` - Appropriate contexts
+* [ ] `Detect_SELinux_Conflicts` - Policy violations
+* [ ] `Validate_Firewall_Safety` - Network command safety
+
+=== 5.9 Tool Integration Validation
+
+* [ ] `Validate_Starship_Config` - Prompt configuration
+* [ ] `Validate_Completion_Setup` - bash-completion, carapace
+* [ ] `Validate_Direnv_Integration` - Hook placement
+* [ ] `Validate_Asdf_Integration` - Version manager setup
+* [ ] `Validate_Atuin_Integration` - History sync
+
+=== 5.10 Formal Verification
+
+* [ ] `Run_Formal_Verification` - ShellCheck, BATS, Pyre
+* [ ] `Generate_Verification_Report` - Comprehensive report
+* [ ] `Export_For_Theorem_Prover` - Experimental prover export
+
+=== 5.11 Annotation and Metadata
+
+* [ ] `Validate_SPDX_Headers` - License headers
+* [ ] `Validate_Annotations` - Required comments
+* [ ] `Check_Documentation_Coverage` - Function documentation
+
+== Milestone 6: Advanced Features
+
+=== 6.1 Remote Configuration
 
 * [ ] Sync configurations via Git
 * [ ] Encrypted secrets handling
@@ -216,6 +296,243 @@ Inject sourcing logic into shell configurations.
 * [ ] Shell completion scripts (bash, zsh, fish, nushell)
 * [ ] Tutorial: "Modularising Your Shell in 5 Minutes"
 * [ ] Architecture Decision Records (ADRs)
+
+== Appendix A: POSIX Shell Validation Roadmap
+
+Validation support for POSIX-compliant shells. The Shell Validator will provide equivalent validation capabilities for all POSIX shells.
+
+=== A.1 POSIX Shell Matrix
+
+[cols="1,2,2,1"]
+|===
+| Shell | Config Files | Special Considerations | Priority
+
+| **sh (Bourne)**
+| `/etc/profile`, `~/.profile`
+| Strictest POSIX compliance, no arrays
+| High
+
+| **dash**
+| `ENV` variable, `~/.profile`
+| Debian/Ubuntu `/bin/sh`, fastest startup
+| High
+
+| **bash**
+| `~/.bashrc`, `~/.bash_profile`
+| Most common, extensive extensions
+| Complete
+
+| **ksh (KornShell)**
+| `~/.kshrc`, `~/.profile`
+| POSIX superset, advanced features
+| Medium
+
+| **zsh**
+| `~/.zshrc`, `~/.zprofile`, `~/.zshenv`
+| Extensive customisation, oh-my-zsh ecosystem
+| High
+
+| **ash (BusyBox)**
+| `ENV` variable
+| Embedded systems, Alpine Linux
+| Medium
+
+| **mksh**
+| `~/.mkshrc`
+| Android shell, MirBSD
+| Low
+
+| **yash**
+| `~/.yashrc`
+| Strictest POSIX compliance
+| Low
+|===
+
+=== A.2 POSIX Validation Features
+
+Each POSIX shell will support:
+
+* [ ] Syntax validation using shell's native `-n` flag
+* [ ] POSIX compliance level checking (strict/relaxed)
+* [ ] Shell-specific extension detection
+* [ ] Configuration file location resolution
+* [ ] Startup script ordering validation
+* [ ] Environment variable inheritance checking
+* [ ] Signal handling validation
+* [ ] Exit code propagation analysis
+
+=== A.3 Cross-Shell Portability Testing
+
+* [ ] Generate portable shell scripts from modular configs
+* [ ] Test execution across sh, dash, bash, ksh, zsh
+* [ ] Report shell-specific incompatibilities
+* [ ] Suggest portable alternatives for non-portable constructs
+
+== Appendix B: Non-POSIX Shell Compatibility
+
+Support for modern non-POSIX shells requires different validation strategies.
+
+=== B.1 Non-POSIX Shell Matrix
+
+[cols="1,2,2,2"]
+|===
+| Shell | Config Files | Language/Paradigm | Compatibility Notes
+
+| **Fish**
+| `~/.config/fish/config.fish`
+| Not POSIX, user-friendly syntax
+| No `$()`, uses `(command)`. No `export`, uses `set -x`. Different quoting rules.
+
+| **Nushell**
+| `~/.config/nushell/config.nu`
+| Structured data, tables as first-class
+| Completely different paradigm. Pipeline operates on structured data, not text.
+
+| **Elvish**
+| `~/.config/elvish/rc.elv`
+| Functional, structured values
+| Different variable syntax (`$var` vs `set var`). Rich data types.
+
+| **Ion**
+| `~/.config/ion/initrc`
+| Rust-inspired, typed
+| Method syntax on variables. Strong typing. Array operations differ.
+
+| **Oils (osh/ysh)**
+| `~/.oshrc`, `~/.yshrc`
+| POSIX-compatible (osh) + enhanced (ysh)
+| osh is POSIX-compatible. ysh adds JSON, expressions, better errors.
+
+| **PowerShell**
+| `$PROFILE` (varies by platform)
+| Object-oriented, .NET based
+| Completely different. Cmdlets, objects in pipeline, `-Verb-Noun` naming.
+
+| **Tcsh/Csh**
+| `~/.tcshrc`, `~/.cshrc`
+| C-like syntax
+| Different syntax for everything. Avoid for scripting (historical only).
+
+| **Xonsh**
+| `~/.xonshrc`
+| Python + shell hybrid
+| Python syntax mixed with shell. Import Python directly.
+
+| **Murex**
+| `~/.murex_profile`
+| Type-aware, safety-focused
+| Strong typing, safer defaults, different pipeline semantics.
+|===
+
+=== B.2 Non-POSIX Validation Strategy
+
+For each non-POSIX shell, implement:
+
+==== Fish
+* [ ] Native syntax validation (`fish -n`)
+* [ ] Universal variable handling
+* [ ] Abbreviation vs alias distinction
+* [ ] Function autoloading paths
+* [ ] Fisher/oh-my-fish plugin detection
+
+==== Nushell
+* [ ] Native syntax validation
+* [ ] Module system validation
+* [ ] Hook configuration (env_change, pre_prompt)
+* [ ] Plugin registration
+* [ ] Structured config validation (TOML-based)
+
+==== Elvish
+* [ ] Native syntax validation
+* [ ] Module import validation
+* [ ] Edit mode configuration
+* [ ] Persistent variable handling
+
+==== Ion
+* [ ] Native syntax validation
+* [ ] Method call validation
+* [ ] Array type checking
+* [ ] Plugin/builtin validation
+
+==== Oils (osh/ysh)
+* [ ] osh: POSIX validation
+* [ ] ysh: Enhanced syntax validation
+* [ ] Expression evaluation safety
+* [ ] JSON/YAML parsing in configs
+
+==== PowerShell
+* [ ] Native syntax validation (`Test-ScriptFileInfo`)
+* [ ] Module manifest validation
+* [ ] Execution policy compliance
+* [ ] Cross-platform path handling (Windows/Linux/macOS)
+
+=== B.3 Translation Layer
+
+For cross-shell configuration:
+
+* [ ] Define common abstraction for aliases
+* [ ] Define common abstraction for environment variables
+* [ ] Define common abstraction for PATH modifications
+* [ ] Transpiler from abstract config to shell-specific syntax
+* [ ] Bidirectional sync between shell configs
+
+=== B.4 Shell Feature Detection
+
+Runtime detection of shell capabilities:
+
+[cols="1,1,1,1,1,1"]
+|===
+| Feature | Bash | Zsh | Fish | Nushell | PowerShell
+
+| Arrays
+| ✓
+| ✓
+| ✓
+| ✓ (tables)
+| ✓
+
+| Associative Arrays
+| ✓ (4.0+)
+| ✓
+| ✗
+| ✓ (records)
+| ✓ (hashtables)
+
+| Command Substitution
+| `$()`
+| `$()`
+| `()`
+| `()`
+| `$()`
+
+| Process Substitution
+| `<()`
+| `<()`
+| `psub`
+| ✗
+| ✗
+
+| Job Control
+| ✓
+| ✓
+| ✓
+| Limited
+| ✓
+
+| Programmable Completion
+| ✓
+| ✓
+| ✓
+| ✓
+| ✓
+
+| Unicode Support
+| Limited
+| ✓
+| ✓
+| ✓
+| ✓
+|===
 
 == Non-Goals
 
