@@ -1,0 +1,47 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
+= Maintainers
+:toc: preamble
+
+This document lists the maintainers of this project and their responsibilities.
+
+== Current Maintainers
+
+[cols="2,3,2",options="header"]
+|===
+| Name | Role | Contact
+
+| Jonathan D.A. Jewell
+| Lead Maintainer
+| https://github.com/hyperpolymath[@hyperpolymath]
+|===
+
+== Responsibilities
+
+Maintainers are responsible for:
+
+* Reviewing and merging pull requests
+* Triaging issues and feature requests
+* Ensuring code quality and security standards
+* Managing releases and versioning
+* Upholding the project's code of conduct
+
+== Becoming a Maintainer
+
+Contributors who demonstrate:
+
+* Consistent, high-quality contributions
+* Understanding of the project's goals and standards
+* Constructive participation in discussions
+* Commitment to the project's long-term health
+
+May be invited to become maintainers at the discretion of existing maintainers.
+
+== Decision Making
+
+* Routine decisions (bug fixes, minor improvements) can be made by any maintainer
+* Significant changes require discussion and consensus among maintainers
+* Breaking changes or major features should be discussed in issues before implementation
+
+== Contact
+
+For questions about project governance, open an issue or contact the maintainers listed above.
