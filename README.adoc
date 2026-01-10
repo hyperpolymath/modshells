@@ -1,6 +1,9 @@
 = Modshells: Modular Shell Configuration Manager
+image:https://img.shields.io/badge/license-PMPL--1.0-blue.svg[License,link="https://github.com/hyperpolymath/palimpsest-license"]
 
-image:https://img.shields.io/badge/License-MPL_2.0-blue.svg[MPL-2.0,link="https://opensource.org/licenses/MPL-2.0"]
+
+
+
 image:https://img.shields.io/badge/Philosophy-Palimpsest-purple.svg[Palimpsest,link="https://github.com/hyperpolymath/palimpsest-licence"]
 
 
@@ -437,9 +440,9 @@ See `.claude/CLAUDE.md` for complete language policy.
 
 == License
 
-SPDX-License-Identifier: `AGPL-3.0-or-later OR MIT`
+SPDX-License-Identifier: PMPL-1.0 OR PMPL-1.0`
 
-Dual-licensed under GNU Affero General Public License v3.0 or later, or MIT License. See link:LICENSE.txt[LICENSE.txt] for details.
+Dual-licensed under GNU Affero General Public License v3.0 or later, or Palimpsest-MPL License v1.0 (PMPL-1.0). See link:LICENSE.txt[LICENSE.txt] for details.
 
 == Citation
 
