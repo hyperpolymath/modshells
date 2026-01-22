@@ -437,9 +437,9 @@ See `.claude/CLAUDE.md` for complete language policy.
 
 == License
 
-SPDX-License-Identifier: `AGPL-3.0-or-later OR MIT`
+SPDX-License-Identifier: `PMPL-1.0-or-later OR MIT`
 
-Dual-licensed under GNU Affero General Public License v3.0 or later, or Palimpsest-MPL-1.0 License. See link:LICENSE.txt[LICENSE.txt] for details.
+Dual-licensed under Palimpsest-MPL License v3.0 or later, or Palimpsest-MPL-1.0 License. See link:LICENSE.txt[LICENSE.txt] for details.
 
 == Citation
 
