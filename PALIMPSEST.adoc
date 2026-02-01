@@ -1,92 +1,41 @@
-= Palimpsest Licence
+= Palimpsest License
 :toc:
 :toc-placement!:
 
-image:https://img.shields.io/badge/license-MPL--2.0-blue.svg[MPL-2.0,link="https://www.mozilla.org/en-US/MPL/2.0/"]
-image:https://img.shields.io/badge/philosophy-Palimpsest-purple.svg[Palimpsest,link="https://github.com/hyperpolymath/palimpsest-licence"]
+image:https://img.shields.io/badge/License-PMPL--1.0-blue.svg[License: PMPL-1.0,link="https://github.com/hyperpolymath/palimpsest-license"]
+image:https://img.shields.io/badge/Philosophy-Palimpsest-indigo.svg[Palimpsest,link="https://github.com/hyperpolymath/palimpsest-license"]
 
 toc::[]
 
 == Legal Status
 
-This project is legally licensed under the **Mozilla Public License 2.0 (MPL-2.0)**.
+This project is licensed under the **Palimpsest-MPL License 1.0 (PMPL-1.0)**.
+For SPDX and tooling, use **PMPL-1.0-or-later**.
 
-The Palimpsest Licence is a philosophical and ethical framework that accompanies the legal license. **Palimpsest does not currently provide legal protections** - it is a manifesto and a set of principles that we encourage adopters to embrace alongside the MPL-2.0.
+PMPL-1.0 incorporates the Mozilla Public License 2.0 by reference and adds
+ethical-use, provenance, and lineage requirements.
 
-== Why MPL-2.0 + Palimpsest?
+== What PMPL Adds
 
-=== The Legal Foundation: MPL-2.0
+* **Emotional Lineage** - preserve narrative intent and cultural context
+* **Provenance Integrity** - retain attribution and lineage metadata
+* **Ethical Use Constraints** - explicit consent for non-interpretive AI training
+* **Quantum-Safe Provenance (optional)** - post-quantum signature support
 
-The Mozilla Public License 2.0 provides:
+== How to Adopt
 
-* **File-level copyleft** - modifications to MPL-licensed files must remain open
-* **Compatibility** - can be combined with proprietary code and other open source licenses
-* **Patent protection** - includes explicit patent grants
-* **Clear, modern language** - well-drafted and widely understood
+1. Include the PMPL-1.0 license text in `LICENSE`.
+2. Add SPDX headers to source files:
+   `SPDX-License-Identifier: PMPL-1.0-or-later`
+3. Add a Palimpsest badge to your README (see `assets/badges/` and `embed/license-blocks/`).
 
-=== The Philosophical Layer: Palimpsest
+== Versioning
 
-Palimpsest adds an ethical dimension that legal licenses cannot capture:
+See `VERSIONING.adoc` for the release process and the "-or-later" model.
+The current legal text is PMPL-1.0.
 
-* **Layered contribution** - like a palimpsest manuscript, each contributor adds to what came before
-* **Transparent provenance** - clear attribution of ideas, not just code
-* **Collaborative evolution** - encouraging forks that improve rather than fragment
-* **Ethical use guidelines** - principles beyond what law can enforce
+== References
 
-== Future Direction
-
-**Palimpsest v0.5** will integrate MPL-2.0 and Palimpsest principles into a single, legally recognized license. This work is ongoing.
-
-Until then:
-
-1. **MPL-2.0** is the legally binding license for this project
-2. **Palimpsest** is the philosophical framework we encourage you to adopt
-3. Distributing Palimpsest alongside your use of this code is encouraged but not required
-
-== Get Involved
-
-We are actively developing Palimpsest as a real, legally recognized license that captures both the legal and ethical dimensions of open source collaboration.
-
-If you are interested in:
-
-* Contributing to the Palimpsest license design
-* Adopting Palimpsest for your own projects
-* Providing legal expertise on open source licensing
-* Discussing the philosophy behind Palimpsest
-
-**Please get in touch:**
-
-* GitHub: https://github.com/hyperpolymath
-* Palimpsest Licence repo: https://github.com/hyperpolymath/palimpsest-licence
-
-== Signing Up to Palimpsest
-
-While Palimpsest is not yet legally formalized, you can signal your support by:
-
-1. Adding the Palimpsest badge to your project README
-2. Including `PALIMPSEST.adoc` in your repository
-3. Mentioning Palimpsest in your LICENSE file
-4. Joining discussions about the license's development
-
-== Summary
-
-[cols="1,2"]
-|===
-|Aspect |Status
-
-|**Legal License**
-|MPL-2.0 (Mozilla Public License 2.0)
-
-|**Philosophical Framework**
-|Palimpsest (encouraged, not legally binding)
-
-|**SPDX Identifier**
-|`MPL-2.0`
-
-|**Future License**
-|Palimpsest v0.5+ (MPL-2.0 integrated, legally recognized)
-|===
-
----
-
-_This project uses MPL-2.0 for legal licensing and encourages adoption of the Palimpsest philosophy. See link:LICENSE[LICENSE] for the full legal text._
+* `legal/README.adoc`
+* `assets/badges/README.md`
+* `embed/license-blocks/README.md`

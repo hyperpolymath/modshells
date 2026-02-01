@@ -1,4 +1,4 @@
-;; SPDX-License-Identifier: AGPL-3.0-or-later
+;; SPDX-License-Identifier: MPL-2.0-or-later
 ;; STATE.scm - Project state for modshells
 ;; Media-Type: application/vnd.state+scm
 

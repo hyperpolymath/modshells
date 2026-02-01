@@ -1,6 +1,6 @@
-# SPDX-License-Identifier: PMPL-1.0
+# SPDX-License-Identifier: MPL-2.0-or-later
 # RSR Anti-Pattern CI Check
-# SPDX-License-Identifier: PMPL-1.0
+# SPDX-License-Identifier: MPL-2.0-or-later
 #
 # Enforces: No TypeScript, No Go, No Python (except SaltStack), No npm
 # Allows: ReScript, Deno, WASM, Rust, OCaml, Haskell, Guile/Scheme

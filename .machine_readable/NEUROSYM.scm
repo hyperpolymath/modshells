@@ -1,4 +1,4 @@
-;; SPDX-License-Identifier: AGPL-3.0-or-later
+;; SPDX-License-Identifier: MPL-2.0-or-later
 ;; NEUROSYM.scm - Neurosymbolic integration config for modshells
 
 (define neurosym-config

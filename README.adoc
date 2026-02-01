@@ -1,7 +1,13 @@
 = Modshells: Modular Shell Configuration Manager
 
-image:https://img.shields.io/badge/License-MPL_2.0-blue.svg[MPL-2.0,link="https://opensource.org/licenses/MPL-2.0"]
-image:https://img.shields.io/badge/Philosophy-Palimpsest-purple.svg[Palimpsest,link="https://github.com/hyperpolymath/palimpsest-licence"]
+image:https://img.shields.io/badge/License-MPL_2.0-blue.svg[MPL-2.0-or-later,link="https://opensource.org/licenses/MPL-2.0"]
+image:https://img.shields.io/badge/Philosophy-Palimpsest-indigo.svg[Palimpsest,link="https://github.com/hyperpolymath/palimpsest-license"]
+
+== License & Philosophy
+
+This project must declare **MPL-2.0-or-later** for platform/tooling compatibility.
+
+Philosophy: **Palimpsest**. The Palimpsest-MPL (PMPL) text is provided in `license/PMPL-1.0.txt`, and the canonical source is the palimpsest-license repository.
 
 
 :toc: macro
@@ -437,7 +443,7 @@ See `.claude/CLAUDE.md` for complete language policy.
 
 == License
 
-SPDX-License-Identifier: `PMPL-1.0-or-later OR MIT`
+SPDX-License-Identifier: MPL-2.0-or-later
 
 Dual-licensed under Palimpsest-MPL License v3.0 or later, or Palimpsest-MPL-1.0 License. See link:LICENSE.txt[LICENSE.txt] for details.
 

@@ -1,4 +1,4 @@
-# SPDX-License-Identifier: PMPL-1.0
+# SPDX-License-Identifier: MPL-2.0-or-later
 name: Well-Known Standards (RFC 9116 + RSR)
 on:
   push:
