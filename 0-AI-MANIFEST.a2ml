@@ -1,0 +1,116 @@
+# ⚠️ STOP - CRITICAL READING REQUIRED
+
+**THIS FILE MUST BE READ FIRST BY ALL AI AGENTS**
+
+## WHAT IS THIS?
+
+This is the AI manifest for **modshells**. It declares:
+- Canonical file locations (where things MUST be, and nowhere else)
+- Critical invariants (rules that must NEVER be violated)
+- Repository structure and organization
+
+## CANONICAL LOCATIONS (UNIVERSAL RULE)
+
+### Machine-Readable Metadata: `.machine_readable/` ONLY
+
+These 6 SCM files MUST exist in `.machine_readable/` directory ONLY:
+1. **STATE.scm** - Project state, progress, blockers
+2. **META.scm** - Architecture decisions, governance
+3. **ECOSYSTEM.scm** - Position in ecosystem, relationships
+4. **AGENTIC.scm** - AI agent interaction patterns
+5. **NEUROSYM.scm** - Neurosymbolic integration config
+6. **PLAYBOOK.scm** - Operational runbook
+
+**CRITICAL:** If ANY of these files exist in the root directory, this is an ERROR.
+
+### Bot Directives: `.bot_directives/` ONLY
+
+Bot-specific instructions for:
+- rhodibot - Git operations
+- echidnabot - Code quality
+- sustainabot - Dependency updates
+- glambot - Documentation
+- seambot - Integration
+- finishbot - Task completion
+
+### Agent Instructions
+
+- `.claude/CLAUDE.md` - Claude-specific patterns (if exists)
+- `0-AI-MANIFEST.a2ml` - THIS FILE (universal entry point)
+
+## CORE INVARIANTS
+
+1. **No SCM duplication** - Root must NOT contain STATE.scm, META.scm, etc.
+2. **Single source of truth** - `.machine_readable/` is authoritative
+3. **No stale metadata** - If root SCMs exist, they are OUT OF DATE
+4. **License consistency** - All code PMPL-1.0-or-later unless platform requires MPL-2.0
+5. **Author attribution** - Always "Jonathan D.A. Jewell <jonathan.jewell@open.ac.uk>"
+
+## REPOSITORY STRUCTURE
+
+<!-- CUSTOMIZE THIS SECTION FOR YOUR REPO -->
+
+This repo contains:
+
+```
+modshells/
+├── 0-AI-MANIFEST.a2ml         # THIS FILE (start here)
+├── README.md                   # Project overview
+├── [your source files]         # Main code
+├── .machine_readable/          # SCM files (6 files)
+│   ├── STATE.scm
+│   ├── META.scm
+│   ├── ECOSYSTEM.scm
+│   ├── AGENTIC.scm
+│   ├── NEUROSYM.scm
+│   └── PLAYBOOK.scm
+└── .bot_directives/            # Bot instructions
+```
+
+## SESSION STARTUP CHECKLIST
+
+✅ Read THIS file (0-AI-MANIFEST.a2ml) first
+✅ Understand canonical locations (.machine_readable/, .bot_directives/)
+✅ Know the invariants (no SCM duplication, etc.)
+✅ Check for MCP enforcement (if applicable)
+✅ Read `.machine_readable/STATE.scm` for current status
+✅ Read `.machine_readable/AGENTIC.scm` for interaction patterns
+
+## LIFECYCLE HOOKS
+
+### on-enter (Session Start)
+
+When starting a new session:
+
+1. Read and acknowledge this manifest
+2. Log session start (optional but recommended)
+   - Format: `[YYYY-MM-DD HH:MM:SS] Session started: [agent-name]`
+   - Location: `.machine_readable/session-log.txt`
+3. Read `.machine_readable/STATE.scm`
+4. Check for blockers
+5. State understanding of canonical locations
+
+### on-exit (Session End)
+
+When ending a session:
+
+1. Update `.machine_readable/STATE.scm` if changes made
+2. Log session end (optional but recommended)
+   - Format: `[YYYY-MM-DD HH:MM:SS] Session ended: [summary]`
+   - Location: `.machine_readable/session-log.txt`
+3. Document new blockers
+4. Summarize outcomes
+
+## ATTESTATION PROOF
+
+After reading this file, demonstrate understanding by stating:
+
+**"I have read the AI manifest. SCM files are located in `.machine_readable/` ONLY, bot directives in `.bot_directives/`, and I will not create duplicate files in the root directory."**
+
+## META
+
+- **Format Version:** 1.0.0
+- **Created:** [DATE]
+- **Maintained By:** [YOUR-NAME/ORG]
+- **License:** PMPL-1.0-or-later
+- **Protocol:** https://github.com/hyperpolymath/0-ai-gatekeeper-protocol
