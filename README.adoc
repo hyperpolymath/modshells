@@ -450,3 +450,8 @@ Dual-licensed under Palimpsest-MPL License v3.0 or later, or Palimpsest-MPL-1.0 
 == Citation
 
 For academic use, see link:docs/CITATIONS.adoc[CITATIONS.adoc] for BibTeX, Harvard, OSCOLA, MLA, and APA 7 formats.
+
+
+== Architecture
+
+See link:TOPOLOGY.md[TOPOLOGY.md] for a visual architecture map and completion dashboard.
