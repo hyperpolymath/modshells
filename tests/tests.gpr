@@ -1,5 +1,5 @@
 -- tests/tests.gpr
--- SPDX-License-Identifier: AGPL-3.0-or-later OR MIT
+-- SPDX-License-Identifier: PMPL-1.0-or-later
 -- GPRBuild project for modshells unit tests
 
 with "../modshells.gpr";

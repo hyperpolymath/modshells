@@ -1,5 +1,5 @@
 -- src/shell_manager/shell_manager.ads
--- SPDX-License-Identifier: AGPL-3.0-or-later OR MIT
+-- SPDX-License-Identifier: PMPL-1.0-or-later
 -- Handles shell detection, idempotency checking, and high-level configuration logic.
 package Shell_Manager is
 

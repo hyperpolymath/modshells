@@ -1,4 +1,4 @@
--- SPDX-License-Identifier: AGPL-3.0-or-later OR MIT
+-- SPDX-License-Identifier: PMPL-1.0-or-later
 -- src/shell_validator/shell_validator.adb
 --
 -- Shell Validator Implementation
@@ -634,7 +634,7 @@ package body Shell_Validator is
         (Valid => True, Level => Info, Code => "SPDX000",
          Message => "SPDX header validation pending implementation",
          File_Path => Root_Path,
-         Suggestion => "Add: # SPDX-License-Identifier: AGPL-3.0-or-later"));
+         Suggestion => "Add: # SPDX-License-Identifier: PMPL-1.0-or-later"));
       return Report;
    end Validate_SPDX_Headers;
 

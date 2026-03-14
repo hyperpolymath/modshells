@@ -1,4 +1,4 @@
-# SPDX-License-Identifier: AGPL-3.0-or-later OR MIT
+# SPDX-License-Identifier: PMPL-1.0-or-later
 # misc/functions.sh - Utility functions
 
 # Create directory and cd into it
