@@ -1,0 +1,9 @@
+# SPDX-License-Identifier: PMPL-1.0-or-later
+# META.a2ml — Project meta-information
+# Converted from META.scm on 2026-03-15
+
+[metadata]
+project = "modshells"
+author = "Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>"
+license = "PMPL-1.0-or-later"
+standard = "RSR 2026"

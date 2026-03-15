@@ -1,0 +1,10 @@
+# SPDX-License-Identifier: PMPL-1.0-or-later
+# ECOSYSTEM.a2ml — Ecosystem position
+# Converted from ECOSYSTEM.scm on 2026-03-15
+
+[metadata]
+project = "modshells"
+ecosystem = "hyperpolymath"
+
+[position]
+type = "component"
