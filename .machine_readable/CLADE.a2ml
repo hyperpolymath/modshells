@@ -1,0 +1,26 @@
+# SPDX-License-Identifier: PMPL-1.0-or-later
+# Clade declaration — part of the gv-clade-index registry
+# See: https://github.com/hyperpolymath/gv-clade-index
+
+[identity]
+uuid = "15105645-61bc-559b-9e88-c11916719ac0"
+primary-forge = "github"
+primary-owner = "hyperpolymath"
+canonical-name = "modshells"
+prefixed-name = "nl-modshells"
+
+[clade]
+primary = "nl"
+secondary = ["ix"]
+assigned = "2026-03-16"
+rationale = ""
+
+[forges]
+github = "hyperpolymath/modshells"
+gitlab = "hyperpolymath/modshells"
+bitbucket = "hyperpolymath/modshells"
+
+[lineage]
+type = "standalone"
+parent = "Modular shell framework"
+born = "2026-03-16"
