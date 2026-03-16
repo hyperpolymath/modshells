@@ -1,0 +1,28 @@
+# SPDX-License-Identifier: PMPL-1.0-or-later
+# Copyright (c) 2026 Jonathan D.A. Jewell (hyperpolymath) <j.d.a.jewell@open.ac.uk>
+#
+# AGENTIC.a2ml — AI agent constraints and capabilities
+# Defines what AI agents can and cannot do in this repository.
+
+[metadata]
+version = "0.1.0"
+last-updated = "2026-03-16"
+
+[agent-permissions]
+can-edit-source = true
+can-edit-tests = true
+can-edit-docs = true
+can-edit-config = true
+can-create-files = true
+
+[agent-constraints]
+# What AI agents must NOT do:
+# - Never use banned language patterns (believe_me, unsafeCoerce, etc.)
+# - Never commit secrets or credentials
+# - Never use banned languages (TypeScript, Python, Go, etc.)
+# - Never place state files in repository root (must be in .machine_readable/)
+# - Never use AGPL license (use PMPL-1.0-or-later)
+
+[automation-hooks]
+# - automation scripts
+# - git hooks only
