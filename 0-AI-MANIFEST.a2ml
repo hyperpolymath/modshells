@@ -14,12 +14,12 @@ This is the AI manifest for **modshells**. It declares:
 ### Machine-Readable Metadata: `.machine_readable/` ONLY
 
 These 6 SCM files MUST exist in `.machine_readable/` directory ONLY:
-1. **STATE.scm** - Project state, progress, blockers
-2. **META.scm** - Architecture decisions, governance
-3. **ECOSYSTEM.scm** - Position in ecosystem, relationships
-4. **AGENTIC.scm** - AI agent interaction patterns
-5. **NEUROSYM.scm** - Neurosymbolic integration config
-6. **PLAYBOOK.scm** - Operational runbook
+1. **.machine_readable/6a2/STATE.a2ml** - Project state, progress, blockers
+2. **.machine_readable/6a2/META.a2ml** - Architecture decisions, governance
+3. **.machine_readable/6a2/ECOSYSTEM.a2ml** - Position in ecosystem, relationships
+4. **.machine_readable/6a2/AGENTIC.a2ml** - AI agent interaction patterns
+5. **.machine_readable/6a2/NEUROSYM.a2ml** - Neurosymbolic integration config
+6. **.machine_readable/6a2/PLAYBOOK.a2ml** - Operational runbook
 
 **CRITICAL:** If ANY of these files exist in the root directory, this is an ERROR.
 
@@ -40,7 +40,7 @@ Bot-specific instructions for:
 
 ## CORE INVARIANTS
 
-1. **No SCM duplication** - Root must NOT contain STATE.scm, META.scm, etc.
+1. **No SCM duplication** - Root must NOT contain .machine_readable/6a2/STATE.a2ml, .machine_readable/6a2/META.a2ml, etc.
 2. **Single source of truth** - `.machine_readable/` is authoritative
 3. **No stale metadata** - If root SCMs exist, they are OUT OF DATE
 4. **License consistency** - All code PMPL-1.0-or-later unless platform requires MPL-2.0
@@ -58,12 +58,12 @@ modshells/
 ├── README.md                   # Project overview
 ├── [your source files]         # Main code
 ├── .machine_readable/          # SCM files (6 files)
-│   ├── STATE.scm
-│   ├── META.scm
-│   ├── ECOSYSTEM.scm
-│   ├── AGENTIC.scm
-│   ├── NEUROSYM.scm
-│   └── PLAYBOOK.scm
+│   ├── .machine_readable/6a2/STATE.a2ml
+│   ├── .machine_readable/6a2/META.a2ml
+│   ├── .machine_readable/6a2/ECOSYSTEM.a2ml
+│   ├── .machine_readable/6a2/AGENTIC.a2ml
+│   ├── .machine_readable/6a2/NEUROSYM.a2ml
+│   └── .machine_readable/6a2/PLAYBOOK.a2ml
 └── .bot_directives/            # Bot instructions
 ```
 
@@ -73,8 +73,8 @@ modshells/
 ✅ Understand canonical locations (.machine_readable/, .bot_directives/)
 ✅ Know the invariants (no SCM duplication, etc.)
 ✅ Check for MCP enforcement (if applicable)
-✅ Read `.machine_readable/STATE.scm` for current status
-✅ Read `.machine_readable/AGENTIC.scm` for interaction patterns
+✅ Read `.machine_readable/6a2/STATE.a2ml` for current status
+✅ Read `.machine_readable/6a2/AGENTIC.a2ml` for interaction patterns
 
 ## LIFECYCLE HOOKS
 
@@ -86,7 +86,7 @@ When starting a new session:
 2. Log session start (optional but recommended)
    - Format: `[YYYY-MM-DD HH:MM:SS] Session started: [agent-name]`
    - Location: `.machine_readable/session-log.txt`
-3. Read `.machine_readable/STATE.scm`
+3. Read `.machine_readable/6a2/STATE.a2ml`
 4. Check for blockers
 5. State understanding of canonical locations
 
@@ -94,7 +94,7 @@ When starting a new session:
 
 When ending a session:
 
-1. Update `.machine_readable/STATE.scm` if changes made
+1. Update `.machine_readable/6a2/STATE.a2ml` if changes made
 2. Log session end (optional but recommended)
    - Format: `[YYYY-MM-DD HH:MM:SS] Session ended: [summary]`
    - Location: `.machine_readable/session-log.txt`
