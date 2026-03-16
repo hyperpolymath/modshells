@@ -44,7 +44,7 @@ Bot-specific instructions for:
 2. **Single source of truth** - `.machine_readable/` is authoritative
 3. **No stale metadata** - If root SCMs exist, they are OUT OF DATE
 4. **License consistency** - All code PMPL-1.0-or-later unless platform requires MPL-2.0
-5. **Author attribution** - Always "Jonathan D.A. Jewell <jonathan.jewell@open.ac.uk>"
+5. **Author attribution** - Always "Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>"
 
 ## REPOSITORY STRUCTURE
 
