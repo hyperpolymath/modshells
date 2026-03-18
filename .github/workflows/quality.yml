@@ -3,7 +3,8 @@ name: Code Quality
 on: [push, pull_request]
 
 
-permissions: read-all
+permissions:
+  contents: read
 
 jobs:
   lint:
