@@ -1,0 +1,10 @@
+{
+  "tasks": {
+    "test": "deno test --allow-read --allow-write --allow-env --allow-run tests/",
+    "bench": "deno bench --allow-read --allow-write --allow-env --allow-run tests/bench/"
+  },
+  "imports": {
+    "std/": "https://deno.land/std@0.208.0/",
+    "std/assert": "https://deno.land/std@0.208.0/assert/mod.ts"
+  }
+}
