@@ -1,0 +1,308 @@
+# SPDX-License-Identifier: PMPL-1.0-or-later
+# Copyright (c) 2026 Jonathan D.A. Jewell (hyperpolymath) <j.d.a.jewell@open.ac.uk>
+#
+# dogfood-gate.yml — Hyperpolymath Dogfooding Quality Gate
+# Validates that the repo uses hyperpolymath's own formats and tools.
+# Companion to static-analysis-gate.yml (security) — this is for format compliance.
+name: Dogfood Gate
+
+on:
+  pull_request:
+    branches: ['**']
+  push:
+    branches: [main, master]
+
+permissions:
+  contents: read
+
+jobs:
+  # ---------------------------------------------------------------------------
+  # Job 1: A2ML manifest validation
+  # ---------------------------------------------------------------------------
+  a2ml-validate:
+    name: Validate A2ML manifests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+
+      - name: Check for A2ML files
+        id: detect
+        run: |
+          COUNT=$(find . -name '*.a2ml' -not -path './.git/*' | wc -l)
+          echo "count=$COUNT" >> "$GITHUB_OUTPUT"
+          if [ "$COUNT" -eq 0 ]; then
+            echo "::warning::No .a2ml manifest files found. Every RSR repo should have 0-AI-MANIFEST.a2ml"
+          fi
+
+      - name: Validate A2ML manifests
+        if: steps.detect.outputs.count > 0
+        uses: hyperpolymath/a2ml-validate-action@main
+        with:
+          path: '.'
+          strict: 'false'
+
+      - name: Write summary
+        run: |
+          A2ML_COUNT="${{ steps.detect.outputs.count }}"
+          if [ "$A2ML_COUNT" -eq 0 ]; then
+            cat <<'EOF' >> "$GITHUB_STEP_SUMMARY"
+          ## A2ML Validation
+
+          :warning: **No .a2ml files found.** Every RSR-compliant repo should have at least `0-AI-MANIFEST.a2ml`.
+
+          Create one with: `a2mliser init` or copy from [rsr-template-repo](https://github.com/hyperpolymath/rsr-template-repo).
+          EOF
+          else
+            echo "## A2ML Validation" >> "$GITHUB_STEP_SUMMARY"
+            echo "" >> "$GITHUB_STEP_SUMMARY"
+            echo "Scanned **${A2ML_COUNT}** .a2ml file(s). See step output for details." >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+  # ---------------------------------------------------------------------------
+  # Job 2: K9 contract validation
+  # ---------------------------------------------------------------------------
+  k9-validate:
+    name: Validate K9 contracts
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+
+      - name: Check for K9 files
+        id: detect
+        run: |
+          COUNT=$(find . \( -name '*.k9' -o -name '*.k9.ncl' \) -not -path './.git/*' | wc -l)
+          CONFIG_COUNT=$(find . \( -name '*.toml' -o -name '*.yaml' -o -name '*.yml' -o -name '*.json' \) \
+            -not -path './.git/*' -not -path './node_modules/*' -not -path './.deno/*' \
+            -not -name 'package-lock.json' -not -name 'Cargo.lock' -not -name 'deno.lock' | wc -l)
+          echo "k9_count=$COUNT" >> "$GITHUB_OUTPUT"
+          echo "config_count=$CONFIG_COUNT" >> "$GITHUB_OUTPUT"
+          if [ "$COUNT" -eq 0 ] && [ "$CONFIG_COUNT" -gt 0 ]; then
+            echo "::warning::Found $CONFIG_COUNT config files but no K9 contracts. Run k9iser to generate contracts."
+          fi
+
+      - name: Validate K9 contracts
+        if: steps.detect.outputs.k9_count > 0
+        uses: hyperpolymath/k9-validate-action@main
+        with:
+          path: '.'
+          strict: 'false'
+
+      - name: Write summary
+        run: |
+          K9_COUNT="${{ steps.detect.outputs.k9_count }}"
+          CFG_COUNT="${{ steps.detect.outputs.config_count }}"
+          if [ "$K9_COUNT" -eq 0 ]; then
+            cat <<'EOF' >> "$GITHUB_STEP_SUMMARY"
+          ## K9 Contract Validation
+
+          :warning: **No K9 contract files found.** Repos with configuration files should have K9 contracts.
+
+          Generate contracts with: `k9iser generate .`
+          EOF
+          else
+            echo "## K9 Contract Validation" >> "$GITHUB_STEP_SUMMARY"
+            echo "" >> "$GITHUB_STEP_SUMMARY"
+            echo "Validated **${K9_COUNT}** K9 contract(s) against **${CFG_COUNT}** config file(s)." >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+  # ---------------------------------------------------------------------------
+  # Job 3: Empty-linter — invisible character detection
+  # ---------------------------------------------------------------------------
+  empty-lint:
+    name: Empty-linter (invisible characters)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+
+      - name: Scan for invisible characters
+        id: lint
+        run: |
+          # Inline invisible character detection (from empty-linter's core patterns).
+          # Checks for: zero-width spaces, zero-width joiners, BOM, soft hyphens,
+          # non-breaking spaces, null bytes, and other invisible Unicode in source files.
+          set +e
+          PATTERNS='\xc2\xa0|\xe2\x80\x8b|\xe2\x80\x8c|\xe2\x80\x8d|\xef\xbb\xbf|\xc2\xad|\xe2\x80\x8e|\xe2\x80\x8f|\xe2\x80\xaa|\xe2\x80\xab|\xe2\x80\xac|\xe2\x80\xad|\xe2\x80\xae|\x00'
+          find "$GITHUB_WORKSPACE" \
+            -not -path '*/.git/*' -not -path '*/node_modules/*' \
+            -not -path '*/.deno/*' -not -path '*/target/*' \
+            -not -path '*/_build/*' -not -path '*/deps/*' \
+            -not -path '*/external_corpora/*' -not -path '*/.lake/*' \
+            -type f \( -name '*.rs' -o -name '*.ex' -o -name '*.exs' -o -name '*.res' \
+              -o -name '*.js' -o -name '*.ts' -o -name '*.json' -o -name '*.toml' \
+              -o -name '*.yml' -o -name '*.yaml' -o -name '*.md' -o -name '*.adoc' \
+              -o -name '*.idr' -o -name '*.zig' -o -name '*.v' -o -name '*.jl' \
+              -o -name '*.gleam' -o -name '*.hs' -o -name '*.ml' -o -name '*.sh' \) \
+            -exec grep -Prl "$PATTERNS" {} \; > /tmp/empty-lint-results.txt 2>/dev/null
+          EL_EXIT=$?
+          set -e
+
+          FINDINGS=$(wc -l < /tmp/empty-lint-results.txt 2>/dev/null || echo 0)
+          echo "findings=$FINDINGS" >> "$GITHUB_OUTPUT"
+          echo "exit_code=$EL_EXIT" >> "$GITHUB_OUTPUT"
+          echo "ready=true" >> "$GITHUB_OUTPUT"
+
+          # Emit annotations for each file with invisible chars
+          while IFS= read -r filepath; do
+            [ -z "$filepath" ] && continue
+            REL_PATH="${filepath#$GITHUB_WORKSPACE/}"
+            echo "::warning file=${REL_PATH}::Invisible Unicode characters detected (zero-width space, BOM, NBSP, etc.)"
+          done < /tmp/empty-lint-results.txt
+
+      - name: Write summary
+        run: |
+          if [ "${{ steps.lint.outputs.ready }}" = "true" ]; then
+            FINDINGS="${{ steps.lint.outputs.findings }}"
+            if [ "$FINDINGS" -gt 0 ] 2>/dev/null; then
+              echo "## Empty-Linter Results" >> "$GITHUB_STEP_SUMMARY"
+              echo "" >> "$GITHUB_STEP_SUMMARY"
+              echo "Found **${FINDINGS}** invisible character issue(s). See annotations above." >> "$GITHUB_STEP_SUMMARY"
+            else
+              echo "## Empty-Linter Results" >> "$GITHUB_STEP_SUMMARY"
+              echo "" >> "$GITHUB_STEP_SUMMARY"
+              echo ":white_check_mark: No invisible character issues found." >> "$GITHUB_STEP_SUMMARY"
+            fi
+          else
+            echo "## Empty-Linter" >> "$GITHUB_STEP_SUMMARY"
+            echo "" >> "$GITHUB_STEP_SUMMARY"
+            echo "Skipped: empty-linter not available." >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+  # ---------------------------------------------------------------------------
+  # Job 4: Groove manifest check (for repos that should expose services)
+  # ---------------------------------------------------------------------------
+  groove-check:
+    name: Groove manifest check
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+
+      - name: Check for Groove manifest
+        id: groove
+        run: |
+          # Check for static or dynamic Groove endpoints
+          HAS_MANIFEST="false"
+          HAS_GROOVE_CODE="false"
+
+          if [ -f ".well-known/groove/manifest.json" ]; then
+            HAS_MANIFEST="true"
+            # Validate the manifest JSON
+            if ! jq empty .well-known/groove/manifest.json 2>/dev/null; then
+              echo "::error file=.well-known/groove/manifest.json::Invalid JSON in Groove manifest"
+            else
+              SVC_ID=$(jq -r '.service_id // "unknown"' .well-known/groove/manifest.json)
+              echo "service_id=$SVC_ID" >> "$GITHUB_OUTPUT"
+            fi
+          fi
+
+          # Check for Groove endpoint code (Rust, Elixir, Zig, V)
+          if grep -rl 'well-known/groove' --include='*.rs' --include='*.ex' --include='*.zig' --include='*.v' --include='*.res' . 2>/dev/null | head -1 | grep -q .; then
+            HAS_GROOVE_CODE="true"
+          fi
+
+          # Check if this repo likely serves HTTP (has server/listener code)
+          HAS_SERVER="false"
+          if grep -rl 'TcpListener\|Bandit\|Plug.Cowboy\|httpz\|vweb\|axum::serve\|actix_web' --include='*.rs' --include='*.ex' --include='*.zig' --include='*.v' . 2>/dev/null | head -1 | grep -q .; then
+            HAS_SERVER="true"
+          fi
+
+          echo "has_manifest=$HAS_MANIFEST" >> "$GITHUB_OUTPUT"
+          echo "has_groove_code=$HAS_GROOVE_CODE" >> "$GITHUB_OUTPUT"
+          echo "has_server=$HAS_SERVER" >> "$GITHUB_OUTPUT"
+
+          if [ "$HAS_SERVER" = "true" ] && [ "$HAS_MANIFEST" = "false" ] && [ "$HAS_GROOVE_CODE" = "false" ]; then
+            echo "::warning::This repo has server code but no Groove endpoint. Add .well-known/groove/manifest.json for service discovery."
+          fi
+
+      - name: Write summary
+        run: |
+          echo "## Groove Protocol Check" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Check | Status |" >> "$GITHUB_STEP_SUMMARY"
+          echo "|-------|--------|" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Static manifest (.well-known/groove/manifest.json) | ${{ steps.groove.outputs.has_manifest }} |" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Groove endpoint in code | ${{ steps.groove.outputs.has_groove_code }} |" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Has HTTP server code | ${{ steps.groove.outputs.has_server }} |" >> "$GITHUB_STEP_SUMMARY"
+
+  # ---------------------------------------------------------------------------
+  # Job 5: Dogfooding summary
+  # ---------------------------------------------------------------------------
+  dogfood-summary:
+    name: Dogfooding compliance summary
+    runs-on: ubuntu-latest
+    needs: [a2ml-validate, k9-validate, empty-lint, groove-check]
+    if: always()
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+
+      - name: Generate dogfooding scorecard
+        run: |
+          SCORE=0
+          MAX=5
+
+          # A2ML manifest present?
+          if find . -name '*.a2ml' -not -path './.git/*' | head -1 | grep -q .; then
+            SCORE=$((SCORE + 1))
+            A2ML_STATUS=":white_check_mark:"
+          else
+            A2ML_STATUS=":x:"
+          fi
+
+          # K9 contracts present?
+          if find . \( -name '*.k9' -o -name '*.k9.ncl' \) -not -path './.git/*' | head -1 | grep -q .; then
+            SCORE=$((SCORE + 1))
+            K9_STATUS=":white_check_mark:"
+          else
+            K9_STATUS=":x:"
+          fi
+
+          # .editorconfig present?
+          if [ -f ".editorconfig" ]; then
+            SCORE=$((SCORE + 1))
+            EC_STATUS=":white_check_mark:"
+          else
+            EC_STATUS=":x:"
+          fi
+
+          # Groove manifest or code?
+          if [ -f ".well-known/groove/manifest.json" ] || grep -rl 'well-known/groove' --include='*.rs' --include='*.ex' --include='*.zig' . 2>/dev/null | head -1 | grep -q .; then
+            SCORE=$((SCORE + 1))
+            GROOVE_STATUS=":white_check_mark:"
+          else
+            GROOVE_STATUS=":ballot_box_with_check:"
+          fi
+
+          # VeriSimDB integration?
+          if grep -rl 'verisimdb\|VeriSimDB' --include='*.toml' --include='*.yaml' --include='*.yml' --include='*.json' --include='*.rs' --include='*.ex' . 2>/dev/null | head -1 | grep -q .; then
+            SCORE=$((SCORE + 1))
+            VSDB_STATUS=":white_check_mark:"
+          else
+            VSDB_STATUS=":ballot_box_with_check:"
+          fi
+
+          cat <<EOF >> "$GITHUB_STEP_SUMMARY"
+          ## Dogfooding Scorecard
+
+          **Score: ${SCORE}/${MAX}**
+
+          | Tool/Format | Status | Notes |
+          |-------------|--------|-------|
+          | A2ML manifest (0-AI-MANIFEST.a2ml) | ${A2ML_STATUS} | Required for all RSR repos |
+          | K9 contracts | ${K9_STATUS} | Required for repos with config files |
+          | .editorconfig | ${EC_STATUS} | Required for all repos |
+          | Groove endpoint | ${GROOVE_STATUS} | Required for service repos |
+          | VeriSimDB integration | ${VSDB_STATUS} | Required for stateful repos |
+
+          ---
+          *Generated by the [Dogfood Gate](https://github.com/hyperpolymath/rsr-template-repo) workflow.*
+          *Dogfooding is guinea pig fooding — we test our tools on ourselves.*
+          EOF
