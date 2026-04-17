@@ -1,0 +1,158 @@
+// SPDX-License-Identifier: PMPL-1.0-or-later
+// SPDX-FileCopyrightText: 2026 Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
+= Modshells: Modular Shell Configuration Manager — Show Me The Receipts
+:toc:
+:icons: font
+
+The README makes claims. This file backs them up. For each headline feature:
+what makes it work, where the code is, and an honest caveat.
+
+== Claim: Idempotent modularisation across ten shells
+
+[quote, README]
+____
+All Modshells operations are idempotent: running the tool multiple times
+produces the same result. Existing configurations are never destroyed.
+Automatic backup before any modification.
+____
+
+Idempotency works through signature-based detection. Before injecting any
+sourcing block, `Shell_Manager.Modularise_Shell` calls `Is_Already_Modularised`
+which scans the target config file for the string `MODSHELLS_START`. If found,
+the shell is skipped entirely. If absent, the procedure creates a timestamped
+backup (`<path>.modshells-backup-YYYYMMDD-HHMMSS`) then appends the
+shell-specific sourcing block delimited by `MODSHELLS_START` / `MODSHELLS_END`
+markers. The entry point `Modshells` in `src/main/modshells.adb` calls
+`Shell_Manager.Modularise_All_Shells` which iterates `Detect_Shells` and
+applies this pattern to every installed shell in a single pass.
+
+**Caveat:** The signature check is text-based. A user who manually edits
+the markers or copies config files between machines could confuse the check.
+There is no cryptographic protection on the injected block; it trusts the
+filesystem.
+
+- Implementation: `src/shell_manager/shell_manager.adb` — `Modularise_Shell`,
+  `Is_Already_Modularised`, `Create_Backup`, `Get_Sourcing_Block`
+- Interface spec: `src/shell_manager/shell_manager.ads`
+
+== Claim: Written in Ada for safety-critical reliability
+
+[quote, README]
+____
+Built in Ada for maximum reliability: strong static typing catches errors at
+compile time, exception handling ensures graceful failure, no unsafe memory
+operations, deterministic behaviour.
+____
+
+The entire core is Ada 2012, compiled with GPRBuild via `modshells.gpr`. The
+package hierarchy separates concerns cleanly: `Config_Store` resolves paths
+(reads `MODSHELLS_CONFIG_PATH` or defaults to `~/.config/nushell/modshells`),
+`Shell_Manager` owns all shell-specific knowledge, and `Shell_Validator`
+provides input guards. Ada's discriminant-constrained `Shell_List` array type
+(declared in `shell_manager.ads`) prevents buffer overruns by construction.
+The top-level `exception when others => raise` in `modshells.adb` ensures
+that any unhandled error surfaces rather than silently failing.
+
+**Caveat:** The Ada runtime exception handler re-raises, so the binary will
+exit with a non-zero code on failure but the error message is plain text —
+there is no structured error output yet. Unit tests are in
+`tests/unit/test_shell_manager.adb` but the test suite is smoke-test-level
+rather than exhaustive at v0.1.
+
+- Project file: `modshells.gpr`
+- Entry point: `src/main/modshells.adb`
+- Package spec: `src/shell_manager/shell_manager.ads`
+- Tests: `tests/smoke_test.sh`, `tests/unit/`
+
+== Dogfooded Across The Account
+
+[cols="1,2"]
+|===
+| Technology | Also Used In
+
+| **Ada / GPRBuild** | https://github.com/hyperpolymath/modshells[modshells] is the primary
+  Ada CLI in the account; Ada is also used in safety-critical FFI layers across
+  repos that require GNAT ecosystem tools
+| **POSIX shell config patterns** | Used as the human-readable layer in
+  https://github.com/hyperpolymath/developer-ecosystem[developer-ecosystem]
+  shell tooling and https://github.com/hyperpolymath/ambientops[ambientops]
+  personal sysadmin scripts
+| **Guix + Nix packaging** | `guix.scm` / `flake.nix` present in all RSR repos;
+  see https://github.com/hyperpolymath/proof-of-work[proof-of-work],
+  https://github.com/hyperpolymath/burble[burble], and dozens of others
+|===
+
+== File Map
+
+[cols="1,3"]
+|===
+| Path | What's There
+
+| `src/main/modshells.adb`
+| Entry point. Three-step procedure: create directories, detect shells,
+  modularise all installed shells. Exception handler at top level.
+
+| `src/shell_manager/shell_manager.ads`
+| Public interface spec. Declares `Shell_Type` (10-member enum), `Shell_Status`,
+  `Shell_Info` record, `Shell_List` unconstrained array, and all function
+  signatures used by the main procedure.
+
+| `src/shell_manager/shell_manager.adb`
+| Implementation. Contains `Is_Shell_Installed` (checks `/usr/bin`, `/bin`,
+  `/usr/local/bin`, `/opt/homebrew/bin`), `Get_Sourcing_Block` (generates
+  shell-specific syntax for POSIX, Fish, Nushell, Tcsh, Ion, PowerShell),
+  `Create_Backup`, `Is_Already_Modularised`, `Modularise_Shell`, and
+  `Modularise_All_Shells`.
+
+| `src/config_store/config_store.adb`
+| Resolves the modshells root path. Reads `MODSHELLS_CONFIG_PATH` environment
+  variable; falls back to `~/.config/nushell/modshells`.
+
+| `src/shell_validator/`
+| Input guards (separate from shell_manager to avoid circular dependencies).
+
+| `tests/smoke_test.sh`
+| Shell-based smoke test: checks source files exist, SPDX headers present,
+  binary runs, directory creation works, idempotency check passes.
+
+| `tests/unit/test_shell_manager.adb`
+| Ada unit tests for Shell_Manager functions. Built separately via `tests/tests.gpr`.
+
+| `tests/e2e/`
+| End-to-end tests against a live shell environment.
+
+| `tests/property/`
+| Property-based tests (QuickCheck style).
+
+| `examples/`
+| Ready-to-use config snippets: `core/00-path.sh`, `tools/git.sh`, `tools/fzf.sh`,
+  `misc/aliases.sh`, `os/linux.sh`, `ui/colours.sh`, and others.
+
+| `modshells.gpr`
+| GPRBuild project file. Source directories, object output path (`obj/`),
+  binary output path (`bin/`).
+
+| `guix.scm` / `flake.nix`
+| Package manager manifests (primary: Guix; fallback: Nix).
+
+| `.machine_readable/6a2/`
+| A2ML checkpoint files: STATE, META, ECOSYSTEM, AGENTIC, NEUROSYM, PLAYBOOK.
+|===
+
+== Checking It
+
+[source,bash]
+----
+# Build
+gprbuild -p -j0 modshells.gpr
+
+# Smoke test (does not require build)
+./tests/smoke_test.sh
+
+# Unit tests
+gprbuild -p -j0 -P tests/tests.gpr
+./bin/test_shell_manager
+
+# Dry-run (inspect what would be changed)
+MODSHELLS_CONFIG_PATH=/tmp/modshells-test ./bin/modshells
+----

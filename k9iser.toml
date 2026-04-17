@@ -1,0 +1,42 @@
+# SPDX-License-Identifier: PMPL-1.0-or-later
+# Copyright (c) 2026 Jonathan D.A. Jewell (hyperpolymath) <j.d.a.jewell@open.ac.uk>
+#
+# k9iser manifest for modshells
+# Generates K9 contracts from repo configuration files.
+# modshells is a shell configuration manager — Deno runtime + Ada (.gpr) components
+
+[project]
+name = "modshells"
+safety_tier = "hunt"
+
+[[source]]
+path = "deno.json"
+type = "deno"
+output = "generated/k9iser/deno-workspace.k9"
+
+[[source]]
+path = "Justfile"
+type = "justfile"
+output = "generated/k9iser/justfile-recipes.k9"
+
+[[source]]
+path = ".github/workflows/hypatia-scan.yml"
+type = "workflow"
+output = "generated/k9iser/ci-security.k9"
+
+[[source]]
+path = ".github/workflows/codeql.yml"
+type = "workflow"
+output = "generated/k9iser/ci-codeql.k9"
+
+[[constraint]]
+rule = "deno.imports has no npm: specifiers"
+severity = "error"
+
+[[constraint]]
+rule = "deno.tasks does not invoke node or npx"
+severity = "error"
+
+[[constraint]]
+rule = "workflows includes hypatia-scan"
+severity = "error"
