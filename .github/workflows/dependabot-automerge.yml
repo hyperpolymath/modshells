@@ -1,0 +1,143 @@
+# SPDX-License-Identifier: PMPL-1.0-or-later
+#
+# dependabot-automerge.yml — enable GitHub's native auto-merge on
+# Dependabot pull requests that match a declared severity / ecosystem
+# policy. Pairs with `.github/dependabot.yml`'s
+# `open-pull-requests-limit: 0` + security-only pattern (see the
+# cargo block there).
+#
+# What this does:
+#   - Triggers on every Dependabot PR.
+#   - Reads the PR's update-type metadata via the dependabot/fetch-metadata
+#     action (no free-text parsing).
+#   - Requires CI to be green before merge (GitHub's auto-merge enforces
+#     required status checks).
+#   - Gates merge behind a severity+ecosystem policy table. Default is
+#     low+medium security updates only.
+#
+# Why auto-merge on GitHub (not via a bot like rhodibot) is the right
+# layer: GitHub enforces branch protection + required checks natively,
+# and the PR author is already `dependabot[bot]`. Rhodibot doesn't need
+# to know anything about ecosystems — GitHub handles the merge mechanics
+# once we approve.
+#
+# Threat model:
+#   - A compromised upstream package with a bogus security advisory
+#     could propose a malicious version bump. Mitigation: require at
+#     least one non-automated reviewer for HIGH+CRITICAL severity
+#     (done below — we explicitly refuse to auto-approve those).
+#   - A compromised Dependabot itself is an Akerlof claim-grounder
+#     problem. Not in scope here; track under
+#     `project_claim_grounders_dual_use_akerlof.md`.
+#
+# Dogfooding: this workflow template is itself subject to the same
+# Dependabot config via the github-actions ecosystem block, so SHA
+# bumps for dependabot/fetch-metadata flow through the same path.
+
+name: Dependabot Auto-Merge
+
+on:
+  pull_request:
+    types: [opened, reopened, synchronize]
+
+permissions:
+  contents: write        # needed to enable auto-merge
+  pull-requests: write   # needed to approve
+  # NB: keep narrow — do NOT add secrets: read or id-token: write here.
+
+jobs:
+  automerge:
+    # Only run for PRs actually authored by Dependabot.
+    if: github.actor == 'dependabot[bot]' && github.event.pull_request.user.login == 'dependabot[bot]'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Fetch Dependabot metadata
+        id: meta
+        uses: dependabot/fetch-metadata@dbb049abf0d677abbd7f7eee0375145b417fdd34 # v2.2.0
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      # --- Policy gate -------------------------------------------------------
+      # Outputs from fetch-metadata we care about:
+      #   update-type      → version-update:semver-{patch,minor,major}
+      #   dependency-type  → direct:{development,production} | indirect
+      #   alert-state      → AUTO_DISMISSED | DISMISSED | FIXED | OPEN
+      #   ghsa-id          → GHSA-... if this is a security PR
+      # --- Policy -------------------------------------------------------------
+      # AUTO-APPROVE + AUTO-MERGE when:
+      #   1. This is a SECURITY update (ghsa-id present), AND
+      #   2. Update is patch or minor, AND
+      #   3. Severity ≤ moderate (Dependabot doesn't expose severity
+      #      directly in fetch-metadata; infer from the absence of
+      #      HIGH/CRITICAL labels added by Dependabot).
+      # Otherwise: do nothing. Human reviews HIGH+CRITICAL security
+      # updates and all non-security bumps.
+      - name: Decide policy outcome
+        id: policy
+        env:
+          GHSA_ID: ${{ steps.meta.outputs.ghsa-id }}
+          UPDATE_TYPE: ${{ steps.meta.outputs.update-type }}
+          PR_LABELS: ${{ toJson(github.event.pull_request.labels.*.name) }}
+        run: |
+          set -euo pipefail
+
+          is_security=false
+          is_patch_or_minor=false
+          is_high_or_critical=false
+
+          [ -n "$GHSA_ID" ] && is_security=true
+          case "$UPDATE_TYPE" in
+            version-update:semver-patch|version-update:semver-minor)
+              is_patch_or_minor=true ;;
+          esac
+
+          # Dependabot adds severity labels like "severity: high",
+          # "severity: critical". Look for those in the PR labels JSON.
+          if echo "$PR_LABELS" | grep -qiE '"(severity: (high|critical))"'; then
+            is_high_or_critical=true
+          fi
+
+          if $is_security && $is_patch_or_minor && ! $is_high_or_critical; then
+            echo "action=automerge" >> "$GITHUB_OUTPUT"
+          else
+            echo "action=skip" >> "$GITHUB_OUTPUT"
+          fi
+          echo "security=$is_security" >> "$GITHUB_OUTPUT"
+          echo "update_type=$UPDATE_TYPE" >> "$GITHUB_OUTPUT"
+          echo "ghsa=$GHSA_ID" >> "$GITHUB_OUTPUT"
+
+      - name: Approve PR (if policy allows)
+        if: steps.policy.outputs.action == 'automerge'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_URL: ${{ github.event.pull_request.html_url }}
+        run: |
+          gh pr review --approve "$PR_URL" \
+            --body "Auto-approving Dependabot security update (${{ steps.policy.outputs.ghsa }}, ${{ steps.policy.outputs.update_type }}). Policy: low/moderate security patches/minors only."
+
+      - name: Enable auto-merge (if policy allows)
+        if: steps.policy.outputs.action == 'automerge'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_URL: ${{ github.event.pull_request.html_url }}
+        run: |
+          gh pr merge --auto --squash "$PR_URL"
+
+      - name: Write decision to step summary
+        env:
+          ACTION: ${{ steps.policy.outputs.action }}
+          IS_SECURITY: ${{ steps.policy.outputs.security }}
+          UPDATE_TYPE: ${{ steps.policy.outputs.update_type }}
+          GHSA: ${{ steps.policy.outputs.ghsa }}
+        run: |
+          {
+            echo "## Dependabot Auto-Merge Decision"
+            echo ""
+            echo "| Field | Value |"
+            echo "|-------|-------|"
+            echo "| Policy action | \`$ACTION\` |"
+            echo "| Security update | \`$IS_SECURITY\` |"
+            echo "| Update type | \`$UPDATE_TYPE\` |"
+            echo "| GHSA ID | \`${GHSA:-n/a}\` |"
+          } >> "$GITHUB_STEP_SUMMARY"
