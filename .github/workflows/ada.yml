@@ -1,4 +1,4 @@
-# SPDX-License-Identifier: MPL-2.0-or-later
+# SPDX-License-Identifier: PMPL-1.0-or-later
 name: Ada (GNAT)
 
 on:
@@ -27,4 +27,4 @@ jobs:
         sudo apt-get install gnat gprbuild
 
     - name: Build
-      run: gprbuild -j0 -p
+      run: gprbuild -P modshells.gpr -j0 -p
