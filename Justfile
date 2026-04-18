@@ -10,25 +10,34 @@ project := "modshells"
 default:
     @just --list --unsorted
 
-# Build
+# Build the Ada executable via GNAT project file
 build:
-    @echo "TODO: Add build command"
+    gprbuild -P modshells.gpr -p
 
-# Test
+# Build + run the Ada test suite (tests/tests.gpr → bin/test_shell_manager)
+# Also runs the bash smoke test if present.
 test:
-    @echo "TODO: Add test command"
+    gprbuild -P tests/tests.gpr -p
+    ./bin/test_shell_manager
+    @if [ -x tests/smoke_test.sh ]; then tests/smoke_test.sh; fi
 
-# Clean
+# Remove build artefacts
 clean:
-    @echo "TODO: Add clean command"
+    gprclean -P modshells.gpr
+    @rm -rf obj bin 2>/dev/null || true
 
-# Format
+# Format Ada sources with gnatformat when available
 fmt:
-    @echo "TODO: Add format command"
+    @if command -v gnatformat >/dev/null 2>&1; then \
+        find src -name '*.adb' -o -name '*.ads' | xargs gnatformat --inline; \
+    else \
+        echo "gnatformat not installed — install GNAT Pro or ALIRE toolchain"; \
+        exit 0; \
+    fi
 
-# Lint
+# Lint Ada sources via -gnaty style checks (runs the compiler in check-only mode)
 lint:
-    @echo "TODO: Add lint command"
+    gprbuild -P modshells.gpr -gnaty -c -u
 
 # Run panic-attacker pre-commit scan
 assail:
