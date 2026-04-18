@@ -1,0 +1,28 @@
+// Bustfile.a2ml — meta-repo bust contractile (breakage / rollback)
+// SPDX-License-Identifier: PMPL-1.0-or-later
+
+Bust {
+    name: "modshells"
+    version: "1.0.0"
+    description: "Rollback procedures when something breaks in the meta-repo"
+
+    scenarios: {
+        "bad-pointer-bump": "git revert <bump-commit> in meta-repo; child repo itself untouched"
+        "submodule-pointer-points-at-missing-sha": "git submodule update --init --checkout <path> resets child to parent-recorded SHA; OR revert the stale bump commit"
+        "submodule-orphan-after-local-only-commit": "roll back locally with git reset to before the stranded commit; fix remote situation before re-attempting"
+        "accidental-private-repo-content-leaked-to-public-submodule": "hard-rotate the leaked secret immediately; git-filter-repo or BFG on the submodule's own history; public re-publication only after rotation complete"
+    }
+
+    escalation-ladder: [
+        "1. revert the meta-repo commit (reversible, low blast radius)",
+        "2. reset the local submodule clone (affects only local workspace)",
+        "3. force-push to main — PROHIBITED without explicit user confirmation (violates branch protection)",
+        "4. registry-level (delete/archive the GitHub repo) — human-only action, never by AI"
+    ]
+
+    backup-points: [
+        "GitHub serves as the durable backup for every submodule's own history",
+        "Meta-repo history on origin/main is the durable backup for pointer state",
+        "Local backup tags (backup/pre-<operation>-<date>) retained on risky rewrites"
+    ]
+}
