@@ -1,0 +1,690 @@
+// SPDX-License-Identifier: PMPL-1.0-or-later
+// Copyright (c) 2026 Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
+
+= Modshells — CRG Audit (2026-04-18)
+Jonathan D.A. Jewell
+2026-04-18
+:toc:
+:sectnums:
+
+== Scope and Standard
+
+Evaluates the `modshells` repository against *Component Readiness Grades
+v2.0 (STRICT)*, 2026-03-30 revision. Modshells was queued for the full
+evidence audit by the HYP-S005 canary: STATE.a2ml claims
+`completion-percentage = 100` while `version = "0.1.0"` — a
+self-contradictory shape that v2.0 was explicitly designed to catch.
+
+- Standard: `standards/component-readiness-grades/COMPONENT-READINESS-GRADES.md`
+- Criteria boilerplate: `rsr-template-repo/docs/governance/CRG-CRITERIA.adoc`
+- Audit template: `rsr-template-repo/docs/governance/CRG-AUDIT-TEMPLATE.adoc`
+- Self-declared grade (prior art):
+  * `.machine_readable/6a2/STATE.a2ml` `[metadata] crg-grade = "C"`,
+    declared 2026-04-04 via commit `cce2320 Update STATE.a2ml: mark
+    modshells as CRG C complete with test coverage metrics`.
+  * `[project-context] completion-percentage = 100`, `phase = "CRG C
+    Complete - Test Coverage Achieved"`.
+  * `[test-coverage] total-tests = 66` (15 unit + 11 property + 9 e2e
+    + 31 aspect + 15 benchmarks).
+- Audit date: 2026-04-18
+- Auditor: Jonathan D.A. Jewell
+
+Schema note: STATE.a2ml uses the flat `crg-grade = "C"` under `[metadata]`
+— the HYP-S005-compatible form. The completion-vs-version contradiction
+is the canary that flagged this audit; the triage note of 35 tests
+(15+11+9) under-counts the STATE claim — the full claim is *66*, which
+widens the evidence gap this audit must close.
+
+The audit grades the repo *as-is today*, not aspirationally.
+
+== v2.0 Strictness Recap
+
+[cols="1,3,4"]
+|===
+| Grade | Release Stage | Hard Requirement (v2.0)
+
+| X | None             | Untested.
+| F | Reject           | Harmful, wasteful, or superseded.
+| E | Pre-alpha        | >=1 test, failures documented.
+| D | Alpha            | Test matrix + scope documented + *RSR compliance mandatory*.
+| C | Alpha-stable     | Dogfooded, CI green, *deep per-file + per-directory annotation*.
+| B | Beta             | 6+ *diverse* external targets, issues fed back.
+| A | Stable           | Real-world external feedback confirms value; no harm.
+|===
+
+Publication requires B+. Long alpha is discipline, not shame.
+
+== Evidence Inventory (verified 2026-04-18)
+
+=== Self-consistency paradox (HYP-S005 canary)
+
+`STATE.a2ml` simultaneously declares:
+
+- `version = "0.1.0"`,
+- `completion-percentage = 100`,
+- `phase = "CRG C Complete - Test Coverage Achieved"`,
+- `crg-grade = "C"`.
+
+And `ROADMAP.adoc` line 11 simultaneously declares:
+
+- `== Current State: v0.0 (Alpha)` — a *lower* version than STATE admits.
+
+And `README.adoc` line 46 simultaneously declares:
+
+- `*Version 0.1* - Core functionality complete`.
+
+And `README.adoc` line 41-44 *Current Status* table declares every
+feature "✓ Working"; but `ROADMAP.adoc` lines 31-36 declare
+`Shell_Manager.Detect_Shells` **"Stub only"** and
+`Shell_Manager.Is_Modularized` **"Partial"** for the same build.
+
+Four documents, four different stories. The v2.0 "honest D > dishonest B"
+clause is violated before a single external check is applied. Per the
+HYP-S005 detector: if completion = 100 is correct, the version cannot
+be 0.1.0 / v0.0 (minimum bump to 0.5.0 for a "CRG C complete" claim,
+1.0.0 for `completion-percentage = 100` with no caveats); if version
+0.1.0 is correct, the completion figure is a lie. Since ROADMAP and
+README both concede stubs in core modules, the *completion* figure is
+the lie.
+
+=== Structural compliance (Grade D floor)
+
+[cols="2,1,3"]
+|===
+| Item | State | Source
+
+| RSR mandatory workflows (17+)
+| PRESENT (21 YAML files)
+| `.github/workflows/` — ada, boj-build, casket-pages, codeql, dogfood-gate, generator-generic-ossf-slsa3-publish, guix-nix-policy, hypatia-scan, instant-sync, mirror, npm-bun-blocker, quality, rsr-antipattern, scorecard, scorecard-enforcer, secret-scanner, security-policy, ts-blocker, wellknown-enforcement, workflow-linter. Count is adequate.
+
+| `.machine_readable/6a2/` canonical A2ML
+| PRESENT (STATE, META, ECOSYSTEM, AGENTIC, NEUROSYM, PLAYBOOK — all 6 files)
+| STATE has substantive content; the other five are 8-24 lines of section placeholders. META.a2ml is 10 lines. ECOSYSTEM.a2ml is 11 lines with a single `type = "component"` field. PLAYBOOK.a2ml's operational sections are all commented out. This is the *thinnest* 6a2 content surface of any CRG-C candidate audited this session.
+
+| `0-AI-MANIFEST.a2ml`
+| PRESENT (4164 bytes)
+| Root
+
+| `README.adoc`, `EXPLAINME.adoc`, `CONTRIBUTING.md`, `SECURITY.md`, `MAINTAINERS.adoc`, `CODE_OF_CONDUCT.md`, `ROADMAP.adoc`, `PALIMPSEST.adoc`, three `QUICKSTART-*.adoc`, `TOPOLOGY.md`, `PROOF-NEEDS.md`, `TEST-NEEDS.md`
+| PRESENT
+| Root. Good surface-level annotation volume.
+
+| `docs/` orientation subtree
+| *critical failure* — contains only `CITATIONS.adoc` (832 bytes) prior to this audit creating `docs/governance/`. No `architecture/`, `decisions/`, `integration/`, `practice/`, `theory/`, `whitepapers/`.
+| Thinner than neurophone (which failed the same check and was demoted C→E).
+
+| `LICENSE` + `LICENSES/` directory
+| PRESENT (`LICENSE` is 18387 bytes; `LICENSES/PMPL-1.0-or-later.txt`, `LICENSES/MPL-2.0.txt`; plus legacy `license/PMPL-1.0.txt`)
+| Licence-file hygiene good structurally; the legacy duplicate `license/` folder should be merged into `LICENSES/`.
+
+| `guix.scm` + `flake.nix`
+| PRESENT (both)
+| Root
+
+| `.well-known/` (security.txt, ai.txt, humans.txt)
+| PRESENT (all three)
+| `.well-known/`
+
+| SPDX headers on source
+| PRESENT on 7/7 Ada source files sampled (`shell_validator.{ads,adb}`, `shell_manager.{ads,adb}`, `modshells.adb`, `config_store.{ads,adb}`)
+| Grep confirmed. Headers are `PMPL-1.0-or-later`.
+
+| `Containerfile` (not `Dockerfile`)
+| N/A at root; `stapeln.toml` present (Stapeln container definition, correct).
+| Zero `Dockerfile`. Policy met.
+
+| `Justfile` + `Mustfile` (no `Makefile`)
+| *PRESENT but stub* — see catastrophic finding below
+| RSR R-020 met structurally, *not behaviourally*.
+
+| Contractile trident
+| PRESENT: `.machine_readable/INTENT.contractile` / `TRUST.contractile` / `MUST.contractile` / `ADJUST.contractile` *plus* `contractiles/{intend,must,trust}/*.a2ml` runners
+| Six-verb layout *partial* — has intend/must/trust trident but no `bust`/`adjust`/`dust` runners (ADJUST.contractile exists at .machine_readable/ but with no companion runner under contractiles/).
+
+| Remote
+| `origin → git@github.com:hyperpolymath/modshells.git` (origin only; no drift to other forges at the canonical copy)
+| `git remote -v`. Clean. The monorepo-nested copy at `verification-ecosystem/modshells/` has four mirror remotes (bitbucket, codeberg, gitlab, sourcehut) which per GitHub-only mirroring rule should be driven by downstream hub-and-spoke not local — but that's a separate copy (see §Duplicate-copy finding).
+|===
+
+RSR compliance verdict: *shell met, one core item stubbed* — see next
+section. D-floor structural count: adequate. D-floor behavioural: **not
+met** because of the Justfile stub.
+
+=== CATASTROPHIC FINDING 1: `Justfile` build/test/lint recipes are placeholder echoes
+
+The Justfile's core RSR recipes *do not execute any work*:
+
+[source,makefile]
+----
+# Build
+build:
+    @echo "TODO: Add build command"
+
+# Test
+test:
+    @echo "TODO: Add test command"
+
+# Clean
+clean:
+    @echo "TODO: Add clean command"
+
+# Format
+fmt:
+    @echo "TODO: Add format command"
+
+# Lint
+lint:
+    @echo "TODO: Add lint command"
+----
+
+`just build` prints a string; it does not invoke `gprbuild modshells.gpr`
+or any Ada compiler. `just test` prints a string; it does not invoke
+`deno task test` despite `deno.json` defining that task. `just clean`,
+`just fmt`, `just lint` are the same. The Justfile *appears* to exist
+(RSR R-020 passes the file-existence check) but carries no operational
+content.
+
+This fails the v2.0 D-floor "test matrix + scope documented" clause
+interpreted behaviourally — there is no `just`-invocable path from a
+green checkout to a test run. A new contributor following `just test`
+sees "TODO" and has no route to the actual test suite.
+
+Separately: the `crg-grade` recipe at lines 84-87 parses
+`READINESS.md` — a file that **does not exist** in this repo. The
+badge-generator recipe at lines 91-98 does the same. Both fall through
+to the `X` (untested) default silently, so any external user
+instrumenting against `just crg-grade` gets `X` regardless of actual
+state. The self-declared `C` never surfaces through the tool's own API.
+
+=== CATASTROPHIC FINDING 2: entire test suite is TypeScript (banned language)
+
+STATE.a2ml `[test-coverage]` credits 66 tests across five suites. All of
+them are written in *TypeScript*:
+
+[cols="2,1,3"]
+|===
+| Suite | `Deno.test` count | File
+
+| unit         | 15 | `tests/unit/shell_config_test.ts`
+| property     | 11 | `tests/property/config_properties_test.ts`
+| e2e          |  9 | `tests/e2e/shell_lifecycle_test.ts`
+| aspect       | 31 | `tests/aspect/security_test.ts`
+| bench        |  — | `tests/bench/config_bench.ts`
+| *total*      | *66* | 5 `.ts` files (+ Ada test `test_shell_manager.adb` + `smoke_test.sh`)
+|===
+
+TypeScript is on the Hyperpolymath BANNED list with ReScript as the
+mandated replacement (CLAUDE.md language policy). The repo's own
+`rsr-antipattern.yml` workflow exists *specifically to block this*.
+
+The violation was hidden by amending the anti-pattern check itself.
+`.github/workflows/rsr-antipattern.yml` line 32:
+
+[source,bash]
+----
+TS_FILES=$(find . \( -name "*.ts" -o -name "*.tsx" \) \
+  | grep -v node_modules \
+  | grep -v 'bindings/deno' \
+  | grep -v '\.d\.ts$' \
+  | grep -v '^./tests/' || true)       # <-- ADDED BY THIS REPO
+----
+
+The trailing `grep -v '^./tests/'` filter was *added in this repo* to
+suppress the ban on its own tests. The monorepo-nested copy at
+`verification-ecosystem/modshells/.github/workflows/rsr-antipattern.yml`
+does *not* carry that exclusion — compare the two:
+
+[source,diff]
+----
+< TS_FILES=$(... | grep -v '^./tests/' || true)   # modshells/
+---
+> TS_FILES=$(... || true)                          # verification-ecosystem/modshells/
+----
+
+Per v2.0 strict interpretation, tailoring the policy gate to hide a
+violation fails the "honest D > dishonest B" clause harder than merely
+missing the policy — it is *editing the speed camera to look the other
+way*. Under the language-policy rule, every test file in the declared
+`[test-coverage]` must be rewritten in ReScript (or another allowed
+language) before the suite can be counted at all. Until that rewrite,
+the 66-test claim supplies *zero* language-policy-compliant test
+evidence.
+
+This simultaneously violates:
+
+. **Language policy** (CLAUDE.md): no TypeScript.
+. **D-floor RSR compliance**: the antipattern workflow is gamed to pass.
+. **C-grade "deep annotation"** clause: the gamed workflow is itself
+  an undocumented, self-excepting rule carve-out — the opposite of
+  "deep annotation".
+
+=== Code and proofs
+
+[cols="2,1,3"]
+|===
+| Item | Count | Notes
+
+| Ada source files
+| 7 (`.ads` + `.adb`)
+| `modshells.adb` (1840 bytes), `config_store.{ads,adb}` (225 + 2340), `shell_manager.{ads,adb}` (3567 + 18818), `shell_validator.{ads,adb}` (11260 + 31605). ~70 KB total source — the `shell_validator` pair is the largest module.
+
+| Ada SPDX header coverage
+| 9 headers across 7 files (some files carry duplicate SPDX lines — minor)
+| All PMPL-1.0-or-later. No MPL-2.0-or-later drift in source (unlike in the monorepo copy's workflow SPDXes).
+
+| Ada test harness
+| 1 file (`tests/test_shell_manager.adb`, 6286 bytes) + `tests/tests.gpr`
+| Listed only via `.gpr` project, not in STATE.a2ml `[test-coverage]`. Count unclear from filesystem inspection.
+
+| Smoke test
+| 1 shell script (`tests/smoke_test.sh`, 5285 bytes)
+| Not counted in STATE.
+
+| TypeScript "tests"
+| 66 `Deno.test` blocks (see catastrophic finding 2)
+| *Banned language*; cannot count.
+
+| `believe_me` / `assert_total` / `Admitted` / `sorry` / `unsafeCoerce` / `Obj.magic` / `unsafe_blocks` in `src/`
+| *0*
+| Grepped 2026-04-18. Clean.
+
+| `unsafe` Ada patterns (e.g. `System.Address_To_Access_Conversions`, `Unchecked_Conversion`)
+| Not audited this pass
+| Follow-up: run `panic-attack assail` on the Ada workspace.
+|===
+
+ROADMAP.adoc admits the Ada body is not as complete as the README
+front-page table suggests:
+
+- `Shell_Manager.Detect_Shells` — **"Stub only"** (ROADMAP line 33).
+- `Shell_Manager.Is_Modularized` — **"Partial"** (ROADMAP line 36).
+- The README's `Current Status` table marks all four of Directory
+  creation / Shell detection / Config backup / Source injection as
+  "✓ Working". Two of these contradict ROADMAP.
+
+`src/shell_manager/shell_manager.adb` enumerates exactly *4* binary
+search paths (`/usr/bin`, `/bin`, `/usr/local/bin`, `/opt/homebrew/bin`)
+— not 10 shells' worth of detection pathways. The README claim
+"detects installed shells (Bash, Zsh, Fish, Nushell, and 6 others)" is
+a count of *enumerated types*, not a count of *implemented detectors*.
+
+=== Test matrix — declared vs actual
+
+STATE.a2ml's 66-total figure matches a `Deno.test`-count grep. However
+all 66 are in banned TypeScript (see catastrophic finding 2). The
+language-compliant test count is:
+
+[cols="2,1,3"]
+|===
+| Suite | Language-compliant count | Notes
+
+| Ada unit (`test_shell_manager.adb` + `tests.gpr`)
+| *unknown — not in STATE.a2ml*
+| One `.adb` file, unit count depends on AUnit procedure count (not scanned here).
+
+| Shell smoke (`smoke_test.sh`)
+| *1 (scripted scenario)*
+| Not counted in STATE.
+
+| TypeScript (all suites)
+| *0 (banned language)*
+| 66 `Deno.test` blocks disqualified.
+
+| *Counted toward v2.0 D-floor*
+| *≥ 1 (smoke script + Ada test file)*
+| Just enough for E (>=1 test); insufficient for D's "test matrix".
+|===
+
+CI coverage: `.github/workflows/ada.yml` (551 bytes) is the nominal
+test workflow for the *allowed-language* side. `.github/workflows/
+quality.yml` exists. No CI-badge link in README. STATE.a2ml does not
+cite a green-run SHA. Assuming the Ada workflow runs and green, CI is
+passing — but the 66 `Deno.test`s it purports to protect are not in the
+allowed language, so CI greenness does not imply test-matrix
+completeness as claimed.
+
+=== Annotation depth
+
+v2.0 C requires **per-file and per-directory orientation**. Evidence:
+
+- `docs/` subtree contains *only* `CITATIONS.adoc` (832 bytes) before
+  this audit created `docs/governance/`. No `architecture/`,
+  `decisions/`, `integration/`, `practice/`, `theory/`, `whitepapers/`.
+  This is the *same failure class* that demoted neurophone C→E in the
+  sibling audit — and modshells' `docs/` is actually *thinner* (one
+  file vs. neurophone's two).
+- Per-directory README coverage in `src/`: *0 of 4* subtrees carry a
+  README (`config_store/`, `main/`, `shell_manager/`, `shell_validator/`).
+  0% fails the "deep per-file annotation" clause by a wide margin.
+- Per-directory README coverage in `tests/`: *0 of 6* (`unit/`,
+  `property/`, `e2e/`, `aspect/`, `bench/`, `fuzz/`). `tests/fuzz/`
+  contains only `placeholder.txt` — so a declared suite slot exists as
+  an empty promise.
+- Per-directory README coverage in `examples/`: *1 of 5* (`examples/
+  README.adoc` exists; the 5 subtree dirs `core/`, `misc/`, `os/`,
+  `tools/`, `ui/` have none).
+- Per-directory README coverage in `.machine_readable/`: *1 of 4*
+  (`agent_instructions/README.adoc` only; no README at `.machine_readable/`
+  root, none at `anchors/`, `contractiles/`, `integrations/`, `6a2/`).
+- Top-level annotation *is* voluminous (README 11379 bytes, EXPLAINME
+  6192 bytes, ROADMAP 15083 bytes, TOPOLOGY 6625 bytes, three
+  QUICKSTART files totalling ~7 KB, PROOF-NEEDS, TEST-NEEDS,
+  PALIMPSEST) — the problem is *depth*, not *surface*: everything
+  orients the repo as-a-whole; nothing orients a specific subtree.
+- EXPLAINME.adoc is substantive and well-structured. It is the single
+  strongest annotation artefact in the repo.
+- Source-level docstrings in Ada: specs (`.ads`) have block comments;
+  not audited for inline-invariant coverage this pass.
+
+=== Dogfooding / home-stable evidence
+
+STATE.a2ml has *no* `[dogfooding-status]` section. Grep for
+`dogfoo` under `.machine_readable/` (case-insensitive) returns zero
+hits across all six 6a2 files. There is no `docs/practice/DOGFOOD-LOG.adoc`.
+
+There is a `.github/workflows/dogfood-gate.yml` (13511 bytes) — an
+elaborate gate workflow. A *gate* is not evidence of *use*. Without a
+`[dogfooding-status]` section cataloguing what was dogfooded, when, by
+whom, on which machine, this is infrastructure for dogfooding rather
+than evidence of it. Same failure pattern as neurophone.
+
+Indirect signals:
+
+- `.hypatia/activity.jsonl` (97 bytes) suggests one Hypatia scan ran.
+  Not dogfood signal; it's observability.
+- Modshells is an Ada shell-config manager. Dogfooding would mean "the
+  author's `~/.config/*/modshells/` is modshells-managed". No evidence
+  file captures this.
+- No other repo in the estate references modshells as a dependency
+  (grep for `modshells` across `/var/mnt/eclipse/repos/**/*.a2ml`
+  returns only modshells' own copies plus a single gv-clade-index
+  catalogue entry — *catalogue listing, not dogfooder*).
+
+v2.0 C requires *continuous* home-context use with no known failures.
+Evidence does not support this for modshells.
+
+=== External validation (Grade B / A)
+
+No `[external-targets]`. No `[issues-fed-back]`. No `[field-signal]`.
+
+External-adjacent signals:
+
+- One PR merged (`89ed5b6 Chore/cicd optimizations (#26)`) and one
+  bot PR (`a600af2 chore(deps): Bump the actions group ... (#25)`) —
+  both internal / automated, not external users.
+- gv-clade-index/verisim/seed/repos.a2ml catalogues modshells — a
+  catalogue listing, not an external user.
+- Mirror remotes configured on the monorepo-nested copy — mirror
+  presence is not usage.
+
+Per v2.0, reaching B requires *6+ diverse external targets* actually
+using the software with feedback fed back. Modshells is at *0*.
+
+=== Duplicate-copy finding
+
+`/var/mnt/eclipse/repos/modshells/` and `/var/mnt/eclipse/repos/
+verification-ecosystem/modshells/` are *two separate git working
+trees* tracking the same `github.com:hyperpolymath/modshells.git`.
+Working-tree diffs (excluding `.git/`):
+
+[cols="2,3"]
+|===
+| File | Difference
+
+| `.github/workflows/rsr-antipattern.yml`
+| Top-level has `grep -v '^./tests/'` exclusion; nested copy does *not*. **Top-level is out of sync with nested — and it's the gamed one.**
+
+| `.github/workflows/ada.yml`, `dogfood-gate.yml`, `hypatia-scan.yml`
+| Differ (content not inspected line-by-line; likely SPDX header or SHA-pin drift).
+
+| `.machine_readable/policies/`
+| Present in nested copy; absent in top-level.
+
+| `.well-known/groove/`
+| Present in nested copy; absent in top-level.
+
+| `.git` remotes
+| Top-level: `origin` only (GitHub-only mirroring respected). Nested: `origin` + `bitbucket` + `codeberg` + `gitlab` + `sourcehut` (legacy direct-push remotes; per GitHub-only mirroring rule these should be removed or at minimum never pushed to from the local machine).
+|===
+
+Both copies share the same HEAD commit (`152f19d`) on
+`chore/cicd-optimizations` branch. But the top-level copy carries
+*different* workflow file content than the nested one — meaning one of
+them has uncommitted-but-local edits or has been edited in place. The
+top-level copy is the one that has been edited to game the TypeScript
+check; the nested copy has the ungamed workflow but is missing the
+`.machine_readable/policies/` tree.
+
+Authoritative copy determination: *neither is clearly authoritative*.
+They are divergent working trees of the same repo. Both need
+reconciliation before the next commit.
+
+== Grade x Evidence Matrix
+
+[cols="1,1,3,3"]
+|===
+| Grade | Met? | Evidence supporting | Evidence against / gaps
+
+| X
+| n/a
+| Tests exist (Ada `test_shell_manager.adb` + `smoke_test.sh`) → not X
+| —
+
+| F
+| n/a
+| Not superseded; no harm signal
+| —
+
+| E
+| ✓
+| ≥1 language-compliant test exists (Ada AUnit harness + shell smoke)
+| —
+
+| D
+| *✗*
+| Structural shell in place: 21 workflows, 6a2 six-file layout, contractile trident (partial), Justfile (*stub*), `.well-known/`, LICENSES dir, SPDX headers 7/7 on Ada source, guix + flake, 0-AI-MANIFEST
+| *Justfile build/test/clean/fmt/lint are placeholder `echo "TODO"`s — no just-invocable path to tests.* STATE.a2ml test count of 66 is language-policy-non-compliant (all TypeScript). `rsr-antipattern.yml` patched to hide the violation. `completion-percentage = 100` at `version = "0.1.0"` self-contradicts. README/ROADMAP contradict each other on core-module completeness. No READINESS.md (Justfile assumes one exists for `crg-grade`). Top-level and nested copies disagree.
+
+| C
+| *✗*
+| EXPLAINME.adoc substantive; 0 dangerous-pattern uses in Ada source; Ada source non-trivial (~70 KB); dogfood-gate workflow exists (infra for dogfood)
+| `docs/` tree has 1 file (CITATIONS). Zero per-directory READMEs in `src/`, `tests/`, `.machine_readable/*/`. No `[dogfooding-status]`. No CI-green-SHA cited. ROADMAP admits `Detect_Shells` is "Stub only" and `Is_Modularized` is "Partial" — contradicting the "100% complete" STATE claim. `tests/fuzz/` is a `placeholder.txt`.
+
+| B
+| ✗
+| —
+| Zero external targets. Zero issues-fed-back. Zero field signal.
+
+| A
+| ✗
+| —
+| No field confirmation.
+|===
+
+== Verdict
+
+*Current CRG grade: **E (Pre-alpha)**. Demote two grades from
+self-declared C.*
+
+Self-declared: *C*. Audited: *E*. This is the second two-grade demotion
+in this session's Bucket-B sweep (matching neurophone's C→E). The
+demotion rationale is *different in structure* from neurophone: neurophone
+failed D-floor via committed merge conflicts; modshells failed D-floor
+via a stub Justfile *and* a banned-language test suite *and* a gamed
+antipattern workflow. Three independent D-floor breaks, not one.
+
+Reasoning (one sentence): STATE.a2ml declares `completion-percentage = 100`
+at `version = "0.1.0"` with 66 tests supporting a C claim, but the
+version/completion pair is internally contradictory (HYP-S005 canary
+tripped), the 66 tests are all in banned TypeScript, the language-policy
+workflow was amended in-repo to hide that violation, and the Justfile's
+core recipes are `echo "TODO"` stubs — so neither the D-floor "RSR
+compliance mandatory" clause nor the C-grade "CI green + deep
+annotation" clause is met before the per-directory-README question
+even arises.
+
+The E grade is earned, not conservative-by-default, on three positive
+signals that keep it above X/F:
+
+1. Real Ada code: `shell_validator.{ads,adb}` (~43 KB) and
+   `shell_manager.{ads,adb}` (~22 KB) are non-trivial
+   safety-critical-flavoured Ada — not vapourware.
+2. Zero dangerous-pattern uses (`believe_me`, `assert_total`, `Admitted`,
+   `sorry`, `unsafeCoerce`, `Obj.magic`, `unsafe_blocks`) in `src/`.
+3. EXPLAINME.adoc is substantive, honest, and lines up claim-for-claim
+   with the implementation — including explicit "Caveat" paragraphs.
+   If the other annotation artefacts were of this quality the gap to C
+   would be much narrower.
+
+What blocks *immediate* promotion to D (do these first):
+
+. **Un-game the language-policy workflow.** Revert the `grep -v '^./tests/'`
+  line from `.github/workflows/rsr-antipattern.yml` line 32. This will
+  make CI red. That redness is *correct*.
+. **Rewrite the 66 `Deno.test` blocks in a policy-allowed language.**
+  Options: (a) ReScript + Deno (consistent with the banned/allowed
+  table), (b) Ada AUnit extending `test_shell_manager.adb`, (c) a
+  Gleam suite calling into Ada via FFI. Pick one per-suite, not a mix.
+  Delete the `.ts` files in the same commit as the new suite.
+. **Replace Justfile TODO echoes with real commands.** `just build`
+  must call `gprbuild -P modshells.gpr`. `just test` must run the Ada
+  AUnit suite *and* the rewritten allowed-language suite. `just fmt`
+  must call `gnatpp` or equivalent. `just lint` must call `gnatcheck`
+  or equivalent. `just clean` must remove `obj/`, `bin/`, `.cache/`.
+. **Reconcile version vs completion vs phase.** Either bump version to
+  `0.5.0` (if "CRG C complete" is what's meant), or drop
+  `completion-percentage` to a number consistent with the README/
+  ROADMAP "Stub only"/"Partial" admissions (likely 40-55 %), or both.
+  Do not ship `0.1.0 + 100 %`.
+. **Reconcile README vs ROADMAP.** Either implement `Detect_Shells` /
+  `Is_Modularized` (code-writing, not doc-writing), or correct the
+  README's "✓ Working" claims to "⚠ Partial" / "⚠ Stub" to match
+  ROADMAP. One source of truth.
+. **Reconcile the two working-tree copies.** Decide whether the
+  canonical copy is `/var/mnt/eclipse/repos/modshells/` or `/var/mnt/
+  eclipse/repos/verification-ecosystem/modshells/`. Remove the
+  divergent local edits from whichever is non-canonical.
+
+What blocks promotion to C (do after D):
+
+. Add `[dogfooding-status]` to STATE.a2ml with concrete done-entries:
+  "modshells manages the author's nushell config since YYYY-MM-DD,
+  proof: `~/.config/nushell/modshells/` timestamp + `MODSHELLS_START`
+  marker present". No entry, no dogfood credit.
+. Per-directory READMEs: *0/4* in `src/`, *0/6* in `tests/`, *0/5*
+  in `examples/`, *0/4* in `.machine_readable/` subtrees. Target:
+  ≥90 %. Start with `src/shell_validator/README.adoc` since it's the
+  largest module.
+. Build out `docs/` with `architecture/`, `decisions/`, `governance/`
+  (this audit belongs here), `practice/`. Minimum first additions:
+  ADR-001 "Why Ada for shell configuration", ADR-002 "Idempotency via
+  text markers (trade-offs vs cryptographic)", ADR-003 "Test language
+  choice (post-TypeScript)".
+. Populate the near-empty 6a2 stubs. META.a2ml should carry actual
+  architectural decisions (it carries 4 fields). ECOSYSTEM.a2ml should
+  declare which estate projects consume modshells (currently 0 known;
+  this is itself a field to record). PLAYBOOK.a2ml should document the
+  release process with actual commands, not commented-out placeholders.
+. Implement or drop the `Detect_Shells` / `Is_Modularized` stubs.
+. Create `READINESS.md` so the Justfile's `crg-grade` recipe does not
+  silently fall through to `X`.
+
+What blocks promotion to B (after C):
+
+. Zero external targets. Need 6+ diverse — different distributions,
+  different shells already in active use, different OSes. Modshells
+  is designed for exactly this kind of cross-system dogfooding.
+. No external-contributor flow. Dependabot PRs don't count under v2.0.
+
+== Notes on Non-Negotiables Respected by this Audit
+
+- The antipattern-workflow edit that hides the TypeScript violation is
+  treated as an integrity breach (per "honest D > dishonest B"), not
+  as a minor lint miss. A C-grade claim cannot coexist with a policy
+  gate patched in-repo to ignore the claim's own evidence base.
+- The `[dogfooding-status]` absence is scored identically to neurophone:
+  a dogfood-gate workflow is *infrastructure*, not *evidence*. If
+  dogfood records exist outside STATE.a2ml (e.g. in the author's
+  actual shell config files), this audit cannot see them and they need
+  to be cited in STATE.a2ml to count.
+- The two-working-tree situation is reported but not graded — both
+  copies point at the same remote, so the grading applies to the
+  remote's main branch regardless of which local copy was inspected.
+  The audit nevertheless flags the divergence because one of the two
+  local copies has an uncommitted-or-mis-committed antipattern edit.
+- Completion-percentage = 100 is not a v2.0 grade criterion, but its
+  contradiction with `version = "0.1.0"` + ROADMAP "v0.0 (Alpha)" is
+  used as the HYP-S005 canary signal that queued this audit.
+
+== STATE.a2ml update recommendation
+
+Recommended (do NOT execute as part of this audit) — edit
+`.machine_readable/6a2/STATE.a2ml`:
+
+[source,toml]
+----
+[metadata]
+project = "modshells"
+version = "0.1.0"              # leave, or bump to 0.2.0 after Justfile fix
+last-updated = "2026-04-18"
+status = "active"
+crg-grade = "E"                # was "C"
+crg-grade-previous = "C"       # audit trail
+crg-audit = "docs/governance/CRG-AUDIT-2026-04-18.adoc"
+crg-next-target = "D"          # honest proximate bar
+
+[project-context]
+name = "modshells"
+completion-percentage = 45     # was 100 — consistent with ROADMAP "v0.0 (Alpha)"
+                                # and admitted "Stub only" / "Partial" modules
+phase = "Un-game language-policy workflow, rewrite tests in allowed language, fill Justfile"
+
+[test-coverage]
+# 66-total claim was TypeScript-only. Language-compliant count unknown
+# until rewrite; below is what the *Ada* side actually provides today:
+ada-unit-tests = "unknown — count from test_shell_manager.adb AUnit procedures"
+shell-smoke = 1                # smoke_test.sh
+# typescript-tests = 66        # REMOVED — banned language, cannot count
+total-tests-language-compliant = "≥ 2 (unknown upper bound pending Ada AUnit count)"
+pass-rate = "unknown"
+execution-time = "unknown"
+
+[blockers]
+justfile-stub = "just build/test/clean/fmt/lint are `echo TODO` placeholders — no invocable path to tests."
+language-policy-violation = "66 Deno.test blocks are TypeScript (banned). rsr-antipattern.yml line 32 amended to hide the violation."
+roadmap-vs-readme-drift = "ROADMAP admits Detect_Shells=Stub and Is_Modularized=Partial; README claims all four features '✓ Working'."
+hyp-s005-canary = "completion-percentage=100 coexists with version=0.1.0 and ROADMAP 'v0.0 (Alpha)'."
+duplicate-worktree = "top-level and verification-ecosystem/ copies have divergent workflow files."
+readiness-md-absent = "Justfile `crg-grade` recipe reads from non-existent READINESS.md; always returns X."
+----
+
+Demote target: *E*. Route-to-D is the "un-game, rewrite in allowed
+language, fill Justfile, reconcile version-vs-completion" sprint above.
+Once D is earned, the C climb is the standard annotation +
+dogfood-log + subtree-README block, plus implementing the admitted
+stubs.
+
+== Related Files
+
+- `.machine_readable/6a2/STATE.a2ml` — authoritative self-declared
+  state; recommend demote C→E with all six blocker lines above.
+- `.github/workflows/rsr-antipattern.yml` line 32 — gamed exclusion
+  `grep -v '^./tests/'`; must be reverted to restore policy integrity.
+- `Justfile` lines 13-31 — `build`/`test`/`clean`/`fmt`/`lint` are
+  placeholder echoes; must be replaced with real commands.
+- `Justfile` lines 84-98 — `crg-grade` / `crg-badge` recipes read
+  from non-existent `READINESS.md`.
+- `tests/{unit,property,e2e,aspect,bench}/*.ts` — 5 files, 66
+  `Deno.test` blocks in banned TypeScript; must be rewritten in an
+  allowed language.
+- `ROADMAP.adoc` lines 11, 33, 36 — `v0.0 (Alpha)` + `Detect_Shells
+  Stub only` + `Is_Modularized Partial` contradict STATE.a2ml and
+  README.
+- `README.adoc` lines 41-46 — `Current Status` table + `Version 0.1 -
+  Core functionality complete` claims contradict ROADMAP.
+- `verification-ecosystem/modshells/` — divergent working-tree copy;
+  reconcile before next commit.
+- `docs/governance/CRG-LIFT-PLAN-2026-04-18.adoc` — *to be written*
+  if a D-lift sprint is scheduled.
+
+_End of audit._
