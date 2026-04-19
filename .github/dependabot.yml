@@ -13,9 +13,8 @@ updates:
     directory: "/"
     schedule:
       interval: "daily"
-    ignore:
-      - dependency-name: "*"
-        update-types: ["version-update:semver-patch"]
+    open-pull-requests-limit: 0  # security PRs still flow; see rsr-template-repo@78b050e
+
   
   - package-ecosystem: "npm"
     directory: "/"
