@@ -28,12 +28,16 @@ jobs:
       - name: Check for TypeScript
         run: |
           # Allowlist (TS legitimate as a bridge/adapter to a non-ReScript ecosystem):
-          #   bindings/      - language bindings (Deno/TS/AssemblyScript FFI to ReScript core)
-          #   *.d.ts         - TypeScript type declarations for ReScript FFI
-          #   tests/, test/  - Deno test runners verifying ReScript output
-          #   scripts/       - Deno build scripts (bundle, dev-server, etc.)
-          #   mcp-adapter/   - MCP server adapters (MCP protocol is Deno/TS-typed by spec)
-          #   vscode/        - VSCode extensions (TS is the ecosystem default)
+          #   bindings/                      - language bindings (Deno/TS/AssemblyScript FFI)
+          #   *.d.ts                         - TypeScript type declarations for ReScript FFI
+          #   tests/, test/                  - Deno test runners
+          #   scripts/                       - Deno build scripts
+          #   mcp-adapter/                   - MCP server adapters (MCP is Deno/TS-typed by spec)
+          #   *vscode*                       - VSCode extensions (TS is the ecosystem default)
+          #   cli/                           - CLI entry points (Deno scripts)
+          #   mod.ts                         - canonical Deno module entrypoint
+          #   *lsp-server.ts, *lsp.ts        - Language Server Protocol implementations
+          #   deno-*/                        - subprojects explicitly named for Deno
           TS_FILES=$(find . \( -name "*.ts" -o -name "*.tsx" \) \
             | grep -v node_modules \
             | grep -v '/bindings/' \
@@ -42,7 +46,12 @@ jobs:
             | grep -v '/test/' \
             | grep -v '/scripts/' \
             | grep -v '/mcp-adapter/' \
-            | grep -v '/vscode/' \
+            | grep -Ev '/[^/]*vscode[^/]*/' \
+            | grep -v '/cli/' \
+            | grep -v '/mod\.ts$' \
+            | grep -Ev 'lsp[-_]?server\.ts$' \
+            | grep -Ev '[/-]lsp\.ts$' \
+            | grep -Ev '/deno-[^/]+/' \
             || true)
           if [ -n "$TS_FILES" ]; then
             echo "❌ TypeScript files detected - use ReScript instead"
