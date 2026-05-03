@@ -27,15 +27,29 @@ jobs:
 
       - name: Check for TypeScript
         run: |
-          # Exclude bindings/deno/ - those are Deno FFI files using Deno.dlopen, not plain TypeScript
-          # Exclude .d.ts files - those are TypeScript type declarations for ReScript FFI
-          TS_FILES=$(find . \( -name "*.ts" -o -name "*.tsx" \) | grep -v node_modules | grep -v 'bindings/deno' | grep -v '\.d\.ts$' | grep -v '^./tests/' || true)
+          # Allowlist (TS legitimate as a bridge/adapter to a non-ReScript ecosystem):
+          #   bindings/      - language bindings (Deno/TS/AssemblyScript FFI to ReScript core)
+          #   *.d.ts         - TypeScript type declarations for ReScript FFI
+          #   tests/, test/  - Deno test runners verifying ReScript output
+          #   scripts/       - Deno build scripts (bundle, dev-server, etc.)
+          #   mcp-adapter/   - MCP server adapters (MCP protocol is Deno/TS-typed by spec)
+          #   vscode/        - VSCode extensions (TS is the ecosystem default)
+          TS_FILES=$(find . \( -name "*.ts" -o -name "*.tsx" \) \
+            | grep -v node_modules \
+            | grep -v '/bindings/' \
+            | grep -v '\.d\.ts$' \
+            | grep -v '/tests/' \
+            | grep -v '/test/' \
+            | grep -v '/scripts/' \
+            | grep -v '/mcp-adapter/' \
+            | grep -v '/vscode/' \
+            || true)
           if [ -n "$TS_FILES" ]; then
             echo "❌ TypeScript files detected - use ReScript instead"
             echo "$TS_FILES"
             exit 1
           fi
-          echo "✅ No TypeScript files (Deno FFI bindings excluded)"
+          echo "✅ No TypeScript files outside allowlisted bridge/adapter paths"
 
       - name: Check for Go
         run: |
