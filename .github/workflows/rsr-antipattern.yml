@@ -27,38 +27,85 @@ jobs:
 
       - name: Check for TypeScript
         run: |
-          # Allowlist (TS legitimate as a bridge/adapter to a non-ReScript ecosystem):
-          #   bindings/                      - language bindings (Deno/TS/AssemblyScript FFI)
-          #   *.d.ts                         - TypeScript type declarations for ReScript FFI
-          #   tests/, test/                  - Deno test runners
-          #   scripts/                       - Deno build scripts
-          #   mcp-adapter/                   - MCP server adapters (MCP is Deno/TS-typed by spec)
-          #   *vscode*                       - VSCode extensions (TS is the ecosystem default)
-          #   cli/                           - CLI entry points (Deno scripts)
-          #   mod.ts                         - canonical Deno module entrypoint
-          #   *lsp-server.ts, *lsp.ts        - Language Server Protocol implementations
-          #   deno-*/                        - subprojects explicitly named for Deno
-          TS_FILES=$(find . \( -name "*.ts" -o -name "*.tsx" \) \
-            | grep -v node_modules \
-            | grep -v '/bindings/' \
-            | grep -v '\.d\.ts$' \
-            | grep -v '/tests/' \
-            | grep -v '/test/' \
-            | grep -v '/scripts/' \
-            | grep -v '/mcp-adapter/' \
-            | grep -Ev '/[^/]*vscode[^/]*/' \
-            | grep -v '/cli/' \
-            | grep -v '/mod\.ts$' \
-            | grep -Ev 'lsp[-_]?server\.ts$' \
-            | grep -Ev '[/-]lsp\.ts$' \
-            | grep -Ev '/deno-[^/]+/' \
-            || true)
-          if [ -n "$TS_FILES" ]; then
-            echo "❌ TypeScript files detected - use ReScript instead"
-            echo "$TS_FILES"
-            exit 1
-          fi
-          echo "✅ No TypeScript files outside allowlisted bridge/adapter paths"
+          python3 << 'PYEOF'
+          import re, sys, fnmatch, pathlib
+
+          # Universal builtin allowlist — bridges that need no per-repo declaration.
+          # Files matching any of these patterns are always allowed.
+          BUILTIN_GLOBS = [
+              '*.d.ts',
+              '**/bindings/**',
+              '**/tests/**', '**/test/**',
+              '**/scripts/**',
+              '**/mcp-adapter/**',
+              '**/*vscode*/**',
+              '**/cli/**',
+              '**/mod.ts',
+              '**/lsp-server.ts', '**/lsp_server.ts', '**/lsp.ts', '**/*-lsp.ts',
+              '**/deno-*/**',
+              '**/node_modules/**',
+              '**/vendor/**',
+              '**/examples/**',
+              '**/ffi/**',
+          ]
+
+          # Per-repo exemptions parsed from .claude/CLAUDE.md "TypeScript Exemptions" table.
+          # Single source of truth — adding a row here unblocks CI for that path.
+          # Format expected:
+          #   ### TypeScript Exemptions ...
+          #   | Path | Files | Rationale | Unblock condition |
+          #   |---|---|---|---|
+          #   | `path/to/file.ts` | 1 | ... | ... |
+          #   | `dir/*.ts` | 6 | ... | ... |
+          exemptions = []
+          claude_md = pathlib.Path('.claude/CLAUDE.md')
+          if claude_md.exists():
+              in_table = False
+              for line in claude_md.read_text(encoding='utf-8').splitlines():
+                  if re.search(r'TypeScript [Ee]xemptions', line):
+                      in_table = True
+                      continue
+                  if in_table and line.startswith(('### ', '## ', '# ')):
+                      break
+                  if in_table and line.startswith('|'):
+                      m = re.match(r'\|\s*`([^`]+)`', line)
+                      if m:
+                          exemptions.append(m.group(1))
+
+          # Find all .ts and .tsx files
+          found = []
+          for ext in ('ts', 'tsx'):
+              found.extend(str(p) for p in pathlib.Path('.').rglob(f'*.{ext}'))
+
+          def allowed(path):
+              p = path.lstrip('./')
+              for g in BUILTIN_GLOBS + exemptions:
+                  if fnmatch.fnmatchcase(p, g):
+                      return True
+                  # also treat glob ending with / as a directory prefix
+                  base = g.rstrip('/').rstrip('*').rstrip('/')
+                  if base and (p == base or p.startswith(base + '/')):
+                      return True
+              return False
+
+          bad = sorted(f for f in found if not allowed(f))
+          if bad:
+              print("❌ TypeScript files detected outside the allowlist.\n")
+              for f in bad:
+                  print(f"  {f}")
+              print()
+              print("To resolve, either:")
+              print("  (a) migrate the file to AffineScript")
+              print("      (see Human_Programming_Guide.adoc migration chapter), OR")
+              print("  (b) move it to an allowlisted bridge path")
+              print("      (bindings/, tests/, scripts/, mcp-adapter/, *vscode*/, cli/, deno-*/, etc.), OR")
+              print("  (c) add an entry to the 'TypeScript Exemptions' table in .claude/CLAUDE.md")
+              print("      with rationale + unblock condition.")
+              if exemptions:
+                  print(f"\n(Currently {len(exemptions)} exemption(s) parsed from .claude/CLAUDE.md.)")
+              sys.exit(1)
+          print(f"✅ No TypeScript files outside allowlist ({len(exemptions)} per-repo exemption(s) parsed).")
+          PYEOF
 
       - name: Check for Go
         run: |
