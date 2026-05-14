@@ -54,8 +54,8 @@ jobs:
             fi
           done
           if [ $failed -eq 1 ]; then
-            echo "Add 'permissions:
-  contents: read' at workflow level"
+            echo "Add 'permissions:'"
+            echo "  contents: read' at workflow level"
             exit 1
           fi
           echo "All workflows have permissions declared"
