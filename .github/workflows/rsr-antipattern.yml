@@ -1,385 +1,194 @@
 # SPDX-License-Identifier: PMPL-1.0-or-later
-
 # RSR Anti-Pattern CI Check
-# SPDX-License-Id
-entifier: PMPL-1.0-or-later
+# SPDX-License-Identifier: PMPL-1.0-or-later
 #
-# Enforces: No 
-TypeScript, No Go, No Python (except SaltStac
-k), No npm
-# Allows: ReScript, Deno, WASM, Ru
-st, OCaml, Haskell, Guile/Scheme
+# Enforces: No TypeScript, No Go, No Python (except SaltStack), No npm
+# Allows: ReScript, Deno, WASM, Rust, OCaml, Haskell, Guile/Scheme
 
-name: RSR A
-nti-Pattern Check
+name: RSR Anti-Pattern Check
 
 on:
   push:
-    branches: 
-[main, master, develop]
+    branches: [main, master, develop]
   pull_request:
-    b
-ranches: [main, master, develop]
+    branches: [main, master, develop]
 
 
-permission
-s:
+permissions:
   contents: read
 
 jobs:
-  antipattern-chec
-k:
+  antipattern-check:
     runs-on: ubuntu-latest
-    permissions
-:
+    permissions:
       contents: read
     steps:
-      - use
-s: actions/checkout@de0fac2e4500dabe0009e6721
-4ff5f5447ce83dd # v6.0.2
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
-      - name: Check
- for TypeScript
+      - name: Check for TypeScript
         run: |
-          pyth
-on3 << 'PYEOF'
-          import re, sys, path
-lib
+          python3 << 'PYEOF'
+          import re, sys, pathlib
 
-          # Universal allowlist — brid
-ges and conventions that need no per-repo dec
-laration.
-          # Implemented as explicit
- string predicates rather than glob patterns 
-so that
-          # top-level directories (e.
-g. tests/foo.ts) are matched the same as nest
-ed ones,
-          # which fnmatch's * cannot
- do reliably.
+          # Universal allowlist — bridges and conventions that need no per-repo declaration.
+          # Implemented as explicit string predicates rather than glob patterns so that
+          # top-level directories (e.g. tests/foo.ts) are matched the same as nested ones,
+          # which fnmatch's * cannot do reliably.
           DIR_NAMES_ALLOWED = {
-
-              'bindings', 'tests', 'test', '
-scripts',
-              'mcp-adapter', 'cli',
- 'vendor', 'examples', 'ffi',
-              '
-node_modules', 'benchmarks',
+              'bindings', 'tests', 'test', 'scripts',
+              'mcp-adapter', 'cli', 'vendor', 'examples', 'ffi',
+              'node_modules', 'benchmarks',
           }
 
-   
-       def builtin_allowed(p):
-              
-# `p` is a posix-style path with no leading .
-/
+          def builtin_allowed(p):
+              # `p` is a posix-style path with no leading ./
               # 1. Type declaration files
- 
-             if p.endswith('.d.ts'):
-        
-          return True
-              # 2. Cano
-nical Deno entrypoint filenames
-             
- base = p.rsplit('/', 1)[-1]
-              if
- base == 'mod.ts':
-                  return T
-rue
-              # 3. LSP server files (file
-name suffixes)
-              if base in ('lsp
--server.ts', 'lsp_server.ts', 'lsp.ts') or ba
-se.endswith('-lsp.ts'):
-                  ret
-urn True
-              # 4. Benchmark files (
-filename suffixes)
-              if base.ends
-with('.bench.ts') or base.endswith('_bench.ts
-'):
+              if p.endswith('.d.ts'):
                   return True
-           
-   # 5. Any directory segment (excluding base
-name) matches an allowed dir
-              se
-gs = p.split('/')
-              for s in segs
-[:-1]:
-                  if s in DIR_NAMES_AL
-LOWED:
+              # 2. Canonical Deno entrypoint filenames
+              base = p.rsplit('/', 1)[-1]
+              if base == 'mod.ts':
+                  return True
+              # 3. LSP server files (filename suffixes)
+              if base in ('lsp-server.ts', 'lsp_server.ts', 'lsp.ts') or base.endswith('-lsp.ts'):
+                  return True
+              # 4. Benchmark files (filename suffixes)
+              if base.endswith('.bench.ts') or base.endswith('_bench.ts'):
+                  return True
+              # 5. Any directory segment (excluding basename) matches an allowed dir
+              segs = p.split('/')
+              for s in segs[:-1]:
+                  if s in DIR_NAMES_ALLOWED:
                       return True
-    
-              # vscode-anything or anything-v
-scode
+                  # vscode-anything or anything-vscode
                   if 'vscode' in s:
-   
-                   return True
-              
-    # deno-named subprojects
-                
-  if s.startswith('deno-'):
-                 
-     return True
+                      return True
+                  # deno-named subprojects
+                  if s.startswith('deno-'):
+                      return True
               return False
 
-
-          # Per-repo exemptions parsed from .
-claude/CLAUDE.md "TypeScript Exemptions" tabl
-e.
-          # This is the documented single 
-source of truth: adding one row here unblocks
- CI.
-          # Glob characters: '*' and '**
-' both mean "any chars including /". This loo
-se
-          # interpretation matches user in
-tent when an exemption row reads, e.g.,
-     
-     # `affinescript-deno-test/*.ts` (coverin
-g nested files too).
-          def glob_to_re
-gex(g):
+          # Per-repo exemptions parsed from .claude/CLAUDE.md "TypeScript Exemptions" table.
+          # This is the documented single source of truth: adding one row here unblocks CI.
+          # Glob characters: '*' and '**' both mean "any chars including /". This loose
+          # interpretation matches user intent when an exemption row reads, e.g.,
+          # `affinescript-deno-test/*.ts` (covering nested files too).
+          def glob_to_regex(g):
               out = []
-              
-for c in g.lstrip('./'):
-                  if
- c == '*': out.append('.*')
-                 
- elif c == '?': out.append('.')
-             
-     elif c in '.+(){}[]|^$\\': out.append(re
-.escape(c))
-                  else: out.appen
-d(c)
-              return re.compile('^' + ''
-.join(out) + '$')
+              for c in g.lstrip('./'):
+                  if c == '*': out.append('.*')
+                  elif c == '?': out.append('.')
+                  elif c in '.+(){}[]|^$\\': out.append(re.escape(c))
+                  else: out.append(c)
+              return re.compile('^' + ''.join(out) + '$')
 
-          exemption_patter
-ns = []
-          claude_md = pathlib.Path('.
-claude/CLAUDE.md')
-          if claude_md.exi
-sts():
+          exemption_patterns = []
+          claude_md = pathlib.Path('.claude/CLAUDE.md')
+          if claude_md.exists():
               in_table = False
-       
-       for line in claude_md.read_text(encodi
-ng='utf-8').splitlines():
-                  i
-f re.search(r'TypeScript [Ee]xemptions', line
-):
+              for line in claude_md.read_text(encoding='utf-8').splitlines():
+                  if re.search(r'TypeScript [Ee]xemptions', line):
                       in_table = True
-    
-                  continue
-                  
-if in_table and line.startswith(('### ', '## 
-', '# ')):
+                      continue
+                  if in_table and line.startswith(('### ', '## ', '# ')):
                       break
-      
-            if in_table and line.startswith('
-|'):
-                      m = re.match(r'\|\
-s*`([^`]+)`', line)
-                      if 
-m:
-                          exemption_patter
-ns.append((m.group(1), glob_to_regex(m.group(
-1))))
+                  if in_table and line.startswith('|'):
+                      m = re.match(r'\|\s*`([^`]+)`', line)
+                      if m:
+                          exemption_patterns.append((m.group(1), glob_to_regex(m.group(1))))
 
           def exempt(p):
-             
- for raw, regex in exemption_patterns:
-      
-            if regex.match(p):
-              
-        return True
-                  # Also 
-allow exact-path matches and prefix matches f
-or paths
+              for raw, regex in exemption_patterns:
+                  if regex.match(p):
+                      return True
+                  # Also allow exact-path matches and prefix matches for paths
                   # ending in `/`
-  
-                if p == raw.lstrip('./'):
-   
-                   return True
-              
-    if raw.endswith('/') and p.startswith(raw
-.lstrip('./')):
-                      return 
-True
+                  if p == raw.lstrip('./'):
+                      return True
+                  if raw.endswith('/') and p.startswith(raw.lstrip('./')):
+                      return True
               return False
 
-          # 
-Find all .ts and .tsx files (excluding common
- dot-dirs that find normally skips)
-         
- found = []
-          for ext in ('ts', 'tsx'
-):
-              for p in pathlib.Path('.').r
-glob(f'*.{ext}'):
-                  parts = p
-.parts
-                  if any(part.startswi
-th('.') and part not in ('.', '..') for part 
-in parts):
+          # Find all .ts and .tsx files (excluding common dot-dirs that find normally skips)
+          found = []
+          for ext in ('ts', 'tsx'):
+              for p in pathlib.Path('.').rglob(f'*.{ext}'):
+                  parts = p.parts
+                  if any(part.startswith('.') and part not in ('.', '..') for part in parts):
                       continue
-   
-               found.append(p.as_posix().lstr
-ip('./'))
+                  found.append(p.as_posix().lstrip('./'))
 
-          bad = sorted(f for f in 
-found if not (builtin_allowed(f) or exempt(f)
-))
+          bad = sorted(f for f in found if not (builtin_allowed(f) or exempt(f)))
           if bad:
-              print("❌
- TypeScript files detected outside the allowl
-ist.\n")
+              print("❌ TypeScript files detected outside the allowlist.\n")
               for f in bad:
-        
-          print(f"  {f}")
-              print
-()
-              print("To resolve, choose on
-e:")
-              print("  (a) migrate the f
-ile to AffineScript")
-              print("  
-    (see Human_Programming_Guide.adoc 'Migrat
-ing from -script Languages')")
-              
-print("  (b) move to an allowlisted bridge pa
-th")
-              print("      (bindings/, t
-ests/, test/, scripts/, benchmarks/, mcp-adap
-ter/,")
-              print("       *vscode*/
-, cli/, deno-*/, vendor/, examples/, ffi/)")
-
-              print("  (c) add an entry to th
-e 'TypeScript Exemptions' table in .claude/CL
-AUDE.md")
-              print("      with rat
-ionale + unblock condition")
-              if
- exemption_patterns:
-                  print(
-f"\n(Currently {len(exemption_patterns)} exem
-ption(s) parsed from .claude/CLAUDE.md.)")
-  
-            sys.exit(1)
-          print(f"✅
- No TypeScript files outside allowlist ({len(
-exemption_patterns)} per-repo exemption(s) pa
-rsed).")
+                  print(f"  {f}")
+              print()
+              print("To resolve, choose one:")
+              print("  (a) migrate the file to AffineScript")
+              print("      (see Human_Programming_Guide.adoc 'Migrating from -script Languages')")
+              print("  (b) move to an allowlisted bridge path")
+              print("      (bindings/, tests/, test/, scripts/, benchmarks/, mcp-adapter/,")
+              print("       *vscode*/, cli/, deno-*/, vendor/, examples/, ffi/)")
+              print("  (c) add an entry to the 'TypeScript Exemptions' table in .claude/CLAUDE.md")
+              print("      with rationale + unblock condition")
+              if exemption_patterns:
+                  print(f"\n(Currently {len(exemption_patterns)} exemption(s) parsed from .claude/CLAUDE.md.)")
+              sys.exit(1)
+          print(f"✅ No TypeScript files outside allowlist ({len(exemption_patterns)} per-repo exemption(s) parsed).")
           PYEOF
 
       - name: Check for Go
-        r
-un: |
-          if find . -name "*.go" | grep
- -q .; then
-            echo "❌ Go files de
-tected - use Rust/WASM instead"
-            f
-ind . -name "*.go"
+        run: |
+          if find . -name "*.go" | grep -q .; then
+            echo "❌ Go files detected - use Rust/WASM instead"
+            find . -name "*.go"
             exit 1
-       
-   fi
+          fi
           echo "✅ No Go files"
 
-     
- - name: Check for Python (non-SaltStack)
-   
-     run: |
-          PY_FILES=$(find . -name
- "*.py" | grep -v salt | grep -v _states | gr
-ep -v _modules | grep -v pillar | grep -v ven
-v | grep -v __pycache__ || true)
-          if
- [ -n "$PY_FILES" ]; then
-            echo "�
-�� Python files detected - only allowed for S
-altStack"
+      - name: Check for Python (non-SaltStack)
+        run: |
+          PY_FILES=$(find . -name "*.py" | grep -v salt | grep -v _states | grep -v _modules | grep -v pillar | grep -v venv | grep -v __pycache__ || true)
+          if [ -n "$PY_FILES" ]; then
+            echo "❌ Python files detected - only allowed for SaltStack"
             echo "$PY_FILES"
-      
-      exit 1
-          fi
-          echo "✅
- No non-SaltStack Python files"
-
-      - name
-: Check for npm lockfiles
-        run: |
-    
-      if [ -f "package-lock.json" ] || [ -f "
-yarn.lock" ]; then
-            echo "❌ npm/
-yarn lockfile detected - use Deno instead"
-  
-          exit 1
-          fi
-          echo 
-"✅ No npm lockfiles"
-
-      - name: Check f
-or tsconfig
-        run: |
-          if [ -f 
-"tsconfig.json" ]; then
-            echo "❌
- tsconfig.json detected - use ReScript instea
-d"
             exit 1
           fi
-          
-echo "✅ No tsconfig.json"
+          echo "✅ No non-SaltStack Python files"
 
-      - name: Ve
-rify Deno presence (if package.json exists)
- 
-       run: |
-          if [ -f "package.json
-" ]; then
-            if [ ! -f "deno.json" ]
- && [ ! -f "deno.jsonc" ]; then
-             
- echo "⚠️ Warning: package.json without d
-eno.json - migration recommended"
-           
- fi
-          fi
-          echo "✅ Deno con
-figuration check complete"
-
-      - name: Sum
-mary
+      - name: Check for npm lockfiles
         run: |
-          echo "╔══
-═══════════════
-═══════════════
-═══════════════
-═════════════╗"
- 
-         echo "║           RSR Anti-Pattern
- Check Passed ✅                 ║"
-      
-    echo "║                                
-                            ║"
-          ec
-ho "║  Allowed: ReScript, Deno, WASM, Rust,
- OCaml, Haskell,     ║"
-          echo "║
-           Guile/Scheme, SaltStack (Python)  
-               ║"
-          echo "║      
-                                             
-         ║"
-          echo "║  Blocked: T
-ypeScript, Go, npm, Python (non-Salt)        
-  ║"
-          echo "╚══════�
-��══════════════�
-��══════════════�
-��══════════════�
-��════════╝"
+          if [ -f "package-lock.json" ] || [ -f "yarn.lock" ]; then
+            echo "❌ npm/yarn lockfile detected - use Deno instead"
+            exit 1
+          fi
+          echo "✅ No npm lockfiles"
 
+      - name: Check for tsconfig
+        run: |
+          if [ -f "tsconfig.json" ]; then
+            echo "❌ tsconfig.json detected - use ReScript instead"
+            exit 1
+          fi
+          echo "✅ No tsconfig.json"
 
+      - name: Verify Deno presence (if package.json exists)
+        run: |
+          if [ -f "package.json" ]; then
+            if [ ! -f "deno.json" ] && [ ! -f "deno.jsonc" ]; then
+              echo "⚠️ Warning: package.json without deno.json - migration recommended"
+            fi
+          fi
+          echo "✅ Deno configuration check complete"
+
+      - name: Summary
+        run: |
+          echo "╔════════════════════════════════════════════════════════════╗"
+          echo "║           RSR Anti-Pattern Check Passed ✅                 ║"
+          echo "║                                                            ║"
+          echo "║  Allowed: ReScript, Deno, WASM, Rust, OCaml, Haskell,     ║"
+          echo "║           Guile/Scheme, SaltStack (Python)                 ║"
+          echo "║                                                            ║"
+          echo "║  Blocked: TypeScript, Go, npm, Python (non-Salt)          ║"
+          echo "╚════════════════════════════════════════════════════════════╝"
