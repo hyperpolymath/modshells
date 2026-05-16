@@ -21,7 +21,13 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - language: javascript-typescript
+          # This repo is Ada/Scheme/Shell — languages CodeQL cannot analyze.
+          # Pointing CodeQL at `javascript-typescript` made the analyze job
+          # see no source and record zero results, so OSSF Scorecard's SAST
+          # check reported "0 commits checked" (alert #72). `actions` scans
+          # the workflow YAML, which every commit touches, so SAST now
+          # produces results on every push. See hyperpolymath/hypatia#260.
+          - language: actions
             build-mode: none
 
     steps:
