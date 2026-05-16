@@ -1,0 +1,37 @@
+# SPDX-License-Identifier: PMPL-1.0-or-later
+# Migrated from STATE.scm by state_scm_to_v2.py on 2026-05-17
+
+@state(version="2.0"):
+phase: "v0.1-complete"
+next_action: "Complete shell_validator.adb implementation"
+last_action: "Populated comprehensive STATE.scm with project status"
+updated: 2026-01-04
+
+@blockers:
+- id: shell-validator-implementation-needs-com
+  description: "Shell validator implementation needs completion"
+  waiting_on: "high-priority — internal"
+  since: 2026-01-04
+- id: justfile-recipes-are-stubs-need-actual-b
+  description: "Justfile recipes are stubs - need actual build/test/clean commands"
+  waiting_on: "medium-priority — internal"
+  since: 2026-01-04
+- id: no-unit-test-suite-yet-aunit-integration
+  description: "No unit test suite yet - AUnit integration pending"
+  waiting_on: "medium-priority — internal"
+  since: 2026-01-04
+- id: man-page-and-shell-completion-scripts-no
+  description: "Man page and shell completion scripts not created"
+  waiting_on: "medium-priority — internal"
+  since: 2026-01-04
+- id: powershell-config-path-handling-needs-pl
+  description: "PowerShell config path handling needs platform detection"
+  waiting_on: "low-priority — internal"
+  since: 2026-01-04
+- id: cross-compilation-for-macos-and-windows-
+  description: "Cross-compilation for macOS and Windows not configured"
+  waiting_on: "low-priority — internal"
+  since: 2026-01-04
+@end
+
+@end
