@@ -30,7 +30,7 @@ jobs:
           # Exclude .d.ts files - those are TypeScript type declarations for ReScript FFI
           TS_FILES=$(find . \( -name "*.ts" -o -name "*.tsx" \) | grep -v node_modules | grep -v 'bindings/deno' | grep -v '\.d\.ts$' || true)
           if [ -n "$TS_FILES" ]; then
-            echo "❌ TypeScript files detected - use ReScript instead"
+            echo "❌ TypeScript files detected - use AffineScript instead"
             echo "$TS_FILES"
             exit 1
           fi
@@ -66,7 +66,7 @@ jobs:
       - name: Check for tsconfig
         run: |
           if [ -f "tsconfig.json" ]; then
-            echo "❌ tsconfig.json detected - use ReScript instead"
+            echo "❌ tsconfig.json detected - use AffineScript instead"
             exit 1
           fi
           echo "✅ No tsconfig.json"
