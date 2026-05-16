@@ -39,7 +39,7 @@ jobs:
           fi
 
       - name: Build Hypatia scanner (if needed)
-        working-directory: ${{ env.HOME }}/hypatia
+        working-directory: /home/runner/hypatia
         run: |
           if [ ! -f hypatia-v2 ]; then
             echo "Building hypatia-v2 scanner..."
