@@ -1,6 +1,6 @@
 ;; SPDX-License-Identifier: AGPL-3.0-or-later
 ;; ECOSYSTEM.scm - Ecosystem position for modshells
-;; Media-Type: application/vnd.ecosystem+scm
+;; Media-Type: application/ecosystem+scm
 
 (ecosystem
   (version "1.0")
