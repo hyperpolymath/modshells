@@ -1,0 +1,20 @@
+# SPDX-License-Identifier: PMPL-1.0
+# governance.yml — single wrapper calling the shared estate governance bundle
+# in hyperpolymath/standards. Replaces ~8 duplicated per-repo governance
+# workflows (verisimiser#59 estate rollout). Load-bearing build/security
+# workflows (rust-ci, codeql, dependabot, release, secret-scanner, scorecard)
+# stay standalone in this repo.
+name: Governance
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  governance:
+    uses: hyperpolymath/standards/.github/workflows/governance-reusable.yml@main
