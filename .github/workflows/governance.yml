@@ -1,4 +1,4 @@
-# SPDX-License-Identifier: PMPL-1.0
+# SPDX-License-Identifier: PMPL-1.0-or-later
 # governance.yml — single wrapper calling the shared estate governance bundle
 # in hyperpolymath/standards. Replaces ~8 duplicated per-repo governance
 # workflows (verisimiser#59 estate rollout). Load-bearing build/security
