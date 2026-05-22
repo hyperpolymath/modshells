@@ -440,7 +440,7 @@ See `.claude/CLAUDE.md` for complete language policy.
 
 == License
 
-SPDX-License-Identifier: PMPL-1.0-or-later OR PMPL-1.0`
+SPDX-License-Identifier: MPL-2.0 OR PMPL-1.0`
 
 Dual-licensed under GNU Affero General Public License v3.0 or later, or Palimpsest-MPL License v1.0 (PMPL-1.0). See link:LICENSE.txt[LICENSE.txt] for details.
 

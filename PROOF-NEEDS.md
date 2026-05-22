@@ -1,6 +1,6 @@
 # Proof Requirements
 
-<!-- SPDX-License-Identifier: PMPL-1.0-or-later -->
+<!-- SPDX-License-Identifier: MPL-2.0 -->
 <!-- Created 2026-05-18 by estate proof-debt audit; reconciled 2026-05-19. -->
 
 ## Current state (reconciled 2026-05-19)

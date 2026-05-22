@@ -1,4 +1,4 @@
-# SPDX-License-Identifier: PMPL-1.0-or-later
+# SPDX-License-Identifier: MPL-2.0
 # Migrated from STATE.scm by state_scm_to_v2.py on 2026-05-17
 
 @state(version="2.0"):
