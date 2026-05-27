@@ -1,5 +1,4 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
-# SPDX-FileCopyrightText: 2025 Jonathan D.A. Jewell
 name: Mirror to Git Forges
 
 on:
@@ -7,138 +6,10 @@ on:
     branches: [main]
   workflow_dispatch:
 
-permissions: read-all
+permissions:
+  contents: read
 
 jobs:
-  mirror-gitlab:
-    runs-on: ubuntu-latest
-    if: vars.GITLAB_MIRROR_ENABLED == 'true'
-    steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v4
-        with:
-          fetch-depth: 0
-
-      - uses: webfactory/ssh-agent@e83874834305fe9a4a2997156cb26c5de65a8555 # v0.10.0
-        with:
-          ssh-private-key: ${{ secrets.GITLAB_SSH_KEY }}
-
-      - name: Mirror to GitLab
-        run: |
-          ssh-keyscan -t ed25519 gitlab.com >> ~/.ssh/known_hosts
-          git remote add gitlab git@gitlab.com:hyperpolymath/${{ github.event.repository.name }}.git || true
-          git push --force gitlab main
-
-  mirror-bitbucket:
-    runs-on: ubuntu-latest
-    if: vars.BITBUCKET_MIRROR_ENABLED == 'true'
-    steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v4
-        with:
-          fetch-depth: 0
-
-      - uses: webfactory/ssh-agent@e83874834305fe9a4a2997156cb26c5de65a8555 # v0.10.0
-        with:
-          ssh-private-key: ${{ secrets.BITBUCKET_SSH_KEY }}
-
-      - name: Mirror to Bitbucket
-        run: |
-          ssh-keyscan -t ed25519 bitbucket.org >> ~/.ssh/known_hosts
-          git remote add bitbucket git@bitbucket.org:hyperpolymath/${{ github.event.repository.name }}.git || true
-          git push --force bitbucket main
-
-  mirror-codeberg:
-    runs-on: ubuntu-latest
-    if: vars.CODEBERG_MIRROR_ENABLED == 'true'
-    steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v4
-        with:
-          fetch-depth: 0
-
-      - uses: webfactory/ssh-agent@e83874834305fe9a4a2997156cb26c5de65a8555 # v0.10.0
-        with:
-          ssh-private-key: ${{ secrets.CODEBERG_SSH_KEY }}
-
-      - name: Mirror to Codeberg
-        run: |
-          ssh-keyscan -t ed25519 codeberg.org >> ~/.ssh/known_hosts
-          git remote add codeberg git@codeberg.org:hyperpolymath/${{ github.event.repository.name }}.git || true
-          git push --force codeberg main
-
-  mirror-sourcehut:
-    runs-on: ubuntu-latest
-    if: vars.SOURCEHUT_MIRROR_ENABLED == 'true'
-    steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v4
-        with:
-          fetch-depth: 0
-
-      - uses: webfactory/ssh-agent@e83874834305fe9a4a2997156cb26c5de65a8555 # v0.10.0
-        with:
-          ssh-private-key: ${{ secrets.SOURCEHUT_SSH_KEY }}
-
-      - name: Mirror to SourceHut
-        run: |
-          ssh-keyscan -t ed25519 git.sr.ht >> ~/.ssh/known_hosts
-          git remote add sourcehut git@git.sr.ht:~hyperpolymath/${{ github.event.repository.name }} || true
-          git push --force sourcehut main
-
-  mirror-disroot:
-    runs-on: ubuntu-latest
-    if: vars.DISROOT_MIRROR_ENABLED == 'true'
-    steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v4
-        with:
-          fetch-depth: 0
-
-      - uses: webfactory/ssh-agent@e83874834305fe9a4a2997156cb26c5de65a8555 # v0.10.0
-        with:
-          ssh-private-key: ${{ secrets.DISROOT_SSH_KEY }}
-
-      - name: Mirror to Disroot
-        run: |
-          ssh-keyscan -t ed25519 git.disroot.org >> ~/.ssh/known_hosts
-          git remote add disroot git@git.disroot.org:hyperpolymath/${{ github.event.repository.name }}.git || true
-          git push --force disroot main
-
-  mirror-gitea:
-    runs-on: ubuntu-latest
-    if: vars.GITEA_MIRROR_ENABLED == 'true'
-    steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v4
-        with:
-          fetch-depth: 0
-
-      - uses: webfactory/ssh-agent@e83874834305fe9a4a2997156cb26c5de65a8555 # v0.10.0
-        with:
-          ssh-private-key: ${{ secrets.GITEA_SSH_KEY }}
-
-      - name: Mirror to Gitea
-        run: |
-          ssh-keyscan -t ed25519 ${{ vars.GITEA_HOST }} >> ~/.ssh/known_hosts
-          git remote add gitea git@${{ vars.GITEA_HOST }}:hyperpolymath/${{ github.event.repository.name }}.git || true
-          git push --force gitea main
-
-  mirror-radicle:
-    runs-on: ubuntu-latest
-    if: vars.RADICLE_MIRROR_ENABLED == 'true'
-    steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v4
-        with:
-          fetch-depth: 0
-
-      - name: Setup Rust
-        uses: dtolnay/rust-toolchain@3c5f7ea28cd621ae0bf5283f0e981fb97b8a7af9 # stable
-        with:
-          toolchain: stable
-
-      - name: Install Radicle
-        run: |
-          # Install via cargo (safer than curl|sh)
-          cargo install radicle-cli --locked
-          echo "$HOME/.cargo/bin" >> $GITHUB_PATH
-
-      - name: Mirror to Radicle
-        run: |
-          echo "${{ secrets.RADICLE_KEY }}" > ~/.radicle/keys/radicle
-          chmod 600 ~/.radicle/keys/radicle
-          rad sync --announce || echo "Radicle sync attempted"
+  mirror:
+    uses: hyperpolymath/standards/.github/workflows/mirror-reusable.yml@e6b2884722350515934d443daf23442f2195796f
+    secrets: inherit
