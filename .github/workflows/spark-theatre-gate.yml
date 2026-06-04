@@ -16,6 +16,7 @@ permissions:
 jobs:
   spark-theatre-gate:
     uses: hyperpolymath/standards/.github/workflows/spark-theatre-gate.yml@462003782f3ebb93ea763e81d0d199ce13ef7d73
+    timeout-minutes: 10
     with:
       paths: "."
       enforce_zero_contract: false
