@@ -27,4 +27,10 @@ jobs:
         sudo apt-get install gnat gprbuild
 
     - name: Build
-      run: gprbuild -j0 -p -P modshells.gpr
+      # Use gnatmake, not gprbuild: apt's gprbuild on ubuntu-latest is not
+      # gprconfig-wired to the FSF Ada compiler ("no compiler for language
+      # Ada"). gnatmake drives the gnat compiler directly.
+      run: |
+        mkdir -p obj bin
+        gnatmake -o bin/modshells src/main/modshells.adb \
+          -Isrc/main -Isrc/config_store -Isrc/shell_manager -Isrc/shell_validator -D obj
