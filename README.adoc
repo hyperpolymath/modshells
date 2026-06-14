@@ -1,5 +1,9 @@
+// SPDX-License-Identifier: MPL-2.0
+// Copyright (c) Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
 = Modshells: Modular Shell Configuration Manager
-image:https://img.shields.io/badge/license-PMPL--1.0-blue.svg[License,link="https://github.com/hyperpolymath/palimpsest-license"]
+image:https://img.shields.io/badge/OpenSSF-Best_Practices-green?logo=openssourcesecurity[OpenSSF Best Practices,link="https://www.bestpractices.dev/en/projects/new?repo_url=https://github.com/hyperpolymath/modshells"]
+
+image:https://img.shields.io/badge/license-MPL--2.0-blue.svg[License,link="https://github.com/hyperpolymath/palimpsest-license"]
 
 
 
@@ -440,9 +444,9 @@ See `.claude/CLAUDE.md` for complete language policy.
 
 == License
 
-SPDX-License-Identifier: MPL-2.0 OR PMPL-1.0`
+This project is licensed under the Mozilla Public License, v. 2.0. See the `LICENSE` file for details.
 
-Dual-licensed under GNU Affero General Public License v3.0 or later, or Palimpsest-MPL License v1.0 (PMPL-1.0). See link:LICENSE.txt[LICENSE.txt] for details.
+SPDX-License-Identifier: MPL-2.0
 
 == Citation
 

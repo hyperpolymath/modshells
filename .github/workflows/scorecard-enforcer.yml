@@ -33,6 +33,7 @@ jobs:
   # uses-only; `check-score` is the gating job that emits the error.
   scorecard:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     permissions:
       security-events: write
       id-token: write  # For OIDC
@@ -63,6 +64,7 @@ jobs:
   check-score:
     needs: scorecard
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     permissions:
       contents: read
     steps:
@@ -88,6 +90,7 @@ jobs:
   # Check specific high-priority items
   check-critical:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 

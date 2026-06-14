@@ -1,8 +1,8 @@
 -- File: modshells.gpr
 -- GNAT Project File for the modshells application.
 project Modshells is
-   -- Point to the correct main file
-   for Main use ("src/shell_manager/shell_manager.adb");
+   -- Point to the correct main file (base name; found via Source_Dirs)
+   for Main use ("modshells.adb");
    -- Include all source directories
    for Source_Dirs use ("src/**");
    -- Object and executable directories
