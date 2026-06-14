@@ -34,11 +34,10 @@ package body Shell_Manager is
    -- Helper: Get HOME directory
    ----------------------------------------------------------------------
    function Get_Home return String is
-      Home_Ptr : constant Ada.Strings.Unbounded.String_Access :=
-        Ada.Environment_Variables.Value ("HOME");
    begin
-      if Home_Ptr /= null then
-         return Home_Ptr.all;
+      --  Ada.Environment_Variables.Value returns a String, not an access type.
+      if Ada.Environment_Variables.Exists ("HOME") then
+         return Ada.Environment_Variables.Value ("HOME");
       else
          return Current_Directory;
       end if;
@@ -50,7 +49,7 @@ package body Shell_Manager is
    -- Helper: Join path components
    ----------------------------------------------------------------------
    function Join_Path (Base : in String; Name : in String) return String is
-      Path_Sep : constant Character := Separator;
+      Path_Sep : constant Character := '/';
    begin
       if Base'Length > 0 and then Base (Base'Last) /= Path_Sep then
          return Base & Path_Sep & Name;
@@ -237,10 +236,10 @@ package body Shell_Manager is
               MODSHELLS_START & LF &
               "# Source modular shell configurations" & LF &
               "for _modshells_dir in core tools misc os ui; do" & LF &
-              "  _modshells_path=\"" & Modshells_Path & "/$_modshells_dir\"" & LF &
-              "  if [ -d \"$_modshells_path\" ]; then" & LF &
-              "    for _modshells_file in \"$_modshells_path\"/*.sh; do" & LF &
-              "      [ -f \"$_modshells_file\" ] && . \"$_modshells_file\"" & LF &
+              "  _modshells_path=""" & Modshells_Path & "/$_modshells_dir""" & LF &
+              "  if [ -d ""$_modshells_path"" ]; then" & LF &
+              "    for _modshells_file in ""$_modshells_path""/*.sh; do" & LF &
+              "      [ -f ""$_modshells_file"" ] && . ""$_modshells_file""" & LF &
               "    done" & LF &
               "  fi" & LF &
               "done" & LF &
@@ -252,7 +251,7 @@ package body Shell_Manager is
               "# MODSHELLS_START - DO NOT REMOVE THIS LINE" & LF &
               "# Source modular shell configurations" & LF &
               "for _modshells_dir in core tools misc os ui" & LF &
-              "  set _modshells_path \"" & Modshells_Path & "/$_modshells_dir\"" & LF &
+              "  set _modshells_path """ & Modshells_Path & "/$_modshells_dir""" & LF &
               "  if test -d $_modshells_path" & LF &
               "    for _modshells_file in $_modshells_path/*.fish" & LF &
               "      test -f $_modshells_file; and source $_modshells_file" & LF &
@@ -265,11 +264,11 @@ package body Shell_Manager is
             return LF &
               "# MODSHELLS_START - DO NOT REMOVE THIS LINE" & LF &
               "# Source modular shell configurations" & LF &
-              "let modshells_root = \"" & Modshells_Path & "\"" & LF &
+              "let modshells_root = """ & Modshells_Path & """" & LF &
               "for dir in [core tools misc os ui] {" & LF &
               "  let dir_path = ($modshells_root | path join $dir)" & LF &
               "  if ($dir_path | path exists) {" & LF &
-              "    for file in (glob ($dir_path | path join \"*.nu\")) {" & LF &
+              "    for file in (glob ($dir_path | path join ""*.nu"")) {" & LF &
               "      source $file" & LF &
               "    }" & LF &
               "  }" & LF &
@@ -281,7 +280,7 @@ package body Shell_Manager is
               "# MODSHELLS_START - DO NOT REMOVE THIS LINE" & LF &
               "# Source modular shell configurations" & LF &
               "for dir in core tools misc os ui" & LF &
-              "  let path = \"" & Modshells_Path & "/$dir\"" & LF &
+              "  let path = """ & Modshells_Path & "/$dir""" & LF &
               "  if test -d $path" & LF &
               "    for file in $path/*.ion" & LF &
               "      if test -f $file" & LF &
@@ -297,7 +296,7 @@ package body Shell_Manager is
               "# MODSHELLS_START - DO NOT REMOVE THIS LINE" & LF &
               "# Source modular shell configurations" & LF &
               "foreach _modshells_dir (core tools misc os ui)" & LF &
-              "  set _modshells_path = \"" & Modshells_Path & "/$_modshells_dir\"" & LF &
+              "  set _modshells_path = """ & Modshells_Path & "/$_modshells_dir""" & LF &
               "  if (-d $_modshells_path) then" & LF &
               "    foreach _modshells_file ($_modshells_path/*.tcsh)" & LF &
               "      if (-f $_modshells_file) source $_modshells_file" & LF &
@@ -312,10 +311,10 @@ package body Shell_Manager is
               MODSHELLS_START & LF &
               "# Source modular shell configurations" & LF &
               "for _modshells_dir in core tools misc os ui; do" & LF &
-              "  _modshells_path=\"" & Modshells_Path & "/$_modshells_dir\"" & LF &
-              "  if [ -d \"$_modshells_path\" ]; then" & LF &
-              "    for _modshells_file in \"$_modshells_path\"/*.sh; do" & LF &
-              "      [ -f \"$_modshells_file\" ] && source \"$_modshells_file\"" & LF &
+              "  _modshells_path=""" & Modshells_Path & "/$_modshells_dir""" & LF &
+              "  if [ -d ""$_modshells_path"" ]; then" & LF &
+              "    for _modshells_file in ""$_modshells_path""/*.sh; do" & LF &
+              "      [ -f ""$_modshells_file"" ] && source ""$_modshells_file""" & LF &
               "    done" & LF &
               "  fi" & LF &
               "done" & LF &
@@ -326,7 +325,7 @@ package body Shell_Manager is
             return LF &
               "# MODSHELLS_START - DO NOT REMOVE THIS LINE" & LF &
               "# Source modular shell configurations" & LF &
-              "$modshellsRoot = \"" & Modshells_Path & "\"" & LF &
+              "$modshellsRoot = """ & Modshells_Path & """" & LF &
               "foreach ($dir in @('core', 'tools', 'misc', 'os', 'ui')) {" & LF &
               "  $dirPath = Join-Path $modshellsRoot $dir" & LF &
               "  if (Test-Path $dirPath) {" & LF &
@@ -361,7 +360,7 @@ package body Shell_Manager is
          end;
       end loop;
    exception
-      when Name_Error | Use_Error => raise;
+      when Ada.Directories.Name_Error | Ada.Directories.Use_Error => raise;
    end Create_Modshell_Directories;
 
    ----------------------------------------------------------------------

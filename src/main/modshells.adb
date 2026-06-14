@@ -6,6 +6,8 @@ with Ada.Text_IO;
 
 procedure Modshells is
 
+   use type Shell_Manager.Shell_Status;  --  make "=" on the enum directly visible
+
    Config_Path : constant String := Config_Store.Get_Modshell_Root_Path;
    Shells      : Shell_Manager.Shell_List := Shell_Manager.Detect_Shells;
 

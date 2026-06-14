@@ -15,13 +15,13 @@ package body Config_Store is
     -- Helper function to get the current user's home directory robustly.
     ----------------------------------------------------------------------
     function Get_Home_Directory return String is
-        -- FIX: Must explicitly use the fully qualified access type
-        Home_Path_Ptr : constant Ada.Strings.Unbounded.String_Access := Ada.Environment_Variables.Value("HOME"); 
     begin
-        if Home_Path_Ptr /= null then
-            return Home_Path_Ptr.all; 
+        --  Ada.Environment_Variables.Value returns a String (not an access
+        --  type); guard with Exists rather than a null check.
+        if Ada.Environment_Variables.Exists ("HOME") then
+            return Ada.Environment_Variables.Value ("HOME");
         else
-            return Ada.Directories.Current_Directory; 
+            return Ada.Directories.Current_Directory;
         end if;
     exception
         when Ada.IO_Exceptions.Name_Error => 
@@ -30,27 +30,21 @@ package body Config_Store is
             raise;
     end Get_Home_Directory;
 
-    -- The default path for Nushell configuration on Linux/Kinoite
-    -- FIX: Use fully qualified Separator
-    DEFAULT_ROOT_PATH : constant String := 
-        Get_Home_Directory & Ada.Directories.Separator & ".config/nushell/modshells";
+    -- Canonical default config root: ~/.config/modshells (matches the deployed
+    -- estate layout). MODSHELLS_CONFIG_PATH overrides.
+    DEFAULT_ROOT_PATH : constant String :=
+        Get_Home_Directory & "/.config/modshells";
 
     ----------------------------------------------------------------------
     -- Implements the robust retrieval of the modular shell root path.
     ----------------------------------------------------------------------
     function Get_Modshell_Root_Path return String is
-        Path_Value : String := "";
-        -- FIX: Must explicitly use the fully qualified access type
-        Env_Value_Ptr : constant Ada.Strings.Unbounded.String_Access := Ada.Environment_Variables.Value(ENV_VAR_NAME); 
     begin
-        if Env_Value_Ptr /= null then
-            Path_Value := Env_Value_Ptr.all;
+        if Ada.Environment_Variables.Exists (ENV_VAR_NAME) then
+            return Ada.Environment_Variables.Value (ENV_VAR_NAME);
         else
-            Path_Value := DEFAULT_ROOT_PATH;
+            return DEFAULT_ROOT_PATH;
         end if;
-        
-        return Path_Value;
-        
     exception
         when others =>
             Ada.Text_IO.Put_Line("Error retrieving config path. Raising exception.");
