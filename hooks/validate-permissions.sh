@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# SPDX-License-Identifier: AGPL-3.0-or-later
+# SPDX-License-Identifier: MPL-2.0
 # Pre-commit hook: Validate workflow permissions declarations
 set -euo pipefail
 ERRORS=0

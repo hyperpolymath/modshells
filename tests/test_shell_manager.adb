@@ -1,5 +1,5 @@
 -- tests/test_shell_manager.adb
--- SPDX-License-Identifier: AGPL-3.0-or-later OR MIT
+-- SPDX-License-Identifier: MPL-2.0 OR MIT
 -- Unit tests for Shell_Manager package
 
 with Ada.Text_IO;

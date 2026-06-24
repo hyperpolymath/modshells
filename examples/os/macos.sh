@@ -1,4 +1,4 @@
-# SPDX-License-Identifier: AGPL-3.0-or-later OR MIT
+# SPDX-License-Identifier: MPL-2.0 OR MIT
 # os/macos.sh - macOS-specific configuration
 
 # Only load on macOS

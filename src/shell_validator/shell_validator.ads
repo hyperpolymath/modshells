@@ -1,4 +1,4 @@
--- SPDX-License-Identifier: AGPL-3.0-or-later OR MIT
+-- SPDX-License-Identifier: MPL-2.0 OR MIT
 -- src/shell_validator/shell_validator.ads
 --
 -- Shell Validator - Comprehensive shell configuration validation
