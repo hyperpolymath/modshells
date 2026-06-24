@@ -1,0 +1,33 @@
+# SPDX-License-Identifier: MPL-2.0
+# Dormant push-email notification. ARMED by setting the repo variable
+# PUSH_EMAIL_ENABLED=true (the single on/off switch). Addresses are pre-filled;
+# sending needs the org SMTP secrets (SMTP_HOST/PORT/USER/PASS). Inherited by
+# new repos from the template; placed on existing repos by the farm sweep.
+name: Push email notification
+on:
+  push: {}
+permissions:
+  contents: read
+jobs:
+  notify:
+    name: Email on push
+    if: ${{ vars.PUSH_EMAIL_ENABLED == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send push notification email
+        uses: dawidd6/action-send-mail@6e502825a508b867ab2954ad6343b68787624c01 # pinned
+        with:
+          server_address: ${{ secrets.SMTP_HOST }}
+          server_port: ${{ secrets.SMTP_PORT }}
+          secure: true
+          username: ${{ secrets.SMTP_USER }}
+          password: ${{ secrets.SMTP_PASS }}
+          from: "GitHub Push <${{ secrets.SMTP_USER }}>"
+          to: "jonathan.jewell@gmail.com j.d.a.jewell@open.ac.uk"
+          subject: "[${{ github.repository }}] push to ${{ github.ref_name }} by ${{ github.actor }}"
+          body: |
+            Repository: ${{ github.repository }}
+            Branch:     ${{ github.ref_name }}
+            Pusher:     ${{ github.actor }}
+            Compare:    ${{ github.event.compare }}
+            Head msg:   ${{ github.event.head_commit.message }}
