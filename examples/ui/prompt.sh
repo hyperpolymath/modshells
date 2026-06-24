@@ -1,4 +1,4 @@
-# SPDX-License-Identifier: AGPL-3.0-or-later OR MIT
+# SPDX-License-Identifier: MPL-2.0 OR MIT
 # ui/prompt.sh - Custom prompt (if not using starship)
 #
 # Skip if starship is being used
