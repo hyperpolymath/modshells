@@ -25,5 +25,5 @@ permissions:
 
 jobs:
   governance:
-    uses: hyperpolymath/standards/.github/workflows/governance-reusable.yml@861b5e911d9e5dcfb3c0ab3dd2a9a3c8fd0a1613
+    uses: hyperpolymath/standards/.github/workflows/governance-reusable.yml@d135b05bfc647d0c0fbfedc7e80f37ea50f49236
     timeout-minutes: 10
