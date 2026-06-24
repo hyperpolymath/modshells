@@ -1,4 +1,4 @@
-# SPDX-License-Identifier: AGPL-3.0-or-later OR MIT
+# SPDX-License-Identifier: MPL-2.0 OR MIT
 # core/00-path.sh - PATH modifications (loaded first)
 #
 # Add custom directories to PATH. Use numeric prefix to control load order.

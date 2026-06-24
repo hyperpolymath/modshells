@@ -1,4 +1,4 @@
-# SPDX-License-Identifier: AGPL-3.0-or-later OR MIT
+# SPDX-License-Identifier: MPL-2.0 OR MIT
 # tools/git.sh - Git aliases and configuration
 
 # Short aliases
