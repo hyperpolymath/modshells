@@ -18,9 +18,9 @@ jobs:
       image: ghcr.io/stefan-hoeck/idris2-pack@sha256:f0758996a931fb35d9ecb1de273c4d59dabe2a09b433afc7e357f65a08b7e1ff
     steps:
       - name: Checkout Site
-        uses: actions/checkout@v7
+        uses: actions/checkout@v7.0.1
       - name: Checkout Ddraig SSG
-        uses: actions/checkout@v7
+        uses: actions/checkout@v7.0.1
         with:
           repository: hyperpolymath/ddraig-ssg
           path: .ddraig-ssg
