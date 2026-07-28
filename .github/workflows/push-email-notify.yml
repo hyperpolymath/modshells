@@ -7,6 +7,7 @@ name: Push email notification
 on:
   push: {}
 permissions:
+  actions: read
   contents: read
 jobs:
   notify:

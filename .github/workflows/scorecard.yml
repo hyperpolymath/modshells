@@ -9,6 +9,7 @@ on:
     branches: [main]
 
 permissions: read-all
+  actions: read
 
 jobs:
   analysis:
