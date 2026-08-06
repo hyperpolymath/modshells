@@ -18,7 +18,6 @@ on:
     types: [created]
 
 permissions: read-all
-  actions: read
 
 jobs:
   build:
