@@ -19,7 +19,6 @@ concurrency:
 
 
 permissions: read-all
-  actions: read
 
 jobs:
   analyze:
