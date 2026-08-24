@@ -1,0 +1,24 @@
+== Security Policy
+
+=== Reporting a Vulnerability
+
+If you discover a security vulnerability, please report it responsibly:
+
+[arabic]
+. *Do not* open a public issue
+. Email security concerns to the maintainer
+. Include steps to reproduce the vulnerability
+. Allow reasonable time for a fix before disclosure
+
+=== Supported Versions
+
+[cols=",",options="header",]
+|===
+|Version |Supported
+|latest |:white_check_mark:
+|< latest |Best effort
+|===
+
+=== Security Updates
+
+Security patches are released as soon as possible after verification.
