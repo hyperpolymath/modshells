@@ -1,0 +1,739 @@
+{
+  "_generated_from": ".github/label-classifier.yml + .github/labels.yml in hyperpolymath/.git-private-farm",
+  "_do_not_edit": "regenerate with scripts/gen-classifier-json.py",
+  "version": 1,
+  "prefix_split_on": "/",
+  "title_prefix": {
+    "docs": {
+      "type": "documentation"
+    },
+    "ci": {
+      "type": "chore",
+      "areas": [
+        "cicd"
+      ]
+    },
+    "governance": {
+      "type": "chore",
+      "areas": [
+        "governance"
+      ]
+    },
+    "roadmap": {
+      "type": "enhancement",
+      "meta": "meta:roadmap"
+    },
+    "chore": {
+      "type": "chore"
+    },
+    "build": {
+      "type": "chore",
+      "areas": [
+        "cicd"
+      ]
+    },
+    "security": {
+      "type": "chore",
+      "areas": [
+        "security"
+      ]
+    },
+    "proof": {
+      "type": "chore",
+      "areas": [
+        "proofs"
+      ]
+    },
+    "proofs": {
+      "type": "chore",
+      "areas": [
+        "proofs"
+      ]
+    },
+    "proof-debt": {
+      "type": "tech-debt",
+      "areas": [
+        "proofs"
+      ]
+    },
+    "epic": {
+      "type": "enhancement",
+      "meta": "meta:umbrella"
+    },
+    "umbrella": {
+      "type": "enhancement",
+      "meta": "meta:umbrella"
+    },
+    "tracking": {
+      "type": "chore",
+      "meta": "meta:umbrella"
+    },
+    "campaign": {
+      "type": "enhancement",
+      "meta": "meta:campaign"
+    },
+    "hygiene": {
+      "type": "tech-debt"
+    },
+    "audit": {
+      "type": "research"
+    },
+    "estate": {
+      "type": "chore",
+      "scope": "scope:estate"
+    },
+    "automation": {
+      "type": "enhancement",
+      "areas": [
+        "automation"
+      ]
+    },
+    "research": {
+      "type": "research"
+    },
+    "refactor": {
+      "type": "refactor"
+    },
+    "test": {
+      "type": "testing"
+    },
+    "tests": {
+      "type": "testing"
+    },
+    "feat": {
+      "type": "enhancement"
+    },
+    "fix": {
+      "type": "bug"
+    },
+    "bug": {
+      "type": "bug"
+    },
+    "perf": {
+      "type": "enhancement",
+      "areas": [
+        "performance"
+      ]
+    },
+    "codegen": {
+      "type": "enhancement",
+      "areas": [
+        "architecture"
+      ]
+    },
+    "packaging": {
+      "type": "chore",
+      "areas": [
+        "packaging"
+      ]
+    },
+    "policy": {
+      "type": "chore",
+      "areas": [
+        "governance"
+      ]
+    },
+    "ops": {
+      "type": "chore",
+      "areas": [
+        "automation"
+      ]
+    },
+    "standard": {
+      "type": "chore",
+      "areas": [
+        "governance"
+      ]
+    },
+    "migration": {
+      "type": "refactor",
+      "areas": [
+        "migration"
+      ]
+    },
+    "drift": {
+      "type": "tech-debt"
+    },
+    "corrective": {
+      "type": "bug"
+    },
+    "adaptive": {
+      "type": "enhancement"
+    },
+    "perfective": {
+      "type": "enhancement"
+    },
+    "preventive": {
+      "type": "tech-debt"
+    },
+    "machine-readable": {
+      "type": "tech-debt"
+    },
+    "parser": {
+      "type": "bug"
+    },
+    "lang": {
+      "type": "bug"
+    },
+    "clippy": {
+      "type": "tech-debt"
+    },
+    "release": {
+      "type": "chore"
+    },
+    "upstream": {
+      "type": "chore"
+    },
+    "hardening": {
+      "type": "chore",
+      "areas": [
+        "security"
+      ]
+    },
+    "deps": {
+      "type": "chore"
+    },
+    "rustsec": {
+      "type": "chore",
+      "areas": [
+        "security"
+      ]
+    },
+    "track": {
+      "type": "chore",
+      "meta": "meta:umbrella"
+    },
+    "tracker": {
+      "type": "chore",
+      "meta": "meta:umbrella"
+    },
+    "wiki": {
+      "type": "documentation"
+    },
+    "reclassify": {
+      "type": "refactor"
+    },
+    "backlog": {
+      "type": "chore"
+    },
+    "core": {
+      "type": "enhancement",
+      "areas": [
+        "design"
+      ]
+    },
+    "evidence": {
+      "type": "enhancement",
+      "areas": [
+        "design"
+      ]
+    },
+    "manifest": {
+      "type": "enhancement",
+      "areas": [
+        "design"
+      ]
+    },
+    "backends": {
+      "type": "enhancement",
+      "areas": [
+        "design"
+      ]
+    }
+  },
+  "bracket_tag": {
+    "campaign": {
+      "meta": "meta:campaign"
+    },
+    "umbrella": {
+      "meta": "meta:umbrella"
+    },
+    "gov": {
+      "areas": [
+        "governance"
+      ]
+    },
+    "proofs/a": {
+      "areas": [
+        "proofs"
+      ]
+    },
+    "proofs/b": {
+      "areas": [
+        "proofs"
+      ]
+    },
+    "proofs/c": {
+      "areas": [
+        "proofs"
+      ]
+    },
+    "estate": {
+      "scope": "scope:estate"
+    },
+    "repo": {
+      "scope": "scope:repo"
+    },
+    "feature": {
+      "type": "enhancement"
+    },
+    "integration": {
+      "areas": [
+        "conformance"
+      ]
+    },
+    "reference": {
+      "type": "documentation"
+    },
+    "register": {
+      "type": "documentation"
+    },
+    "p0": {
+      "priority": "priority:p0"
+    },
+    "p1": {
+      "priority": "priority:p1"
+    },
+    "p2": {
+      "priority": "priority:p2"
+    },
+    "et-l2": {
+      "areas": [
+        "conformance"
+      ]
+    },
+    "et-l4": {
+      "areas": [
+        "conformance"
+      ]
+    }
+  },
+  "keyword_area": {
+    "proofs": [
+      "agda",
+      "coq",
+      "rocq",
+      "idris",
+      "lean",
+      "isabelle",
+      "hol",
+      "mizar",
+      "why3",
+      "tla",
+      "alloy",
+      "dafny",
+      "acl2",
+      "pvs",
+      "metamath",
+      "z3",
+      "smt",
+      "prover",
+      "provers",
+      "theorem",
+      "theorems",
+      "axiom",
+      "axioms",
+      "postulate",
+      "postulates",
+      "believe_me",
+      "sorry",
+      "proof obligation",
+      "proof obligations",
+      "proof hole",
+      "proof holes",
+      "proof suite",
+      "proof-pipeline",
+      "proof debt",
+      "proof-debt",
+      "metatheory",
+      "mechanize",
+      "qed"
+    ],
+    "cicd": [
+      "workflow",
+      "github action",
+      "actions.lock",
+      "lockfile",
+      "runner",
+      "startup_failure",
+      "dependabot",
+      "check run",
+      "required context",
+      "scorecard",
+      "codeql",
+      "ci/cd"
+    ],
+    "licensing": [
+      "spdx",
+      "licence",
+      "license",
+      "reuse",
+      "copyright",
+      "attribution",
+      "agpl",
+      "mpl"
+    ],
+    "security": [
+      "gitleaks",
+      "secret",
+      "vulnerabilit",
+      "advisory",
+      "supply chain",
+      "cve"
+    ],
+    "bindings": [
+      "abi",
+      "ffi",
+      "wasm",
+      "jni",
+      "c api",
+      "interop",
+      "extern \"c\"",
+      "nif",
+      "snif"
+    ],
+    "packaging": [
+      "guix",
+      "nix",
+      "container",
+      "containerfile",
+      "docker",
+      "flatpak",
+      "oci image"
+    ],
+    "scaffolding": [
+      "rsr",
+      "scaffold",
+      "template",
+      "repo-init",
+      "instantiat",
+      "placeholder"
+    ],
+    "governance": [
+      "ruleset",
+      "policy",
+      "compliance",
+      "governance",
+      "branch protection",
+      "codeowners",
+      "code of conduct"
+    ],
+    "migration": [
+      "rescript",
+      "to-affinescript",
+      "\u2192 affinescript",
+      "port",
+      "deno",
+      "bun"
+    ],
+    "automation": [
+      "bot",
+      "gitbot",
+      "hypatia",
+      "sustainabot",
+      "oikosbot",
+      "fan-out",
+      "fanout",
+      "dispatch",
+      "self-heal"
+    ],
+    "performance": [
+      "latency",
+      "throughput",
+      "binary size",
+      "memory",
+      "hot path",
+      "regression"
+    ]
+  },
+  "keyword_type": {
+    "tech-debt": [
+      "debt",
+      "drift",
+      "hygiene",
+      "stale",
+      "cleanup",
+      "follow-up",
+      "clean up",
+      "left over",
+      "leftover",
+      "anti-pattern",
+      "inconsistency",
+      "inconsistent",
+      "placeholder",
+      "placeholders",
+      "tbd",
+      "todo",
+      "todos",
+      "unfilled"
+    ],
+    "documentation": [
+      "document",
+      "docs",
+      "readme",
+      "adoc",
+      "prose",
+      "docs/",
+      "changelog",
+      "explainme",
+      "quickstart",
+      "wiki",
+      "docstring",
+      "doc tree"
+    ],
+    "testing": [
+      "test",
+      "tests",
+      "fuzz",
+      "bench",
+      "coverage",
+      "crash-consistency",
+      "linearizability",
+      "equivalence",
+      "property-correspondence",
+      "property-based",
+      "test suite",
+      "proptest"
+    ],
+    "bug": [
+      "broken",
+      "fails",
+      "failing",
+      "crash",
+      "oom",
+      "regression",
+      "incorrect",
+      "does not",
+      "panic",
+      "panics",
+      "unreachable",
+      "mangled",
+      "never run",
+      "never ran",
+      "never succeeded",
+      "never fires",
+      "cannot fail",
+      "deadlock",
+      "hangs"
+    ],
+    "refactor": [
+      "refactor",
+      "restructure",
+      "consolidate",
+      "consolidation",
+      "reconcile",
+      "reconciliation",
+      "unify",
+      "dedupe",
+      "re-point",
+      "repoint",
+      "extract",
+      "retire",
+      "retire duplicate",
+      "deduplicate",
+      "reclassify",
+      "migrate"
+    ],
+    "research": [
+      "investigat",
+      "explore",
+      "spike",
+      "work out",
+      "triage",
+      "assess",
+      "survey",
+      "gap analysis",
+      "self-audit",
+      "inventory",
+      "weakness list",
+      "theory",
+      "synthesis",
+      "prioritised weakness",
+      "feasibility"
+    ],
+    "decision": [
+      "ruling",
+      "decide",
+      "decision",
+      "adjudicat",
+      "which of"
+    ],
+    "enhancement": [
+      "add",
+      "implement",
+      "support",
+      "introduce",
+      "enable",
+      "expand",
+      "expansion",
+      "extend",
+      "wire",
+      "complete",
+      "build",
+      "create",
+      "port"
+    ]
+  },
+  "meta_signal": {
+    "meta:umbrella": [
+      "umbrella",
+      "epic",
+      "master issue",
+      "parent issue",
+      "sub-issues",
+      "child issues"
+    ],
+    "meta:campaign": [
+      "campaign"
+    ],
+    "meta:roadmap": [
+      "roadmap",
+      "capability-expansion",
+      "future work"
+    ],
+    "meta:recurring": [
+      "recurring",
+      "recurrence",
+      "standing",
+      "every run",
+      "each week"
+    ]
+  },
+  "status_signal": {
+    "status:blocked": [
+      "blocked on",
+      "blocked:",
+      "(blocked",
+      "is blocked",
+      "gated on",
+      "waiting on upstream",
+      "needs upstream"
+    ],
+    "status:needs-owner": [
+      "unassigned",
+      "needs an owner",
+      "no owner"
+    ],
+    "status:needs-ruling": [
+      "needs a ruling",
+      "awaiting ruling",
+      "owner decision needed"
+    ]
+  },
+  "scope_signal": {
+    "scope:estate": [
+      "estate-wide",
+      "estate wide",
+      "across the estate",
+      "all repos",
+      "fleet-wide"
+    ]
+  },
+  "tier_of": {
+    "bug": "type",
+    "enhancement": "type",
+    "documentation": "type",
+    "refactor": "type",
+    "tech-debt": "type",
+    "testing": "type",
+    "chore": "type",
+    "research": "type",
+    "decision": "type",
+    "question": "type",
+    "cicd": "area",
+    "security": "area",
+    "proofs": "area",
+    "governance": "area",
+    "design": "area",
+    "architecture": "area",
+    "performance": "area",
+    "bindings": "area",
+    "migration": "area",
+    "packaging": "area",
+    "licensing": "area",
+    "automation": "area",
+    "scaffolding": "area",
+    "conformance": "area",
+    "priority:p0": "priority",
+    "priority:p1": "priority",
+    "priority:p2": "priority",
+    "priority:p3": "priority",
+    "status:blocked": "status",
+    "status:ready": "status",
+    "status:needs-owner": "status",
+    "status:needs-ruling": "status",
+    "status:do-not-automate": "status",
+    "meta:umbrella": "meta",
+    "meta:campaign": "meta",
+    "meta:roadmap": "meta",
+    "meta:recurring": "meta",
+    "scope:estate": "scope",
+    "scope:repo": "scope"
+  },
+  "tier_max": {
+    "type": 1,
+    "area": null,
+    "priority": 1,
+    "status": 1,
+    "meta": 1,
+    "scope": 1
+  },
+  "types": [
+    "bug",
+    "enhancement",
+    "documentation",
+    "refactor",
+    "tech-debt",
+    "testing",
+    "chore",
+    "research",
+    "decision",
+    "question"
+  ],
+  "frozen": [
+    "dependencies",
+    "duplicate",
+    "elixir",
+    "gitar-approved",
+    "github_actions",
+    "good first issue",
+    "help wanted",
+    "invalid",
+    "javascript",
+    "never-stale",
+    "nix",
+    "pinned",
+    "python",
+    "rust",
+    "security",
+    "stale",
+    "wontfix"
+  ],
+  "precedence": {
+    "meta:campaign": 0,
+    "meta:umbrella": 1,
+    "meta:recurring": 2,
+    "meta:roadmap": 3,
+    "priority:p0": 0,
+    "priority:p1": 1,
+    "priority:p2": 2,
+    "priority:p3": 3,
+    "status:blocked": 0,
+    "status:needs-ruling": 1,
+    "status:needs-owner": 2,
+    "status:do-not-automate": 3,
+    "status:ready": 4,
+    "scope:estate": 0,
+    "scope:repo": 1,
+    "bug": 0,
+    "decision": 1,
+    "tech-debt": 2,
+    "testing": 3,
+    "documentation": 4,
+    "refactor": 5,
+    "research": 6,
+    "enhancement": 7,
+    "chore": 8,
+    "question": 9
+  }
+}

@@ -1,0 +1,260 @@
+{
+  "_generated_from": ".github/labels.yml in hyperpolymath/.git-private-farm",
+  "_do_not_edit": "regenerate with scripts/gen-labels-json.py",
+  "version": 1,
+  "labels": [
+    {
+      "name": "bug",
+      "color": "d73a4a",
+      "description": "Something is broken or behaves incorrectly",
+      "tier": "type"
+    },
+    {
+      "name": "enhancement",
+      "color": "a2eeef",
+      "description": "New capability or improvement to existing behaviour",
+      "tier": "type"
+    },
+    {
+      "name": "documentation",
+      "color": "0075ca",
+      "description": "Docs, prose, diagrams, READMEs, ADRs",
+      "tier": "type"
+    },
+    {
+      "name": "refactor",
+      "color": "c5def5",
+      "description": "Restructuring that preserves observable behaviour",
+      "tier": "type"
+    },
+    {
+      "name": "tech-debt",
+      "color": "fbca04",
+      "description": "Known shortcut, drift, or hygiene owed - includes cleanup",
+      "tier": "type"
+    },
+    {
+      "name": "testing",
+      "color": "bfd4f2",
+      "description": "Tests, benchmarks, fuzzing, property checks, coverage",
+      "tier": "type"
+    },
+    {
+      "name": "chore",
+      "color": "ededed",
+      "description": "Routine maintenance with no behaviour change",
+      "tier": "type"
+    },
+    {
+      "name": "research",
+      "color": "d4c5f9",
+      "description": "Open investigation; the outcome is knowledge, not code",
+      "tier": "type"
+    },
+    {
+      "name": "decision",
+      "color": "8b5cf6",
+      "description": "A ruling is required before work can proceed",
+      "tier": "type"
+    },
+    {
+      "name": "question",
+      "color": "d876e3",
+      "description": "Further information is requested",
+      "tier": "type"
+    },
+    {
+      "name": "cicd",
+      "color": "006b75",
+      "description": "CI/CD: workflows, actions, lockfiles, pins, runners, release gates",
+      "tier": "area"
+    },
+    {
+      "name": "security",
+      "color": "006b75",
+      "description": "Security posture, secrets, scanning, advisories, supply chain",
+      "tier": "area"
+    },
+    {
+      "name": "proofs",
+      "color": "006b75",
+      "description": "Formal verification: Agda, Coq, Idris, Lean, Z3/SMT, axiom debt",
+      "tier": "area"
+    },
+    {
+      "name": "governance",
+      "color": "006b75",
+      "description": "Policy, rulesets, standards, compliance, and their enforcement",
+      "tier": "area"
+    },
+    {
+      "name": "design",
+      "color": "006b75",
+      "description": "Design of an interface, protocol, grammar, or type theory",
+      "tier": "area"
+    },
+    {
+      "name": "architecture",
+      "color": "006b75",
+      "description": "Structural/system-level shape and runtime behaviour",
+      "tier": "area"
+    },
+    {
+      "name": "performance",
+      "color": "006b75",
+      "description": "Throughput, latency, memory, binary size",
+      "tier": "area"
+    },
+    {
+      "name": "bindings",
+      "color": "006b75",
+      "description": "ABI, FFI, WASM, and cross-language interop surfaces",
+      "tier": "area"
+    },
+    {
+      "name": "migration",
+      "color": "006b75",
+      "description": "Porting between languages or toolchains (e.g. -> AffineScript)",
+      "tier": "area"
+    },
+    {
+      "name": "packaging",
+      "color": "006b75",
+      "description": "Guix, Nix, containers, distribution artefacts",
+      "tier": "area"
+    },
+    {
+      "name": "licensing",
+      "color": "006b75",
+      "description": "Licences, SPDX headers, REUSE compliance, attribution",
+      "tier": "area"
+    },
+    {
+      "name": "automation",
+      "color": "006b75",
+      "description": "Bots, schedulers, dispatch, self-healing, fan-out",
+      "tier": "area"
+    },
+    {
+      "name": "scaffolding",
+      "color": "006b75",
+      "description": "RSR templates, repo init, instantiation, project skeletons",
+      "tier": "area"
+    },
+    {
+      "name": "conformance",
+      "color": "006b75",
+      "description": "Conformance to an external or internal specification",
+      "tier": "area"
+    },
+    {
+      "name": "priority:p0",
+      "color": "b60205",
+      "description": "Critical - drop other work",
+      "tier": "priority"
+    },
+    {
+      "name": "priority:p1",
+      "color": "d93f0b",
+      "description": "High - schedule next",
+      "tier": "priority"
+    },
+    {
+      "name": "priority:p2",
+      "color": "e99695",
+      "description": "Normal - queue it",
+      "tier": "priority"
+    },
+    {
+      "name": "priority:p3",
+      "color": "f9d0c4",
+      "description": "Low - nice to have",
+      "tier": "priority"
+    },
+    {
+      "name": "status:blocked",
+      "color": "fbca04",
+      "description": "Cannot proceed until a dependency clears",
+      "tier": "status"
+    },
+    {
+      "name": "status:ready",
+      "color": "fbca04",
+      "description": "Fully specified and ready to be picked up",
+      "tier": "status"
+    },
+    {
+      "name": "status:needs-owner",
+      "color": "fbca04",
+      "description": "Unassigned and needs someone to take it",
+      "tier": "status"
+    },
+    {
+      "name": "status:needs-ruling",
+      "color": "fbca04",
+      "description": "Awaiting an owner decision",
+      "tier": "status"
+    },
+    {
+      "name": "status:do-not-automate",
+      "color": "fbca04",
+      "description": "Bots and sweeps must not touch this issue",
+      "tier": "status"
+    },
+    {
+      "name": "meta:umbrella",
+      "color": "5319e7",
+      "description": "Parent issue aggregating child issues",
+      "tier": "meta"
+    },
+    {
+      "name": "meta:campaign",
+      "color": "5319e7",
+      "description": "Coordinated multi-repo push with a defined end state",
+      "tier": "meta"
+    },
+    {
+      "name": "meta:roadmap",
+      "color": "5319e7",
+      "description": "Forward planning; not yet actionable work",
+      "tier": "meta"
+    },
+    {
+      "name": "meta:recurring",
+      "color": "5319e7",
+      "description": "Recurs on a schedule or by trigger; never finally closed",
+      "tier": "meta"
+    },
+    {
+      "name": "scope:estate",
+      "color": "bfdadc",
+      "description": "Affects many or all repos across the estate",
+      "tier": "scope"
+    },
+    {
+      "name": "scope:repo",
+      "color": "bfdadc",
+      "description": "Confined to this repository",
+      "tier": "scope"
+    }
+  ],
+  "frozen": [
+    "dependencies",
+    "duplicate",
+    "elixir",
+    "gitar-approved",
+    "github_actions",
+    "good first issue",
+    "help wanted",
+    "invalid",
+    "javascript",
+    "never-stale",
+    "nix",
+    "pinned",
+    "python",
+    "rust",
+    "security",
+    "stale",
+    "wontfix"
+  ]
+}
