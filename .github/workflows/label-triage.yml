@@ -1,0 +1,116 @@
+# SPDX-License-Identifier: MPL-2.0
+name: Label Triage
+
+# Classify newly-filed issues against the estate label taxonomy.
+#
+# The sweep that established the taxonomy is a one-off; this is what stops it
+# decaying. Without it every new issue arrives unlabelled and the 55%-unlabelled
+# state rebuilds itself.
+#
+# ⚠ NO `uses:` ANYWHERE, DELIBERATELY. The estate enforces
+# .github/workflows/actions.lock, which is keyed BY WORKFLOW PATH: a workflow
+# the lock does not list is rejected before any step runs (startup_failure, and
+# therefore no check run at all). A dispatched workflow lands in repos whose
+# lock has not been regenerated, so it must not depend on any action.
+#
+# ⚠ THE CLASSIFIER IS jq, NOT PYTHON. Python is fully banned estate-wide -- the
+# `governance / Language / package anti-pattern policy` gate runs
+# `git ls-files '*.py'` and fails the PR. Shipping a .py into 416 repos would
+# mean shipping an exemption into 416 repos. jq is preinstalled on every GitHub
+# runner, is not banned, and needs no action.
+#
+# Deliberately conservative:
+#   - ADDITIVE ONLY. It never removes a label and never overrides a human's
+#     classification: anything already on the issue is passed in via `have` and
+#     is never re-suggested, and the classifier stays out of any max-1 tier the
+#     issue already carries a label in.
+#   - SILENT WHEN UNSURE. Nothing is printed unless a prefix, bracket or type
+#     rule actually fired. Roughly 70% of the historical corpus classified this
+#     way; the rest is meant to reach a human.
+#   - NEVER FAILS THE ISSUE. Every step is best-effort; a missing payload or an
+#     API hiccup exits 0 rather than leaving a red mark on someone's bug report.
+
+on:
+  issues:
+    types: [opened, reopened]
+  workflow_dispatch:
+    inputs:
+      issue:
+        description: "Issue number to (re)classify"
+        required: true
+
+permissions:
+  issues: write
+  contents: read
+
+jobs:
+  triage:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Classify and label
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NUM: ${{ github.event.issue.number || inputs.issue }}
+        run: |
+          set -uo pipefail
+          work=$(mktemp -d); RULES=$work/rules.json; SCRIPT=$work/classify.jq
+
+          # fetch instead of checking out -- no action means no lock entry to drift
+          gh api "repos/$GITHUB_REPOSITORY/contents/.github/label-classifier.json?ref=$GITHUB_SHA" \
+            --jq '.content' 2>/dev/null | base64 -d > "$RULES" || true
+          gh api "repos/$GITHUB_REPOSITORY/contents/.github/scripts/classify-issue.jq?ref=$GITHUB_SHA" \
+            --jq '.content' 2>/dev/null | base64 -d > "$SCRIPT" || true
+          if [[ ! -s "$RULES" || ! -s "$SCRIPT" ]]; then
+            echo "no classifier payload in this repo - nothing to do"
+            exit 0
+          fi
+
+          TITLE=$(gh issue view "$NUM" -R "$GITHUB_REPOSITORY" --json title --jq .title) || exit 0
+          echo "issue #$NUM: $TITLE"
+
+          # Labels this repo actually defines. --limit 1000 is GitHub's real
+          # per-repo ceiling; the default of 30 would silently hide most of the
+          # taxonomy. Fetched BEFORE the label read below so that read stays as
+          # close to the write as possible.
+          mapfile -t DEFINED < <(gh label list -R "$GITHUB_REPOSITORY" --limit 1000 \
+                                   --json name --jq '.[].name' 2>/dev/null)
+
+          # Labels already present; a human's work is never overridden. Read
+          # HERE rather than earlier: every API call between this read and the
+          # edit below widens a window in which someone could add a type label
+          # and get a second one back from us. Only the local jq call is inside it.
+          HAVE=$(gh issue view "$NUM" -R "$GITHUB_REPOSITORY" \
+                   --json labels --jq '[.labels[].name]' 2>/dev/null) || HAVE='[]'
+          [[ -n "$HAVE" ]] || HAVE='[]'
+          echo "already has: $HAVE"
+
+          mapfile -t ADD < <(jq -r --arg title "$TITLE" --argjson have "$HAVE" \
+                               -f "$SCRIPT" "$RULES" 2>/dev/null)
+          if [[ ${#ADD[@]} -eq 0 || -z "${ADD[0]:-}" ]]; then
+            echo "no confident classification - leaving for a human"
+            exit 0
+          fi
+
+          apply=()
+          for want in "${ADD[@]}"; do
+            for def in "${DEFINED[@]}"; do
+              if [[ "$want" == "$def" ]]; then apply+=("$want"); break; fi
+            done
+          done
+          if [[ ${#apply[@]} -eq 0 ]]; then
+            echo "classified as ${ADD[*]} but this repo defines none of them - run the label sync"
+            exit 0
+          fi
+
+          printf 'applying: %s\n' "${apply[*]}"
+          # Build the arguments as an ARRAY. The previous form was an unquoted
+          # command substitution, so the shell re-split its output on spaces and
+          # a label name containing whitespace would arrive as several broken
+          # arguments. No canonical label contains a space today, which is
+          # exactly why this would have failed quietly the first time one did.
+          # (Also clears actionlint SC2046.)
+          edit_args=()
+          for lab in "${apply[@]}"; do edit_args+=(--add-label "$lab"); done
+          gh issue edit "$NUM" -R "$GITHUB_REPOSITORY" "${edit_args[@]}" \
+            || echo "label apply failed - not failing the run"
+          exit 0
