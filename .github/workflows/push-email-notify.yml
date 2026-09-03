@@ -3,20 +3,43 @@
 # PUSH_EMAIL_ENABLED=true (the single on/off switch). Addresses are pre-filled;
 # sending needs the org SMTP secrets (SMTP_HOST/PORT/USER/PASS). Inherited by
 # new repos from the template; placed on existing repos by the farm sweep.
+#
+# Re-landed after the 2026-07-20 notification-storm freeze (removed in
+# 09f94c5), now on hyperpolymath/smtp-notify-action: Node-free, the SMTP
+# session is Idris2-specified and machine-checked, the binary is Zig-built,
+# byte-reproducible, and SHA-256-pinned inside the action itself.
 name: Push email notification
 on:
-  push: {}
+  push:
+    # Branch pushes only: tag and deletion payloads mislabel Branch:/head_commit.
+    branches: ['**']
+concurrency:
+  # Deliberately per-RUN, so no run is ever queued behind another and none is
+  # ever cancelled. Do NOT "tidy" this into a shared group such as
+  # ${{ github.workflow }}-${{ github.ref }}. GitHub's workflow-syntax docs:
+  # "By default, any existing pending job or workflow in the same concurrency
+  # group will be canceled and the new queued job or workflow will take its
+  # place." That happens regardless of cancel-in-progress, which governs only
+  # the RUNNING job. On this workflow it silently loses a notification email,
+  # with no error anywhere. Every run here reports a DISTINCT commit, so there
+  # is no redundant work for a concurrency limit to remove.
+  # The docs also offer `queue: max` (up to 100 pending); not used, because 100
+  # is still a cap whereas a per-run group needs none.
+  # Verified with zizmor 1.30.0: deleting this block raises concurrency-limits;
+  # this form silences it exactly as a shared group would.
+  group: push-email-${{ github.run_id }}
+  cancel-in-progress: false
 permissions:
-  actions: read
   contents: read
 jobs:
   notify:
     name: Email on push
     if: ${{ vars.PUSH_EMAIL_ENABLED == 'true' }}
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     steps:
       - name: Send push notification email
-        uses: dawidd6/action-send-mail@0fd6142bc2fdec26ea3c70b93c3e3a084d98a863 # pinned
+        uses: hyperpolymath/smtp-notify-action@ede1191ef6ff3ac02c4f4d9efdf837ee517e11d7 # v0.2.0
         with:
           server_address: ${{ secrets.SMTP_HOST }}
           server_port: ${{ secrets.SMTP_PORT }}
