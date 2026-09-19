@@ -574,7 +574,7 @@ The following are explicitly out of scope:
 
 == Contributing
 
-See link:CONTRIBUTING.md[CONTRIBUTING.md] for contribution guidelines.
+See link:.github/CONTRIBUTING.md[CONTRIBUTING.md] for contribution guidelines.
 
 Priority areas for contribution:
 

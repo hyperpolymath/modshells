@@ -428,7 +428,7 @@ See link:ROADMAP.adoc[ROADMAP.adoc] for planned features including:
 
 == Contributing
 
-Contributions welcome. See link:CONTRIBUTING.md[CONTRIBUTING.md] for guidelines.
+Contributions welcome. See link:.github/CONTRIBUTING.md[CONTRIBUTING.md] for guidelines.
 
 This project follows the Rhodium Standard Repository (RSR) conventions.
 
