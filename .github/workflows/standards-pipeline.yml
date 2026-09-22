@@ -1,0 +1,42 @@
+# SPDX-License-Identifier: MPL-2.0
+# SPDX-FileCopyrightText: 2026 Jonathan D.A. Jewell (hyperpolymath) <j.d.a.jewell@open.ac.uk>
+#
+# Standards pipeline — DRY-RUN WAVE caller. This is a deliberate OBSERVATION,
+# not an adoption, and it is expected to be informative whether it is green or
+# red.
+#
+# `.machine_readable/pipeline-allow.txt` in hyperpolymath/standards is seeded
+# EMPTY by doctrine. Its own text: "An entry here must be EARNED BY
+# OBSERVATION: the pipeline ran in that repository and went red. It must never
+# be seeded by inference." and "The honest seed is a dry-run wave: adopt the
+# caller in a deliberate sample, record the real verdict per repository, and add
+# only what actually went red." This caller is how that observation is earned.
+#
+# ⚠ KNOWN DEFECT DISCLOSED: hyperpolymath/standards#976 — ci-pipeline.yml's
+# `detect` job counts `*.ncl` into its ecosystem denominator, and the RSR
+# template ships a six-file k9 Nickel set into every seeded repository, so
+# TOTAL can be lifted above zero by boilerplate alone and the zero-denominator
+# refusal is then never reached. This repository was chosen BECAUSE its verdict
+# does not depend on that contaminated signal.
+#
+# Pinned to an immutable commit, never `@main`: following main would let one
+# push in standards change the verdict of every already-pinned caller with no
+# review here.
+name: "🟡 CHECK: Standards pipeline"
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  pipeline:
+    # hyperpolymath/standards @ 2eb9bb19 — ci-pipeline.yml blob d2583657.
+    #
+    # NO `secrets:` block, deliberately. ci-pipeline.yml declares
+    # `workflow_call.inputs` only, has no `secrets:` block and references no
+    # `secrets.*` anywhere; `secrets: inherit` would hand the whole store to a
+    # workflow that consumes none of it.
+    uses: hyperpolymath/standards/.github/workflows/ci-pipeline.yml@2eb9bb19d43b6285466ca36b92d1324a09e7a207
