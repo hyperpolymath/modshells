@@ -33,10 +33,10 @@ permissions:
 
 jobs:
   pipeline:
-    # hyperpolymath/standards @ f95130bb — ci-pipeline.yml blob 8bcdeaf2.
+    # hyperpolymath/standards @ ed5e3f65 — ci-pipeline.yml blob ea87c43a.
     #
     # NO `secrets:` block, deliberately. ci-pipeline.yml declares
     # `workflow_call.inputs` only, has no `secrets:` block and references no
     # `secrets.*` anywhere; `secrets: inherit` would hand the whole store to a
     # workflow that consumes none of it.
-    uses: hyperpolymath/standards/.github/workflows/ci-pipeline.yml@f95130bbcbc8917bfec8f8875fa810ad93b08871
+    uses: hyperpolymath/standards/.github/workflows/ci-pipeline.yml@ed5e3f651305dd1ce0d0b5d2d08b97a963634632
