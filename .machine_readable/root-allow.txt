@@ -1,1 +1,8 @@
 flake.nix
+
+# ─── JS manifest and locks (LANGUAGE-POLICY §1.4) ───────────────────────────
+package.json               # JCS-canonical manifest; pins JS tooling (LANGUAGE-POLICY §1.4)
+bun.lock                   # tier-1 lock, required (LANGUAGE-POLICY §1.4)
+deno.lock                  # generated compatibility lock (LANGUAGE-POLICY §1.4)
+pnpm-lock.yaml             # generated compatibility lock (LANGUAGE-POLICY §1.4)
+.prettierignore            # keeps Prettier off the JCS package.json and pnpm-lock.yaml; Prettier reads it from the root
