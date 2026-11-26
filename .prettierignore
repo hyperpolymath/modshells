@@ -1,0 +1,4 @@
+# package.json is JCS-canonical and pnpm-lock.yaml is tool-generated (LANGUAGE-POLICY §1.4).
+# Prettier must not reformat them.
+package.json
+pnpm-lock.yaml
