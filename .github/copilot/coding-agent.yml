@@ -1,6 +1,6 @@
 mcp_servers:
   boj-server:
-    command: npx
-    args: ["-y", "@hyperpolymath/boj-server@latest"]
+    command: bunx
+    args: ["--bun", "@hyperpolymath/boj-server@0.4.7"]
     env:
       BOJ_URL: http://localhost:7700
