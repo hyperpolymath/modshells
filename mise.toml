@@ -32,7 +32,21 @@ gnu-grep = "latest"
 # Task runner alias
 [alias]
 task = "go-task"
-build = "cargo build --release"
-test = "cargo test"
-lint = "bun install --frozen-lockfile && bunx --no-install --bun prettier --check ."
-fmt = "bun install --frozen-lockfile && bunx --no-install --bun prettier --write ."
+
+[tasks.setup]
+description = "Install pinned JS dev tools (Prettier) from bun.lock"
+run = "bun install --frozen-lockfile"
+
+[tasks.build]
+run = "cargo build --release"
+
+[tasks.test]
+run = "cargo test"
+
+[tasks.lint]
+depends = ["setup"]
+run = "bunx --no-install --bun prettier --check ."
+
+[tasks.fmt]
+depends = ["setup"]
+run = "bunx --no-install --bun prettier --write ."
