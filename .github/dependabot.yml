@@ -1,4 +1,9 @@
 version: 2
+
+multi-ecosystem-groups:
+  js-locks:
+    schedule:
+      interval: "daily"
 updates:
   - package-ecosystem: "github-actions"
     directory: "/"
@@ -29,15 +34,15 @@ updates:
   
   - package-ecosystem: "npm"
     directory: "/"
-    schedule:
-      interval: "daily"
+    multi-ecosystem-group: "js-locks"
+    patterns: ["*"]
     open-pull-requests-limit: 3
 
-  # Bun (bun.lock): same directory and schedule as npm, so Dependabot keeps bun.lock in step
+  # Bun (bun.lock): in the js-locks group with npm, so one PR moves pnpm-lock.yaml and bun.lock together
   - package-ecosystem: "bun"
     directory: "/"
-    schedule:
-      interval: "daily"
+    multi-ecosystem-group: "js-locks"
+    patterns: ["*"]
     open-pull-requests-limit: 3
   
   - package-ecosystem: "pip"
