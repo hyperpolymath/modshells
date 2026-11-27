@@ -4,6 +4,7 @@ multi-ecosystem-groups:
   js-locks:
     schedule:
       interval: "daily"
+    open-pull-requests-limit: 3
 updates:
   - package-ecosystem: "github-actions"
     directory: "/"
@@ -36,14 +37,12 @@ updates:
     directory: "/"
     multi-ecosystem-group: "js-locks"
     patterns: ["*"]
-    open-pull-requests-limit: 3
 
   # Bun (bun.lock): in the js-locks group with npm, so one PR moves pnpm-lock.yaml and bun.lock together
   - package-ecosystem: "bun"
     directory: "/"
     multi-ecosystem-group: "js-locks"
     patterns: ["*"]
-    open-pull-requests-limit: 3
   
   - package-ecosystem: "pip"
     directory: "/"
