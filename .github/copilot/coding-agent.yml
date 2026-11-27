@@ -1,6 +1,7 @@
 mcp_servers:
   boj-server:
     command: bunx
-    args: ["--bun", "@hyperpolymath/boj-server@0.4.7"]
+    # boj-server 0.5.0 (main 4379e6c); 0.4.7 needs Deno, 0.5.0 is not on npm yet
+    args: ["--bun", "github:hyperpolymath/boj-server#4379e6c4a62afa564fa115b3910ef21c4238aa15"]
     env:
       BOJ_URL: http://localhost:7700
