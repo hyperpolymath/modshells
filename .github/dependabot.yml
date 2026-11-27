@@ -38,7 +38,7 @@ updates:
     multi-ecosystem-group: "js-locks"
     patterns: ["*"]
 
-  # Bun (bun.lock): in the js-locks group with npm, so one PR moves pnpm-lock.yaml and bun.lock together
+  # Bun (bun.lock): in the js-locks group with npm, so one PR moves package.json and bun.lock together
   - package-ecosystem: "bun"
     directory: "/"
     multi-ecosystem-group: "js-locks"

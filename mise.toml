@@ -3,7 +3,6 @@
 rust = "latest"
 zig = "latest"
 bun = "1.4"
-denojs = "latest"
 
 # Package managers
 pnpm = "latest"
@@ -41,9 +40,7 @@ run = "bun install --frozen-lockfile"
 run = "gprbuild -p -j0 modshells.gpr"
 
 [tasks.lint]
-depends = ["setup"]
-run = 'bunx --no-install --bun prettier --check --no-error-on-unmatched-pattern "**/*.{js,mjs,cjs,json,md}"'
+run = "bun install --frozen-lockfile && bunx --no-install --bun prettier --check ."
 
 [tasks.fmt]
-depends = ["setup"]
-run = 'bunx --no-install --bun prettier --write --no-error-on-unmatched-pattern "**/*.{js,mjs,cjs,json,md}"'
+run = "bun install --frozen-lockfile && bunx --no-install --bun prettier --write ."
