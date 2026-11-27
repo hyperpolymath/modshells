@@ -2,7 +2,7 @@
 # Language runtimes
 rust = "latest"
 zig = "latest"
-bun = "latest"
+bun = "1.4"
 denojs = "latest"
 
 # Package managers
@@ -38,10 +38,7 @@ description = "Install pinned JS dev tools (Prettier) from bun.lock"
 run = "bun install --frozen-lockfile"
 
 [tasks.build]
-run = "cargo build --release"
-
-[tasks.test]
-run = "cargo test"
+run = "gprbuild -p -j0 modshells.gpr"
 
 [tasks.lint]
 depends = ["setup"]
